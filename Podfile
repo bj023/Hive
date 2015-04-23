@@ -1,0 +1,12 @@
+source  'https://github.com/CocoaPods/Specs.git' 
+platform :ios, '7.0'
+pod 'Reachability', '~> 3.2'
+pod 'MBProgressHUD', '~> 0.9.1'
+pod 'JSONModel', '~> 1.0.1'
+pod 'SDWebImage', '~> 3.7.1'
+#pod 'MJRefresh', '~> 1.4.1'
+pod 'MagicalRecord', '~> 2.2'
+pod 'XHRefreshControl', '~> 3.8'
+pod 'AMap3DMap', '~> 2.4.2' #3D地图SDK(2D地图和3D地图不能同时使用)
+pod 'AFNetworking', '~> 2.5.2'
+pod 'XMPPFramework', '~> 3.6.4'
