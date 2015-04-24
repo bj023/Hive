@@ -29,6 +29,7 @@
     [self configMessageArr];
     [self configTableView];
     [self configMessageToolBar];
+    [self sendRequestChatRoom];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -158,5 +159,24 @@
 - (void)set_HiddenKeyboard
 {
     [self.chatToolBar endEditing:YES];
+}
+
+#pragma -mark 请求网络
+- (void)sendRequestChatRoom
+{
+    [HttpTool sendRequestChatRoomWithLongitude:@"116.335854" Latitude:@"39.979321" success:^(id json) {
+        
+        debugLog(@"%@",json);
+        
+    } faliure:^(NSError *error) {
+        
+    }];
+}
+
+- (void)dealloc
+{
+    self.chatToolBar = nil;
+    self.tableView = nil;
+    self.mesgaeArr = nil;
 }
 @end

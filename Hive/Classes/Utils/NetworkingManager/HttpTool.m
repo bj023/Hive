@@ -28,6 +28,8 @@
 #define APPEND_UpdateProfileUserName @"/info/updateProfile.do" // 修改用户名
 #define APPEND_SettingsNotification @"/info/loadPushSetting.do" // 拉取推送设置
 
+#define APPEND_ChatRoom @"/info/loadCrowdID.do" // 聊天室 用户列表
+
 @implementation HttpTool
 #pragma -mark 登陆
 /**
@@ -364,6 +366,30 @@
 {
     NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_FriendList];
     NSMutableDictionary *dict = [HttpTool parameterUserID];
+    [HttpManager postRequestWithBaseUrl:urlString params:dict success:^(id response) {
+        success(response);
+    } Fail:^(NSError *error) {
+        faliure(error);
+    }];
+}
+
+#pragma -mark 聊天室用户列表
++ (NSMutableDictionary *)parameterWithLongitude:(NSString *)longitude Latitude:(NSString *)latitude
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setObject:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID forKey:@"userId"];
+    [parameters setObject:longitude forKey:@"longitude"];
+    [parameters setObject:latitude forKey:@"latitude"];
+    return parameters;
+}
+
++ (void)sendRequestChatRoomWithLongitude:(NSString *)longitude
+                                Latitude:(NSString *)latitude
+                                 success:(ResponseSuccBlcok)success
+                                 faliure:(HttpFailBlcok)faliure
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_ChatRoom];
+    NSMutableDictionary *dict = [HttpTool parameterWithLongitude:longitude Latitude:latitude];
     [HttpManager postRequestWithBaseUrl:urlString params:dict success:^(id response) {
         success(response);
     } Fail:^(NSError *error) {

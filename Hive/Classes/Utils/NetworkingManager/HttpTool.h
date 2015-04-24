@@ -199,4 +199,17 @@ typedef void(^ResponseSuccBlcok)(id json);
 + (void)sendRequestFollowListSuccess:(ResponseSuccBlcok)success
                              faliure:(HttpFailBlcok)faliure;
 
+/**
+ *  封装 聊天大厅 用户列表
+ *
+ *  @param longitude 经度
+ *  @param latitude  纬度
+ *  @param success   成功回调
+ *  @param faliure   失败回调
+ */
++ (void)sendRequestChatRoomWithLongitude:(NSString *)longitude
+                                Latitude:(NSString *)latitude
+                                 success:(ResponseSuccBlcok)success
+                                 faliure:(HttpFailBlcok)faliure;
+
 @end
