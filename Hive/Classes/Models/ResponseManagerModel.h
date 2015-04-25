@@ -30,3 +30,11 @@
 @property (nonatomic, assign) int RETURN_CODE;
 @property (nonatomic, strong) NSDictionary *RETURN_OBJ;
 @end
+
+#pragma -mark 聊天大厅 用户ID 列表
+@interface ResponseChatUsersModel : JSONModel
+
+@property (nonatomic, assign) int RETURN_CODE;
+@property (nonatomic, strong) NSArray *userIDs;
+
+@end

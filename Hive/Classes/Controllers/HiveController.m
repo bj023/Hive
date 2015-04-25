@@ -11,6 +11,7 @@
 #import "MessageToolBar.h"
 #import "ChatCell.h"
 
+
 @interface HiveController ()<MessageToolBarDelegate, UITableViewDataSource, UITableViewDelegate>
 {
     
@@ -29,7 +30,7 @@
     [self configMessageArr];
     [self configTableView];
     [self configMessageToolBar];
-    [self sendRequestChatRoom];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -140,7 +141,7 @@
 -(void)sendTextMessage:(NSString *)textMessage
 {
     
-    [[XMPPManager sharedInstance] sendNewMessage:textMessage from:@"79" to:@"128"];
+    [[XMPPManager sharedInstance] sendNewMessage:textMessage];
     
     [self.mesgaeArr addObject:textMessage];
     
@@ -161,16 +162,12 @@
     [self.chatToolBar endEditing:YES];
 }
 
-#pragma -mark 请求网络
-- (void)sendRequestChatRoom
+
+- (void)showHudWith:(NSString *)text
 {
-    [HttpTool sendRequestChatRoomWithLongitude:@"116.335854" Latitude:@"39.979321" success:^(id json) {
-        
-        debugLog(@"%@",json);
-        
-    } faliure:^(NSError *error) {
-        
-    }];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    
+    [MBProgressHUD showTextHUDAddedTo:self.view withText:text animated:YES];
 }
 
 - (void)dealloc

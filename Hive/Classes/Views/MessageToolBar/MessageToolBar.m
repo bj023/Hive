@@ -71,7 +71,7 @@
     CGFloat allButtonWidth = 0.0;
     CGFloat textViewLeftMargin = 6.0;
     
-    CGFloat faceW = 24;
+    CGFloat faceW = 0;//24
     CGFloat faceH = faceW;
     CGFloat faceY = CGRectGetHeight(self.bounds)/2 - 24/2;
     

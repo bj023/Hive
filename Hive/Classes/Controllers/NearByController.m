@@ -10,6 +10,7 @@
 #import "Utils.h"
 #import "NearByCell.h"
 #import "CustomActionSheetView.h"
+#import "NSTimeUtil.h"
 
 @interface NearByController ()<UITableViewDataSource, UITableViewDelegate>
 @property (strong, nonatomic) UITableView *nearByTable;
@@ -130,15 +131,26 @@
 
 - (void)sendNearByActionWithGender:(NSString *)gender
 {
+    
+    NSString *latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
+    NSString *longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
+    
+    if (IsEmpty(latitude) ||
+        IsEmpty(longitude)) {
+        [self showHudWith:@"获取信息失败"];
+        return;
+    }
+    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     //gender 性别
-    [HttpTool sendRequestWithLongitude:@"116.335854" Latitude:@"39.979321" Gender:gender success:^(id json) {
+    [HttpTool sendRequestWithLongitude:longitude Latitude:latitude Gender:gender success:^(id json) {
         
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 
         NSError *error = nil;
         ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:&error];
         if (!error) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
             self.dataSource = [NSMutableArray arrayWithArray:res.content];
             [self.nearByTable reloadData];
         }else
@@ -152,6 +164,8 @@
 
 - (void)showHudWith:(NSString *)text
 {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
     [MBProgressHUD showTextHUDAddedTo:self.view withText:text animated:YES];
 }
 

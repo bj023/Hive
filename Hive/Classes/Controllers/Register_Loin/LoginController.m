@@ -229,11 +229,12 @@
     
     [HttpTool sendRequestWithUserName:self.loginView.userName Password:self.loginView.password success:^(id json) {
         
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
-        
         NSError *error = nil;
         ResponseLoginModel *res = [[ResponseLoginModel alloc] initWithString:json error:&error];
         if (!error) {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
             [self handleLoginCenterManager:res.content];
             [self handleSetRootViewController];
         }else
@@ -250,11 +251,11 @@
     
     [HttpTool sendRequestRegisterPhoneNum:_registerFirst.phoneNumText.text success:^(id json) {
         
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        
         ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
-            
+
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
             [self pushNextRegister:navStr];
             
         }else
@@ -271,11 +272,11 @@
 
     [HttpTool sendRequestRegisterCode:[self.registerSecond hponeCode] success:^(id json) {
         
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        
         ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
-            
+
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
             [self pushThirdRegister:navStr];
             
         }else
@@ -292,11 +293,12 @@
 
     [HttpTool sendRequestRegisterEmail:_registerThird.emailText.text UserName:_registerThird.userNameText.text Passwowd:_registerThird.passwordText.text success:^(id json) {
         
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
         ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
-            
+
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
             [self pushFourRegister:navStr];
             
         }else
@@ -309,6 +311,8 @@
 
 - (void)showErrorWithText:(NSString *)text
 {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
     [MBProgressHUD showTextHUDAddedTo:self.view withText:text animated:YES];
 }
 

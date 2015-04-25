@@ -111,12 +111,17 @@
 #pragma -mark 请求网络
 - (void)sendRequest
 {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
     [HttpTool sendRequestFollowListSuccess:^(id json) {
 
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 
         ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
+
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
             self.dataSource = [NSMutableArray arrayWithArray:res.content];
             [self.followTable reloadData];
         }else
@@ -129,6 +134,8 @@
 
 - (void)showHudWith:(NSString *)text
 {
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
     [MBProgressHUD showTextHUDAddedTo:self.view withText:text animated:YES];
 }
 @end

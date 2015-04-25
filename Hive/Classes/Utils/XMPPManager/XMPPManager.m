@@ -8,6 +8,7 @@
 
 #import "XMPPManager.h"
 #import "Utils.h"
+#import "NSTimeUtil.h"
 
 #define kXMPPHost @"115.28.51.196"
 #define LITTLEBIRD @"ay130718210956811b81z"
@@ -84,12 +85,12 @@ static XMPPManager *sharedManager;
 
 //验证通过l
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender{
-    NSLog(@"==========验证通过！！！！");
+    NSLog(@"==========验证通过==========");
     [self goOnline];
 }
 
 - (void)goOnline{
-    NSLog(@"====发送在线状态");
+    NSLog(@"====发送在线状态====");
     //发送在线状态
     XMPPPresence *presence = [XMPPPresence presence];
     [xmppStream sendElement:presence];
@@ -101,7 +102,7 @@ static XMPPManager *sharedManager;
 }
 
 - (void)goOffline{
-    NSLog(@"====发送下线状态");
+    NSLog(@"====发送下线状态====");
     //发送下线状态
     XMPPPresence *presence = [XMPPPresence presenceWithType:@"unavailable"];
     [xmppStream sendElement:presence];
@@ -150,23 +151,44 @@ static XMPPManager *sharedManager;
 }
 
 #pragma -mark 发送消息
-- (void)sendNewMessage:(NSString *)message from:(NSString *)userID to:(NSString *)chatUser
+- (void)sendNewMessage:(NSString *)message
 {
-    //XMPPFramework主要是通过KissXML来生成XML文件
-    //生成文档
-    NSXMLElement *body = [NSXMLElement elementWithName:@"body"];
-    [body setStringValue:message];
-    //生成XML消息文档
-    NSXMLElement *mes = [NSXMLElement elementWithName:@"message"];
-    //消息类型
-    [mes addAttributeWithName:@"type" stringValue:@"chat"];
-    //发送给谁
-    [mes addAttributeWithName:@"to" stringValue:chatUser];
-    //由谁发送
-    [mes addAttributeWithName:@"from" stringValue:userID];
-    //组合
-    [mes addChild:body];
-    //发送消息
-    [xmppStream sendElement:mes];
+    NSString *mytime =[UtilDate getCurrentTime];
+
+    
+    NSXMLElement *body;
+    NSXMLElement *mes;
+    
+    for (NSString *toUserID in [[NSTimeUtil sharedInstance] getChatUserIDs]) {
+        
+        //生成<body>文档
+        body = [NSXMLElement elementWithName:@"body"];
+        //生成XML消息文档
+        mes = [NSXMLElement elementWithName:@"message"];
+        //消息类型
+        [mes addAttributeWithName:@"type" stringValue:@"chat"];
+        [mes addAttributeWithName:@"flag" stringValue:@"public"];
+        //由谁发送
+        [mes addAttributeWithName:@"from" stringValue:[NSString stringWithFormat:@"%@@%@",[[UserInfoManager sharedInstance] getCurrentUserInfo].userID,LITTLEBIRD]];
+        [mes addAttributeWithName:@"time" stringValue:mytime];
+        //组合
+        [mes addChild:body];
+        //发送给谁
+        [mes addAttributeWithName:@"to" stringValue:[NSString stringWithFormat:@"%@@%@/%@",@"NO",LITTLEBIRD,toUserID]];
+        //发送消息
+        XMPPElementReceipt *receipt = [[XMPPElementReceipt alloc] init];
+        [xmppStream sendElement:mes andGetReceipt:&receipt];
+        BOOL messageState =[receipt wait:-1];
+        if (messageState)
+            NSLog(@"消息已发送");
+        else
+            NSLog(@"消息发送失败");
+    }
+}
+
+
+- (void)sendNewMessage:(NSString *)message to:(NSString *)chatUser
+{
+    
 }
 @end

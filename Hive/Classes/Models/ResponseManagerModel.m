@@ -30,3 +30,11 @@
 @implementation ResponseFollowModel
 
 @end
+
+@implementation ResponseChatUsersModel
++(JSONKeyMapper*)keyMapper
+{
+    return [[JSONKeyMapper alloc] initWithDictionary:@{@"RETURN_OBJ" : @"userIDs"}];
+}
+
+@end

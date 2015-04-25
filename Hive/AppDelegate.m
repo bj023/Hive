@@ -12,6 +12,7 @@
 #import "LoginController.h"
 #import "Utils.h"
 #import "XMPPManager.h"
+#import "NSTimeUtil.h"
 
 #define UIWIDTH [UIScreen mainScreen].bounds.size.width
 #define UIHEIGHT [UIScreen mainScreen].bounds.size.height
@@ -90,6 +91,8 @@
     
     [self registerRemoteNotification];
     
+    [[NSTimeUtil sharedInstance] startUpdatelocation];
+
     /*
     if ([UserDefaultsUtil iSFirstUse])
         [self guideStart];

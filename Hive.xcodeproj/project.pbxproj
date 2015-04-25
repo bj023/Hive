@@ -17,6 +17,7 @@
 		966ECFD11AD38EC900C93440 /* UIColor+SLAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 966ECFCB1AD38EC900C93440 /* UIColor+SLAddition.m */; };
 		966ECFD21AD38EC900C93440 /* UIScrollView+UpdateContentSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 966ECFCD1AD38EC900C93440 /* UIScrollView+UpdateContentSize.m */; };
 		966ECFD31AD38EC900C93440 /* SLPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966ECFD01AD38EC900C93440 /* SLPagingViewController.m */; };
+		9673950D1AEA1EDF0065D239 /* NSTimeUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 9673950C1AEA1EDF0065D239 /* NSTimeUtil.m */; };
 		9675D9EC1AD957440001B8F9 /* BlockListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9675D9EB1AD957440001B8F9 /* BlockListController.m */; };
 		969378CF1AE23D4200BE585F /* UserInforCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 969378CE1AE23D4200BE585F /* UserInforCell.m */; };
 		96A3F4FD1AE3603C00A03BA2 /* UtilDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A3F4FC1AE3603C00A03BA2 /* UtilDate.m */; };
@@ -95,6 +96,8 @@
 		966ECFCE1AD38EC900C93440 /* ShareResources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareResources.h; sourceTree = "<group>"; };
 		966ECFCF1AD38EC900C93440 /* SLPagingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPagingViewController.h; sourceTree = "<group>"; };
 		966ECFD01AD38EC900C93440 /* SLPagingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPagingViewController.m; sourceTree = "<group>"; };
+		9673950B1AEA1EDF0065D239 /* NSTimeUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTimeUtil.h; sourceTree = "<group>"; };
+		9673950C1AEA1EDF0065D239 /* NSTimeUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTimeUtil.m; sourceTree = "<group>"; };
 		9675D9EA1AD957440001B8F9 /* BlockListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockListController.h; sourceTree = "<group>"; };
 		9675D9EB1AD957440001B8F9 /* BlockListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockListController.m; sourceTree = "<group>"; };
 		969378CD1AE23D4200BE585F /* UserInforCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInforCell.h; sourceTree = "<group>"; };
@@ -522,6 +525,8 @@
 				96C8A64A1AD6311D00372AF8 /* NSDataUtil.m */,
 				96A3F4FB1AE3603C00A03BA2 /* UtilDate.h */,
 				96A3F4FC1AE3603C00A03BA2 /* UtilDate.m */,
+				9673950B1AEA1EDF0065D239 /* NSTimeUtil.h */,
+				9673950C1AEA1EDF0065D239 /* NSTimeUtil.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -745,6 +750,7 @@
 				E6B8BADD1AC7A6F4003CA484 /* LoginController.m in Sources */,
 				E6B8BAE41AC7BE6F003CA484 /* RegisterView.m in Sources */,
 				E6A808451ABE55CC005E48C2 /* AppDelegate.m in Sources */,
+				9673950D1AEA1EDF0065D239 /* NSTimeUtil.m in Sources */,
 				E6B8BAF21AC7E036003CA484 /* RegisterFourView.m in Sources */,
 				966C1DEC1AD239FD004D33DA /* MessageToolBar.m in Sources */,
 				E69F084F1ABE99D400E5ADD3 /* MessagesController.m in Sources */,

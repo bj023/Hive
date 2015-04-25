@@ -35,7 +35,5 @@
 
 - (void)signOut;
 
-- (void)sendNewMessage:(NSString *)message
-                  from:(NSString *)userID
-                    to:(NSString *)chatUser;
+- (void)sendNewMessage:(NSString *)message;
 @end
