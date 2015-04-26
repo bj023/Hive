@@ -23,6 +23,7 @@
 #import "HttpTool.h"
 #include "XMPPManager.h"
 #import "MBProgressHUD+Helper.h"
+#import <CoreData+MagicalRecord.h>
 
 /**
  *  公共宏

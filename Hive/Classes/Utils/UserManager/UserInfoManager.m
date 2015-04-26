@@ -23,6 +23,8 @@
     [coder encodeObject:self.userSex forKey:@"userSex"];
     [coder encodeObject:self.xmppUserName forKey:@"xmppUserName"];
     [coder encodeObject:self.xmppPassWord forKey:@"xmppPassWord"];
+    [coder encodeObject:self.isStealth forKey:@"isStealth"];
+
 }
 
 //把属性变量根据关键字进行逆转码，最后返回一个类的对象
@@ -31,7 +33,7 @@
     self = [super init];
     if (self){
         self.deviceToken     = [decoder decodeObjectForKey:@"deviceToken"];
-        self.userID = [decoder decodeObjectForKey:@"userID"];
+        self.userID          = [decoder decodeObjectForKey:@"userID"];
         self.userPhoneNumber = [decoder decodeObjectForKey:@"userPhoneNumber"];
         self.userEmail       = [decoder decodeObjectForKey:@"userEmail"];
         self.userName        = [decoder decodeObjectForKey:@"userName"];
@@ -40,6 +42,8 @@
         self.userSex         = [decoder decodeObjectForKey:@"userSex"];
         self.xmppUserName    = [decoder decodeObjectForKey:@"xmppUserName"];
         self.xmppPassWord    = [decoder decodeObjectForKey:@"xmppPassWord"];
+        self.isStealth       = [decoder decodeObjectForKey:@"isStealth"];
+
     }
     return self;
 }

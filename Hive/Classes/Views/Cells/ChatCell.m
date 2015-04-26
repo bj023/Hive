@@ -9,9 +9,11 @@
 #import "ChatCell.h"
 #import "CustomIMGView.h"
 #import "Utils.h"
+#import "ChatRoomModel.h"
+
 
 #define HEAD_SIZE 40 // 头像大小
-#define HEAD_PADDING 5 // 头像到cell的内间距和头像到bubble的间距
+#define HEAD_PADDING 10 // 头像到cell的内间距和头像到bubble的间距
 #define MESSAGE_FONT_SIZE [UIFont systemFontOfSize:16] // 字体
 
 #define Message_X 23
@@ -63,13 +65,13 @@
         self.headIMG.backgroundColor = [UIColorUtil colorWithCoded9d9d9];
     }
     
-    CGFloat userX = headW + padding + HEAD_PADDING;
+    CGFloat userX = headW + padding + HEAD_PADDING + 7;
     CGFloat userY = headY;
     CGFloat userW = UIWIDTH - headW - 3 * padding;
     CGFloat userH = 20; // 高度
     if (!self.userInforLabel) {
         self.userInforLabel = [[UILabel alloc] initWithFrame:CGRectMake(userX, userY, userW, userH)];
-        self.userInforLabel.font = MESSAGE_FONT_SIZE;
+        self.userInforLabel.font = [UIFont systemFontOfSize:12];
         self.userInforLabel.textAlignment = NSTextAlignmentLeft;
         self.userInforLabel.textColor = [UIColor grayColor];
     }
@@ -77,6 +79,7 @@
     if (!self.bubbleIMG) {
         self.bubbleIMG = [[UIImageView alloc] initWithFrame:CGRectZero];
         self.bubbleIMG.backgroundColor = [UIColor clearColor];
+        self.bubbleIMG.userInteractionEnabled =YES;
     }
     
     if (!self.messageLabel) {
@@ -103,7 +106,12 @@
 
 - (void)addRecognizer
 {
-    [self.headIMG addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressHeadIMGAction:)]];
+    [self.bubbleIMG addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressHeadIMGAction:)]];
+    [self.bubbleIMG addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBubbleIMGAction:)]];
+    
+
+   
+    [self.headIMG addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHeadIMGAction:)]];
 }
 
 // 长按头像手势
@@ -115,57 +123,80 @@
     }
 }
 
-#pragma -mark 区分左右 message
-- (void)set_DataWithMessage:(NSString *)message show:(BOOL)isShow
+- (void)tapBubbleIMGAction:(UITapGestureRecognizer *)sender
 {
-    self.userInforLabel.hidden = !isShow;
-    self.headIMG.hidden = !isShow;
-    
-    if (isShow) {
-        [self setCellLeftSubviews:message];
-    }else{
-        [self setCellRIghtSubviews:message];
-    }
-    
-    self.userInforLabel.text = @"隐身用户 0.1 km";
-    [self.headIMG setImageURLStr:@"http://e.hiphotos.baidu.com/image/pic/item/91ef76c6a7efce1b212832c8ad51f3deb48f65b5.jpg"];
-    self.messageLabel.text = message;
-    self.timeLabel.text = [UtilDate getCurrentSendTime];
+    self.tapBubbleBlock(self.indexPath);
 }
 
+- (void)tapHeadIMGAction:(UITapGestureRecognizer *)sender
+{
+    self.tapBlock(self.indexPath);
+}
 
-- (void)setCellLeftSubviews:(NSString *)message
+#pragma -mark 区分左右 message
+- (void)set_DataWithMessage:(ChatRoomModel *)message
+{
+    
+    BOOL isShow = [message.flag isEqualToString:@"ME"]?YES:NO;
+    
+    if (!isShow) {
+        [self setCellLeftSubviews:message.message isAname:!IsEmpty(message.isAname)];
+        self.userInforLabel.hidden = NO;
+        self.headIMG.hidden = NO;
+        
+        if ([message.isStealth isEqualToString:@"1"]) {
+            self.userInforLabel.text = @"隐身用户 0.1 km";
+        }else
+            self.userInforLabel.text = message.userName;
+
+        [self.headIMG setImageURLStr:[NSString stringWithFormat:@"http://115.28.51.196/X_USER_ICON/%@.jpg",message.userID]];
+        
+    }else{
+        [self setCellRIghtSubviews:message.message];
+        self.userInforLabel.hidden = YES;
+        self.headIMG.hidden = YES;
+    }
+    
+    self.messageLabel.text = message.message;
+
+    self.timeLabel.text = [[message.time componentsSeparatedByString:@" "] objectAtIndex:1];
+}
+
+- (void)setCellLeftSubviews:(NSString *)message isAname:(BOOL)aName
 {
     CGSize size = [ChatCell sizeMessage:message];
     
     // message
-    self.messageLabel.frame = CGRectMake(Message_X, Message_Y, size.width, size.height);
+    self.messageLabel.frame = CGRectMake(Message_X, Message_Y-1, size.width, size.height);
     
     CGFloat bubbleX = self.headIMG.frame.size.width + self.headIMG.frame.origin.x + HEAD_PADDING;
-    CGFloat bubbleY = self.userInforLabel.frame.origin.y + self.userInforLabel.frame.size.height + HEAD_PADDING;
-    CGFloat bubbleW = size.width + self.messageLabel.frame.origin.x * 2;
+    CGFloat bubbleY = self.userInforLabel.frame.origin.y + self.userInforLabel.frame.size.height + HEAD_PADDING - 5;
+    CGFloat bubbleW = size.width + self.messageLabel.frame.origin.x * 2 - 5;
     CGFloat bubbleH = size.height + self.messageLabel.frame.origin.y * 2;
     self.bubbleIMG.frame = CGRectMake(bubbleX, bubbleY, bubbleW, bubbleH);
     
-    UIImage *image = [UIImage imageNamed:@"chat_orange"];
+    UIImage *image = [UIImage imageNamed:aName?@"chat_gray":@"chat_orange"];
     image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
     self.bubbleIMG.image = image;
     
-    self.timeLabel.frame = CGRectMake(self.bubbleIMG.frame.size.width + self.bubbleIMG.frame.origin.x + HEAD_PADDING, self.bubbleIMG.frame.size.height + self.bubbleIMG.frame.origin.y - 20, 40, 20);
-    
+    self.timeLabel.frame = CGRectMake(self.bubbleIMG.frame.size.width + self.bubbleIMG.frame.origin.x + 3, self.bubbleIMG.frame.size.height + self.bubbleIMG.frame.origin.y - 25, 40, 20);
+
     self.messageLabel.textColor = [UIColor blackColor];
+    
 }
 
 #pragma -mark 设置 Cell 子控件
 - (void)setCellRIghtSubviews:(NSString*)message
 {
     CGSize size = [ChatCell sizeMessage:message];
-    // message
-    self.messageLabel.frame = CGRectMake(Message_X - 5, Message_Y, size.width, size.height);
     
-    CGFloat bubbleX = UIWIDTH - size.width - HEAD_PADDING - Message_X * 2;
-    CGFloat bubbleY = HEAD_PADDING * 2 + Message_Y;
-    CGFloat bubbleW = size.width + Message_X * 2;
+    
+    // message
+    self.messageLabel.frame = CGRectMake(Message_X - 6, Message_Y, size.width, size.height);
+    
+    CGFloat bubbleX = UIWIDTH - size.width - Message_X * 2 + 5; // 偏移量
+    CGFloat bubbleY = Message_Y;//HEAD_PADDING * 2 + Message_Y;
+    CGFloat bubbleW = size.width + Message_X * 2 - 8;
     CGFloat bubbleH = size.height + Message_Y * 2;
     self.bubbleIMG.frame = CGRectMake(bubbleX, bubbleY, bubbleW, bubbleH);
     
@@ -173,9 +204,10 @@
     image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
     self.bubbleIMG.image = image;
     
-    self.timeLabel.frame = CGRectMake(bubbleX - 50, self.bubbleIMG.frame.size.height + self.bubbleIMG.frame.origin.y - 20, 40, 20);
+    self.timeLabel.frame = CGRectMake(bubbleX - 43, self.bubbleIMG.frame.size.height + self.bubbleIMG.frame.origin.y - 25, 40, 20);
 
     self.messageLabel.textColor = [UIColor whiteColor];
+
 }
 
 #pragma -mark Chat 行高

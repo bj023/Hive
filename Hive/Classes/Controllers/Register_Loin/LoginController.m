@@ -231,7 +231,7 @@
         
         NSError *error = nil;
         ResponseLoginModel *res = [[ResponseLoginModel alloc] initWithString:json error:&error];
-        if (!error) {
+        if (res.RETURN_CODE == 200) {
             
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 
@@ -326,7 +326,8 @@
     user.userName = loginModel.userName;
     user.userSex = loginModel.gender;
     user.userAge  = [NSString stringWithFormat:@"%d",loginModel.age];
-
+    user.xmppPassWord = self.loginView.password;
+    user.isStealth = [NSString stringWithFormat:@"%d",loginModel.hide];
     UserInfoManager *manager = [UserInfoManager sharedInstance];
     [manager saveUserInfoToDisk:user];
 }

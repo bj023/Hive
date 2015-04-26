@@ -212,4 +212,15 @@ typedef void(^ResponseSuccBlcok)(id json);
                                  success:(ResponseSuccBlcok)success
                                  faliure:(HttpFailBlcok)faliure;
 
+/**
+ *  封装 点击用户头像 查看信息
+ *
+ *  @param userID  用户ID
+ *  @param success 成功回调
+ *  @param faliure 失败回调
+ */
++ (void)sendRequestProfileWithUserID:(NSString *)userID
+                             success:(ResponseSuccBlcok)success
+                             faliure:(HttpFailBlcok)faliure;
+
 @end

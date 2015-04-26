@@ -10,12 +10,12 @@
 /**
  *  自定义 Message Cell
  */
-typedef void(^clickUserHeadIMG)(NSIndexPath *indexpath);
+//typedef void(^clickUserHeadIMG)(NSIndexPath *indexpath);
 
 @interface MessageCell : UITableViewCell
 
 @property (strong, nonatomic)NSIndexPath *indexPath;
-@property (copy,   nonatomic)clickUserHeadIMG block;
+//@property (copy,   nonatomic)clickUserHeadIMG block;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView;
 

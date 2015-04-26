@@ -7,9 +7,9 @@
 //
 
 #import "MainViewController.h"
+#import "NearByModel.h"
 
-@class NearByModel;
-typedef void(^NearByControllerBlock)(NearByModel *model, NSIndexPath *indexpath);
+typedef void(^NearByControllerBlock)(NearByModel * model, NSIndexPath *indexpath);
 
 @interface NearByController : MainViewController
 
@@ -22,4 +22,5 @@ typedef void(^NearByControllerBlock)(NearByModel *model, NSIndexPath *indexpath)
 
 - (void)updateCellWithNearby:(NearByModel *)model IndexPath:(NSIndexPath *)indexpath;
 - (void)removeCellWithNearby:(NearByModel *)model IndexPath:(NSIndexPath *)indexpath;
+
 @end

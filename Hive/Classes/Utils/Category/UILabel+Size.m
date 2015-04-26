@@ -7,6 +7,7 @@
 //
 
 #import "UILabel+Size.h"
+#import "Utils.h"
 
 @implementation UILabel (Size)
 /**
@@ -20,6 +21,9 @@
  */
 + (CGSize)sizeWithString:(NSString *)str font:(UIFont *)font maxSize:(CGSize)maxSize
 {
+    if (IsEmpty(str)) {
+        return CGSizeMake(0, 0);
+    }
     NSDictionary *dict = @{NSFontAttributeName : font};
     // 如果将来计算的文字的范围超过了指定的范围，返回的就是指定的范围
     // 如果将来计算的文字的范围小于指定的范围，返回的就是真实的范围

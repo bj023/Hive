@@ -19,4 +19,5 @@
 @property (nonatomic, assign) int age; // 年龄
 @property (nonatomic, assign) float longitude;
 @property (nonatomic, assign) float latitude;
+@property (nonatomic, assign) int hide;
 @end

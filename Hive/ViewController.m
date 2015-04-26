@@ -20,6 +20,7 @@
 #import "FollowController.h"
 #import "UserInformationController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "ChatViewController.h"
 
 #define APIKey @"588013a8aa2e427d04f67917d98d0315"
 
@@ -133,8 +134,9 @@
 {
     if (!_settingsVC)
         _settingsVC = [[SettingsController alloc] init];
-    if (!_messagesVC)
+    if (!_messagesVC){
         _messagesVC = [[MessagesController alloc] init];
+    }
     if (!_hiveVC)
         _hiveVC     = [[HiveController alloc] init];
     if (!_nearByVC)
@@ -333,6 +335,11 @@
     userInformationVC.indexPath = indexpath;
     userInformationVC.model = model;
     [self presentViewController:userInformationVC animated:YES completion:nil];
+}
+
+- (void)pushChatViewController
+{
+    
 }
 
 - (void)followCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath

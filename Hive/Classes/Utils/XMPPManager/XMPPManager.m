@@ -9,6 +9,7 @@
 #import "XMPPManager.h"
 #import "Utils.h"
 #import "NSTimeUtil.h"
+#import "ChatRoomModel.h"
 
 #define kXMPPHost @"115.28.51.196"
 #define LITTLEBIRD @"ay130718210956811b81z"
@@ -34,13 +35,16 @@ static XMPPManager *sharedManager;
     [xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
 }
 
-- (BOOL)connect{
+- (BOOL)connect
+{
     
     [self setupStream];
     
+    NSString *userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    
     //从本地取得用户名，密码和服务器地址
-    NSString *userId = [NSString stringWithFormat:@"%@@%@",@"79",LITTLEBIRD];
-    NSString *pass = @"123456";
+    NSString *userId = [NSString stringWithFormat:@"%@@%@",userID,LITTLEBIRD];
+    NSString *pass = [[UserInfoManager sharedInstance] getCurrentUserInfo].xmppPassWord;
     NSString *server = @"115.28.51.196";
     //@"42.96.168.50";
     //    NSString *server = @"211.101.12.58";
@@ -110,15 +114,39 @@ static XMPPManager *sharedManager;
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
 {
-    NSLog(@"message =========== %@", message);
+    debugLog(@"message =========== %@ ===========", message);
     NSString *type =[[message attributeForName:@"type"] stringValue];
-//    NSString *myFlag = [[message attributeForName:@"flag"] stringValue];
-//    NSString *from = [[message attributeForName:@"from"] stringValue];
-//    NSString *time = [[message attributeForName:@"time"] stringValue];
-//    NSString *at = [[message attributeForName:@"at"] stringValue];
-//    NSString *msgId = [[message attributeForName:@"msgId"] stringValue];
-//    NSString *receipts = [[message attributeForName:@"receipts"] stringValue];
-    NSLog(@"type : %@",type);
+    NSString *myFlag = [[message attributeForName:@"flag"] stringValue];
+    NSString *from = [[message attributeForName:@"from"] stringValue];
+    NSString *time = [[message attributeForName:@"time"] stringValue];
+    NSString *at = [[message attributeForName:@"at"] stringValue];
+    NSString *msgId = [[message attributeForName:@"msgId"] stringValue];
+    NSString *name = [[message attributeForName:@"name"] stringValue];
+    //NSString *receipts = [[message attributeForName:@"receipts"] stringValue];//已读操作
+    
+    if ([myFlag isEqualToString:@"public"] && [type isEqualToString:@"chat"]) {
+        [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+
+            NSArray *array = [ChatRoomModel MR_findAll];
+            ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
+            model.id = [NSNumber numberWithInteger:(array.count + 1)];
+            model.userID = [self getUserId:from];
+            model.message = [[message elementForName:@"body"] stringValue];
+            model.time = time;
+            model.flag = @"YOU";
+            model.isAname = IsEmpty(at)?at:@"";
+            model.longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
+            model.latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
+            model.messageID = msgId;
+            model.userName = name;
+            model.isStealth = [[message attributeForName:@"isStealth"] stringValue];
+        } completion:^(BOOL success, NSError *error) {
+            
+            if ([self.delegate respondsToSelector:@selector(receiveChatMessageWithMessageID:)]) {
+                [self.delegate receiveChatMessageWithMessageID:msgId];
+            }
+        }];
+    }
     
 }
 
@@ -151,11 +179,8 @@ static XMPPManager *sharedManager;
 }
 
 #pragma -mark 发送消息
-- (void)sendNewMessage:(NSString *)message
+- (void)sendNewMessage:(NSString *)message Time:(NSString *)time Message:(NSString *)messageID isAname:(NSString *)aName
 {
-    NSString *mytime =[UtilDate getCurrentTime];
-
-    
     NSXMLElement *body;
     NSXMLElement *mes;
     
@@ -168,13 +193,26 @@ static XMPPManager *sharedManager;
         //消息类型
         [mes addAttributeWithName:@"type" stringValue:@"chat"];
         [mes addAttributeWithName:@"flag" stringValue:@"public"];
+        
+        [mes addAttributeWithName:@"time" stringValue:time];
+        [mes addAttributeWithName:@"messageID" stringValue:messageID];
+        [mes addAttributeWithName:@"at" stringValue:aName];
+        //用户名
+        [mes addAttributeWithName:@"name" stringValue:[[UserInfoManager sharedInstance] getCurrentUserInfo].userName];
+        //隐身
+        [mes addAttributeWithName:@"isStealth" stringValue:[[UserInfoManager sharedInstance] getCurrentUserInfo].isStealth];
+        
+        [body setStringValue:[message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+        
         //由谁发送
         [mes addAttributeWithName:@"from" stringValue:[NSString stringWithFormat:@"%@@%@",[[UserInfoManager sharedInstance] getCurrentUserInfo].userID,LITTLEBIRD]];
-        [mes addAttributeWithName:@"time" stringValue:mytime];
+        //发送给谁
+        [mes addAttributeWithName:@"to" stringValue:[NSString stringWithFormat:@"%@@%@/%@",toUserID,LITTLEBIRD,toUserID]];
         //组合
         [mes addChild:body];
-        //发送给谁
-        [mes addAttributeWithName:@"to" stringValue:[NSString stringWithFormat:@"%@@%@/%@",@"NO",LITTLEBIRD,toUserID]];
+        
+        
+        
         //发送消息
         XMPPElementReceipt *receipt = [[XMPPElementReceipt alloc] init];
         [xmppStream sendElement:mes andGetReceipt:&receipt];
@@ -186,9 +224,11 @@ static XMPPManager *sharedManager;
     }
 }
 
-
-- (void)sendNewMessage:(NSString *)message to:(NSString *)chatUser
+- (NSString *)getUserId:(NSString *)email
 {
-    
+    NSRange range;
+    range = [email rangeOfString:@"@"];
+    return [email stringByPaddingToLength:range.location withString:nil startingAtIndex:0];
 }
+
 @end

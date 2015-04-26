@@ -30,6 +30,8 @@
 
 #define APPEND_ChatRoom @"/info/loadCrowdID.do" // 聊天室 用户列表
 
+#define APPEND_Profile @"/info/loadProfile.do" // 查看用户信息
+
 @implementation HttpTool
 #pragma -mark 登陆
 /**
@@ -397,4 +399,24 @@
     }];
 }
 
+#pragma -mark 获取用户信息
++ (NSMutableDictionary *)parameterUserID:(NSString *)userID
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setObject:userID forKey:@"userId"];
+    return parameters;
+}
+
++ (void)sendRequestProfileWithUserID:(NSString *)userID
+                             success:(ResponseSuccBlcok)success
+                             faliure:(HttpFailBlcok)faliure
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_Profile];
+    NSMutableDictionary *dict = [HttpTool parameterUserID:userID];
+    [HttpManager postRequestWithBaseUrl:urlString params:dict success:^(id response) {
+        success(response);
+    } Fail:^(NSError *error) {
+        faliure(error);
+    }];
+}
 @end

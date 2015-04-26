@@ -8,6 +8,8 @@
 
 #import "UtilDate.h"
 
+
+
 @implementation UtilDate
 +(NSString *)getCurrentTime
 {
@@ -28,4 +30,14 @@
     NSString *  locationString=[dateformatter stringFromDate:senddate];
     return  locationString;
 }
+
++ (NSString *)dateFromString:(NSString *)dateString withFormat:(NSString*)format
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat: format];
+    NSDate *destDate = [dateFormatter dateFromString:dateString];
+    NSString *locationString=[dateFormatter stringFromDate:destDate];
+    return locationString;
+}
+
 @end

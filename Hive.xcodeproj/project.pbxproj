@@ -14,6 +14,9 @@
 		966C1DE91AD238F8004D33DA /* MessageTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966C1DE81AD238F8004D33DA /* MessageTextView.m */; };
 		966C1DEC1AD239FD004D33DA /* MessageToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 966C1DEB1AD239FD004D33DA /* MessageToolBar.m */; };
 		966C1DEF1AD265FD004D33DA /* FaceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966C1DEE1AD265FD004D33DA /* FaceView.m */; };
+		966C5D151AEC9929004EE35D /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966C5D141AEC9929004EE35D /* ChatViewController.m */; };
+		966C5D181AECA059004EE35D /* ChatRoomModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 966C5D171AECA059004EE35D /* ChatRoomModel.m */; };
+		966C5D1C1AECEDD7004EE35D /* ChatTimeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 966C5D1B1AECEDD7004EE35D /* ChatTimeCell.m */; };
 		966ECFD11AD38EC900C93440 /* UIColor+SLAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 966ECFCB1AD38EC900C93440 /* UIColor+SLAddition.m */; };
 		966ECFD21AD38EC900C93440 /* UIScrollView+UpdateContentSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 966ECFCD1AD38EC900C93440 /* UIScrollView+UpdateContentSize.m */; };
 		966ECFD31AD38EC900C93440 /* SLPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966ECFD01AD38EC900C93440 /* SLPagingViewController.m */; };
@@ -89,6 +92,13 @@
 		966C1DEB1AD239FD004D33DA /* MessageToolBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageToolBar.m; sourceTree = "<group>"; };
 		966C1DED1AD265FD004D33DA /* FaceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FaceView.h; sourceTree = "<group>"; };
 		966C1DEE1AD265FD004D33DA /* FaceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FaceView.m; sourceTree = "<group>"; };
+		966C5D131AEC9929004EE35D /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
+		966C5D141AEC9929004EE35D /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
+		966C5D161AECA059004EE35D /* ChatRoomModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatRoomModel.h; sourceTree = "<group>"; };
+		966C5D171AECA059004EE35D /* ChatRoomModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatRoomModel.m; sourceTree = "<group>"; };
+		966C5D191AECD7C5004EE35D /* ChatMessageDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessageDelegate.h; sourceTree = "<group>"; };
+		966C5D1A1AECEDD7004EE35D /* ChatTimeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatTimeCell.h; sourceTree = "<group>"; };
+		966C5D1B1AECEDD7004EE35D /* ChatTimeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatTimeCell.m; sourceTree = "<group>"; };
 		966ECFCA1AD38EC900C93440 /* UIColor+SLAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+SLAddition.h"; sourceTree = "<group>"; };
 		966ECFCB1AD38EC900C93440 /* UIColor+SLAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+SLAddition.m"; sourceTree = "<group>"; };
 		966ECFCC1AD38EC900C93440 /* UIScrollView+UpdateContentSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+UpdateContentSize.h"; sourceTree = "<group>"; };
@@ -276,6 +286,7 @@
 			children = (
 				964698D61AD1634400FE7C4F /* XMPPManager.h */,
 				964698D71AD1634400FE7C4F /* XMPPManager.m */,
+				966C5D191AECD7C5004EE35D /* ChatMessageDelegate.h */,
 			);
 			path = XMPPManager;
 			sourceTree = "<group>";
@@ -320,6 +331,8 @@
 				965111521AD4B3810045EBA5 /* ChatCell.m */,
 				969378CD1AE23D4200BE585F /* UserInforCell.h */,
 				969378CE1AE23D4200BE585F /* UserInforCell.m */,
+				966C5D1A1AECEDD7004EE35D /* ChatTimeCell.h */,
+				966C5D1B1AECEDD7004EE35D /* ChatTimeCell.m */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -479,6 +492,8 @@
 				9675D9EB1AD957440001B8F9 /* BlockListController.m */,
 				96A3F4FE1AE3B7D600A03BA2 /* FollowController.h */,
 				96A3F4FF1AE3B7D600A03BA2 /* FollowController.m */,
+				966C5D131AEC9929004EE35D /* ChatViewController.h */,
+				966C5D141AEC9929004EE35D /* ChatViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -494,6 +509,8 @@
 		E6A8086B1ABE5EE6005E48C2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				966C5D161AECA059004EE35D /* ChatRoomModel.h */,
+				966C5D171AECA059004EE35D /* ChatRoomModel.m */,
 				96AFB6871AD3C4D400D6128E /* ResponseManagerModel.h */,
 				96AFB6881AD3C4D400D6128E /* ResponseManagerModel.m */,
 				96AFB68A1AD3C8E700D6128E /* LoginModel.h */,
@@ -712,6 +729,7 @@
 			files = (
 				E687147C1ACCEC11000ED631 /* UserInformationView.m in Sources */,
 				E6B8BAE81AC7CD1F003CA484 /* BaseView.m in Sources */,
+				966C5D151AEC9929004EE35D /* ChatViewController.m in Sources */,
 				E6F95CF81ACD8469005CE112 /* NearByCell.m in Sources */,
 				965111531AD4B3810045EBA5 /* ChatCell.m in Sources */,
 				E6A808481ABE55CC005E48C2 /* Hive.xcdatamodeld in Sources */,
@@ -739,9 +757,11 @@
 				E6B8BAD91AC7A2DF003CA484 /* UserDefaultsUtil.m in Sources */,
 				966ECFD31AD38EC900C93440 /* SLPagingViewController.m in Sources */,
 				E680C7781ACEBCE300E26136 /* UILabel+Size.m in Sources */,
+				966C5D1C1AECEDD7004EE35D /* ChatTimeCell.m in Sources */,
 				96C8A64B1AD6311D00372AF8 /* NSDataUtil.m in Sources */,
 				E6A808741ABE6809005E48C2 /* UIFontUtil.m in Sources */,
 				E69F08521ABE9A1100E5ADD3 /* HiveController.m in Sources */,
+				966C5D181AECA059004EE35D /* ChatRoomModel.m in Sources */,
 				966ECFD21AD38EC900C93440 /* UIScrollView+UpdateContentSize.m in Sources */,
 				966ECFD11AD38EC900C93440 /* UIColor+SLAddition.m in Sources */,
 				E6737FE01ACA1C11004AC5E1 /* UserInfoManager.m in Sources */,

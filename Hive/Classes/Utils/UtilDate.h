@@ -8,8 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+static NSString *DateFormatHM = @"HH:mm";
+
+
 @interface UtilDate : NSObject
 +(NSString *)getCurrentTime;
 
 +(NSString *)getCurrentSendTime;
+
++ (NSString *)dateFromString:(NSString *)dateString withFormat:(NSString*)format;
+
 @end

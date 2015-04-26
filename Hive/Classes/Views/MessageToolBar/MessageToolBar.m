@@ -325,6 +325,14 @@
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
+    
+    if ([text isEqualToString:@""])//如果string是空白
+    {
+        if (self.aNameLength > range.location) {
+            self.inputTextView.text = @"";
+            self.aNameLength = 0;
+        }
+    }
     if ([text isEqualToString:@"\n"]) {
         if ([self.delegate respondsToSelector:@selector(didSendText:)]) {
             [self.delegate didSendText:textView.text];

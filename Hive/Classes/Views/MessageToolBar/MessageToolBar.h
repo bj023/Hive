@@ -24,6 +24,8 @@
 
 @property (strong, nonatomic) UIView *faceView;
 
+
+@property (assign, nonatomic) NSInteger aNameLength;
 /**
  *  文字输入区域最大高度，必须 > KInputTextViewMinHeight(最小高度)并且 < KInputTextViewMaxHeight，否则设置无效
  */

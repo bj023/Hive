@@ -10,5 +10,6 @@
 
 
 @interface HiveController : MainViewController
+
 - (void)set_HiddenKeyboard;
 @end

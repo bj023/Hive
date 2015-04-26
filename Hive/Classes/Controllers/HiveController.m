@@ -10,11 +10,17 @@
 #import "Utils.h"
 #import "MessageToolBar.h"
 #import "ChatCell.h"
+#import "ChatRoomModel.h"
+#import "NSTimeUtil.h"
+#import "ChatMessageDelegate.h"
+#import "ChatTimeCell.h"
 
 
-@interface HiveController ()<MessageToolBarDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface HiveController ()<MessageToolBarDelegate, UITableViewDataSource, UITableViewDelegate, ChatMessageDelegate>
 {
+    NSString *_isAname;
     
+    NSString *_lastTime;
 }
 @property (strong, nonatomic)MessageToolBar *chatToolBar;
 
@@ -27,9 +33,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self configMessageArr];
     [self configTableView];
+    [self configMessageArr];
     [self configMessageToolBar];
+    
 
 }
 
@@ -40,8 +47,16 @@
 
 - (void)configMessageArr
 {
-    self.mesgaeArr = [NSMutableArray array];
+    self.mesgaeArr = [NSMutableArray arrayWithArray:[ChatRoomModel MR_findAll]];
+
+    if (self.mesgaeArr.count == 0) {
+        return;
+    }
+    
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.mesgaeArr.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+
 }
+
 
 #pragma -mark 初始化 表格
 - (void)configTableView
@@ -57,6 +72,8 @@
         [self.view addSubview:self.tableView];
         
         [self.tableView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(keyBoardHidden)]];
+        
+        //[self.tableView addGestureRecognizer:[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(keyBoardHidden)]];
     }
 }
 
@@ -79,32 +96,90 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [ChatCell getChatCellHeight:self.mesgaeArr[indexPath.row]];
+    
+    ChatRoomModel *moel = self.mesgaeArr[indexPath.row];
+
+    if ([moel.flag isEqualToString:@"ME"]) {
+        return [ChatCell getChatCellHeight:moel.message] - 40;
+    }else
+        return [ChatCell getChatCellHeight:moel.message] - 25;
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     ChatCell *cell = [ChatCell cellWithTableView:tableView];
     cell.indexPath = indexPath;
-    [cell set_DataWithMessage:self.mesgaeArr[indexPath.row] show:indexPath.row%2 == 0];
+    [cell set_DataWithMessage:self.mesgaeArr[indexPath.row]];
     
     cell.longBlock = ^(NSIndexPath *indexpath){
-        // 长按 头像手势
-        debugLog(@"长按 头像手势");
-        self.chatToolBar.inputTextView.text = @"@自定义";
+        // 长按 复制
+        ChatRoomModel *model = self.mesgaeArr[indexpath.row];
+
+        debugLog(@"长按手势->%@",model.message);
+
+    };
+    
+    
+    
+    cell.tapBlock = ^(NSIndexPath *indexpath){
+        //点击头像 查看个人信息
+        ChatRoomModel *model = self.mesgaeArr[indexpath.row];
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        [HttpTool sendRequestProfileWithUserID:model.userID success:^(id json) {
+            ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:nil];
+            if (res.RETURN_CODE == 200) {
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                // 跳转
+                //self.nearByBlock(res.content,indexPath);// 传递用户ID
+
+                
+            }else
+                [self showHudWith:ErrorRequestText];
+            
+        } faliure:^(NSError *error) {
+            [self showHudWith:ErrorText];
+        }];
+        
+    };
+    
+    cell.tapBubbleBlock = ^(NSIndexPath *indexpath){
+        // @
+        
+        ChatRoomModel *model = self.mesgaeArr[indexpath.row];
+        
+        if (![model.flag isEqualToString:@"ME"]) {
+            ChatRoomModel *model = self.mesgaeArr[indexpath.row];
+            NSString *aName = [NSString stringWithFormat:@"@%@ ",model.userName];
+            _isAname = model.userID;
+            self.chatToolBar.inputTextView.text = aName;
+            self.chatToolBar.aNameLength = [aName length];
+        }
     };
     
     return cell;
 }
 
+
+- (void)showHudWith:(NSString *)text
+{
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    
+    [MBProgressHUD showTextHUDAddedTo:self.view withText:text animated:YES];
+}
+
+
 #pragma mark - MessageToolBarDelegate
 - (void)inputTextViewWillBeginEditing:(MessageTextView *)messageInputTextView{
     //[_menuController setMenuItems:nil];
+    debugMethod();
 }
 
 - (void)inputTextViewDidBeginEditing:(MessageTextView *)messageInputTextView
 {
-
+    debugMethod();
 }
 
 - (void)didChangeFrameToHeight:(CGFloat)toHeight
@@ -140,13 +215,56 @@
 
 -(void)sendTextMessage:(NSString *)textMessage
 {
+    NSString *currentTime = [UtilDate getCurrentTime];
+    NSString *userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
+    NSString *messageID = [NSString stringWithFormat:@"%@_%@",userID,timeSp];
     
-    [[XMPPManager sharedInstance] sendNewMessage:textMessage];
+    [self saveDateMessage:textMessage Time:currentTime MessgaeID:messageID];
     
-    [self.mesgaeArr addObject:textMessage];
-    
-    [self.tableView reloadData];
+    [[XMPPManager sharedInstance] sendNewMessage:textMessage Time:currentTime Message:messageID isAname:_isAname];
+}
 
+- (void)saveDateMessage:(NSString *)message Time:(NSString *)currentTime MessgaeID:(NSString *)messageID
+{
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+        
+        /*
+        if ([ChatRoomModel MR_findAll].count > 30) {
+            [ChatRoomModel MR_truncateAllInContext:localContext];
+        }
+        */
+        ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
+        model.id = [NSNumber numberWithInteger:(self.mesgaeArr.count + 1)];
+        model.userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+        model.message = message;
+        model.time = currentTime;
+        model.flag = @"ME";
+        model.isAname = self.chatToolBar.aNameLength>0?_isAname:@"";
+        model.longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
+        model.latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
+        model.messageID = messageID;
+        
+    } completion:^(BOOL success, NSError *error) {
+        
+        [self scrollToRowWithMessageID:messageID];
+
+    }];
+    
+}
+
+- (void)receiveChatMessageWithMessageID:(NSString *)messageID
+{
+    debugMethod();
+    [self scrollToRowWithMessageID:messageID];
+}
+
+- (void)scrollToRowWithMessageID:(NSString *)messageID
+{
+    ChatRoomModel *model = [ChatRoomModel MR_findFirstByAttribute:@"messageID" withValue:messageID];
+    
+    [self.mesgaeArr addObject:model];
+    [self.tableView reloadData];
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.mesgaeArr.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
@@ -160,14 +278,6 @@
 - (void)set_HiddenKeyboard
 {
     [self.chatToolBar endEditing:YES];
-}
-
-
-- (void)showHudWith:(NSString *)text
-{
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-    
-    [MBProgressHUD showTextHUDAddedTo:self.view withText:text animated:YES];
 }
 
 - (void)dealloc

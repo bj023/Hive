@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <XMPP.h>
 #import <XMPPRoom.h>
+#import "ChatMessageDelegate.h"
 
 @interface XMPPManager : NSObject
 {
@@ -18,6 +19,8 @@
     BOOL isOpen;  //xmppSt ream是否开着
     XMPPRoom *xmppRoom;
 }
+
+@property (nonatomic, weak)id<ChatMessageDelegate>delegate;
 
 + (XMPPManager*)sharedInstance;
 
@@ -35,5 +38,8 @@
 
 - (void)signOut;
 
-- (void)sendNewMessage:(NSString *)message;
+- (void)sendNewMessage:(NSString *)message
+                  Time:(NSString *)time
+               Message:(NSString *)messageID
+               isAname:(NSString *)aName;
 @end

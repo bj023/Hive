@@ -111,7 +111,7 @@
     [self addSubview:self.messageLabel];
     [self.contentView addSubview:self.unreadLabel];
 
-    [self.headIMG addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadIMG:)]];    
+    //[self.headIMG addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadIMG:)]];
 }
 
 + (CGFloat)getMessageCellHeight
@@ -131,7 +131,7 @@
 
 - (void)clickHeadIMG:(id)sender
 {
-    self.block(self.indexPath);
+    //self.block(self.indexPath);
 }
 
 - (void)dealloc

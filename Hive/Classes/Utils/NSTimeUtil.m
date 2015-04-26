@@ -9,6 +9,7 @@
 #import "NSTimeUtil.h"
 #import "Utils.h"
 #import <CoreLocation/CoreLocation.h>
+#import <Reachability.h>
 
 static CGFloat const chageImageTime = 60.0;
 
@@ -157,7 +158,11 @@ static CGFloat const chageImageTime = 60.0;
     if (IsEmpty(_coordinateLatitude) ||
         IsEmpty(_coordinateLongitude)) {
         return;
+    }else if (![[UserInfoManager sharedInstance] checkUserIsLogin]){
+        return;
     }
+    
+    
     
     [HttpTool sendRequestChatRoomWithLongitude:_coordinateLongitude Latitude:_coordinateLatitude success:^(id json) {
         
@@ -206,4 +211,31 @@ static CGFloat const chageImageTime = 60.0;
     });
     
 }
+
++(BOOL)Request3G
+{
+    BOOL GetMy3G = NO;
+    //监测网络
+    Reachability *r = [Reachability reachabilityWithHostName:@"www.baidu.com"];
+    switch ([r currentReachabilityStatus])
+    {
+        case NotReachable:
+            // 没有网络连接
+            NSLog(@"没有网络");
+            GetMy3G = NO;
+            break;
+        case ReachableViaWWAN:
+            // 使用3G网络
+            NSLog(@"正在使用3G网络");
+            GetMy3G = YES;
+            break;
+        case ReachableViaWiFi:
+            // 使用WiFi网络
+            NSLog(@"正在使用wifi网络");
+            GetMy3G = YES;
+            break;
+    }
+    return GetMy3G;
+}
+
 @end

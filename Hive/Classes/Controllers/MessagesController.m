@@ -10,6 +10,7 @@
 #import "MessageCell.h"
 #import "Utils.h"
 
+
 @interface MessagesController ()<UITableViewDataSource, UITableViewDelegate>
 @property (strong, nonatomic) UITableView *messageTable;
 @end
@@ -57,16 +58,22 @@
     MessageCell *cell = [MessageCell cellWithTableView:tableView];
     cell.indexPath = indexPath;
     [cell set_MessageCellData];
+    /*
     __weak MessagesController *weadSelf = self;
     cell.block = ^(NSIndexPath *indexpath){
         weadSelf.mainViewBlock(@"888");// 传递用户ID
     };
+     */
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //self.clickCellBlock(indexPath);
+    
+    debugMethod();
+    
+
 }
 - (void)dealloc
 {
