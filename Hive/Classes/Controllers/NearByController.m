@@ -94,7 +94,7 @@
 {
     NearByCell *cell = [NearByCell cellWithTableView:tableView];
     cell.indexPath = indexPath;
-
+    
     [cell set_NearByCellData:self.dataSource[indexPath.row]];
 
     return cell;
@@ -103,6 +103,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NearByModel *_model = self.dataSource[indexPath.row];
+    
     self.nearByBlock(_model,indexPath);// 传递用户ID
 }
 

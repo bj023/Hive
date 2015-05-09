@@ -79,16 +79,6 @@ typedef void(^ResponseSuccBlcok)(id json);
                          success:(ResponseSuccBlcok)success
                          faliure:(HttpFailBlcok)faliure;
 
-/**
- *  封装 修改用户名 发送请求
- *
- *  @param new_userName 新的用户名
- *  @param success      成功回调
- *  @param faliure      失败回调
- */
-+ (void)sendRequestWithUpdateProfile:(NSString *)new_userName
-                             success:(ResponseSuccBlcok)success
-                             faliure:(HttpFailBlcok)faliure;
 
 /**
  *  封装 拉取推送设置
@@ -159,6 +149,18 @@ typedef void(^ResponseSuccBlcok)(id json);
                                   Gender:(NSString *)gender
                                  success:(ResponseSuccBlcok)success
                                  faliure:(HttpFailBlcok)faliure;
+
+/**
+ *  封装 修改用户名 发送请求
+ *
+ *  @param new_userName 新的用户名
+ *  @param success      成功回调
+ *  @param faliure      失败回调
+ */
++ (void)sendRequestWithUpdateProfile:(NSString *)new_userName
+                             success:(ResponseSuccBlcok)success
+                             faliure:(HttpFailBlcok)faliure;
+
 
 /**
  *  封装 隐身

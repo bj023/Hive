@@ -9,5 +9,13 @@
 #import <Foundation/Foundation.h>
 
 @protocol ChatMessageDelegate <NSObject>
--(void)receiveChatMessageWithMessageID:(NSString *)messageID;
+
+@optional;
+- (void)sendPublicMessageSuccessMessageID:(NSString *)messageID;
+- (void)sendPrivateMessageSuccessMessage:(NSString *)messageID;
+
+- (void)receiveChatRoomMessageWithMessageID:(NSString *)messageID;
+- (void)receiveChatMessageWithMessageID:(NSString *)messageID;
+- (void)receiptsChatMessageWithMessageID:(NSString *)messageID;
+
 @end

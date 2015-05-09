@@ -145,34 +145,7 @@
         faliure(error);
     }];
 }
-#pragma -mark 修改用户名
-/**
- *  封装 修改用户名
- *
- *  @param userName 新的用户名
- *
- *  @return 返回 字典
- */
-+ (NSMutableDictionary *)parameterWithUserName:(NSString *)userName
-{
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    [parameters setObject:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID forKey:@"userId"];
-    [parameters setObject:userName forKey:@"userName"];
-    return parameters;
-}
 
-+ (void)sendRequestWithUpdateProfile:(NSString *)new_userName
-                             success:(ResponseSuccBlcok)success
-                             faliure:(HttpFailBlcok)faliure
-{
-    NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_UpdateProfileUserName];
-    NSMutableDictionary *dict = [HttpTool parameterWithUserName:new_userName];
-    [HttpManager postRequestWithBaseUrl:urlString params:dict success:^(id response) {
-        success(response);
-    } Fail:^(NSError *error) {
-        faliure(error);
-    }];
-}
 
 #pragma -mark 拉取推送设置
 /**
@@ -281,14 +254,48 @@
         faliure(error);
     }];
 }
+
+#pragma -mark 修改用户名
+/**
+ *  封装 修改用户名
+ *
+ *  @param userName 新的用户名
+ *
+ *  @return 返回 字典
+ */
++ (NSMutableDictionary *)parameterWithUserName:(NSString *)userName
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setObject:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID forKey:@"userId"];
+    [parameters setObject:userName forKey:@"userName"];
+    return parameters;
+}
+
++ (void)sendRequestWithUpdateProfile:(NSString *)new_userName
+                             success:(ResponseSuccBlcok)success
+                             faliure:(HttpFailBlcok)faliure
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_UpdateProfileUserName];
+    NSMutableDictionary *dict = [HttpTool parameterWithUserName:new_userName];
+    [HttpManager postRequestWithBaseUrl:urlString params:dict success:^(id response) {
+        success(response);
+    } Fail:^(NSError *error) {
+        faliure(error);
+    }];
+}
+
 #pragma -mark 修改用户信息
 + (NSMutableDictionary *)parameterUpdateProfile:(NSString *)username Label:(NSString *)label Gender:(NSString *)gender
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setObject:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID forKey:@"userId"];
-    [parameters setObject:username forKey:@"username"];
-    [parameters setObject:label forKey:@"label"];
-    [parameters setObject:gender forKey:@"gender"];
+    if (!IsEmpty(username)) {
+        [parameters setObject:username forKey:@"username"];
+    }
+    if (!IsEmpty(label))
+        [parameters setObject:label forKey:@"label"];
+    if(!IsEmpty(gender))
+        [parameters setObject:gender forKey:@"gender"];
     return parameters;
 }
 + (void)sendRequestUpdateProfileUserName:(NSString *)username

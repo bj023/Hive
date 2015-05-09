@@ -24,4 +24,6 @@
 
 - (NSArray *)getChatUserIDs;
 
++ (NSString *)getDistance:(NSString *)longitude latitude:(NSString *)latitude;
+
 @end

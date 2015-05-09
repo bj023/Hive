@@ -38,3 +38,8 @@
 @property (nonatomic, strong) NSArray *userIDs;
 
 @end
+
+@interface ResponseChatUserInforModel : JSONModel
+@property (nonatomic, assign) int RETURN_CODE;
+@property (nonatomic, strong) NearByModel *RETURN_OBJ;
+@end

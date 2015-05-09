@@ -45,15 +45,14 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     debugLog(@"%@",self.model);
-
     [super viewWillAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
 }
 
 - (void)setViewBackground
@@ -87,7 +86,8 @@
 // 关闭按钮点击事件
 - (void)clickCloseBtn:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    //[self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (UIImage *)buttonImageFromColor:(UIColor *)color size:(CGSize)size
@@ -241,7 +241,10 @@
 {
     switch (index) {
         case 0:
-            
+            if (self.pushType == PushNextNoneVC) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }else
+                [self clickTalk];
             break;
         case 1:
             [self sendFollow];
@@ -293,10 +296,14 @@
             [self updateFollow];
         }else{
             // 关注失败
+            [self showHudWith:ErrorRequestText];
+
         }
         
     } faliure:^(NSError *error) {
         // 请求失败
+        [self showHudWith:ErrorText];
+
     }];
 }
 
@@ -311,10 +318,13 @@
             [self updateFollow];
         }else{
             // 取消关注失败
+            [self showHudWith:ErrorRequestText];
+
         }
         
     } faliure:^(NSError *error) {
         // 请求失败
+        [self showHudWith:ErrorText];
 
     }];
 }
@@ -329,24 +339,42 @@
             [self removeBlock];
         }else{
             // 屏蔽失败
+            [self showHudWith:ErrorRequestText];
         }
 
     } faliure:^(NSError *error) {
         // 请求失败
+        [self showHudWith:ErrorText];
+
     }];
+}
+
+- (void)showHudWith:(NSString *)text
+{
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    
+    [MBProgressHUD showTextHUDAddedTo:self.view withText:text animated:YES];
+}
+
+- (void)clickTalk
+{
+    if ([self.delegate respondsToSelector:@selector(talkCellWithNearByModel:IndexPath:)]) {
+        [self.navigationController popViewControllerAnimated:NO];
+        [self.delegate talkCellWithNearByModel:self.model IndexPath:self.indexPath];
+    }
 }
 
 - (void)updateFollow
 {
-    if ([self.delegate respondsToSelector:@selector(followCellWithNearByModel:IndexPath:)]) {
-        [self.delegate followCellWithNearByModel:self.model IndexPath:self.indexPath];
+    if ([self.delegate respondsToSelector:@selector(followCellWithNearByModel:IndexPath:PUSHTYPE:)]) {
+        [self.delegate followCellWithNearByModel:self.model IndexPath:self.indexPath PUSHTYPE:self.pushType];
     }
 }
 
 - (void)removeBlock
 {
-    if ([self.delegate respondsToSelector:@selector(blockCellWithNearByModel:IndexPath:)]) {
-        [self.delegate blockCellWithNearByModel:self.model IndexPath:self.indexPath];
+    if ([self.delegate respondsToSelector:@selector(blockCellWithNearByModel:IndexPath:PUSHTYPE:)]) {
+        [self.delegate blockCellWithNearByModel:self.model IndexPath:self.indexPath PUSHTYPE:self.pushType];
     }
     [self.buttonView set_DataBlock:self.model.isBlocked];
     [self clickCloseBtn:nil];

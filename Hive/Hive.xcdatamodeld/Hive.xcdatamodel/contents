@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7549" systemVersion="14D131" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="ChatModel" representedClassName="ChatModel" syncable="YES">
+        <attribute name="distance" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="hasRead" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="hasStealth" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="hasTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="isSend" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="messageID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="ChatRoomModel" representedClassName="ChatRoomModel" syncable="YES">
         <attribute name="distance" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="flag" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="isAname" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isSend" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isStealth" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isTime" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
@@ -15,6 +33,7 @@
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ChatRoomModel" positionX="-63" positionY="-18" width="128" height="225"/>
+        <element name="ChatModel" positionX="-63" positionY="81" width="128" height="255"/>
+        <element name="ChatRoomModel" positionX="-63" positionY="-18" width="128" height="255"/>
     </elements>
 </model>

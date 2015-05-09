@@ -2,7 +2,7 @@
 //  ChatRoomModel.m
 //  
 //
-//  Created by 那宝军 on 15/4/26.
+//  Created by 那宝军 on 15/5/8.
 //
 //
 
@@ -11,17 +11,19 @@
 
 @implementation ChatRoomModel
 
-@dynamic id;
-@dynamic message;
-@dynamic userID;
-@dynamic time;
-@dynamic messageID;
-@dynamic flag;
-@dynamic longitude;
-@dynamic latitude;
-@dynamic isAname;
-@dynamic userName;
 @dynamic distance;
+@dynamic flag;
+@dynamic id;
+@dynamic isAname;
 @dynamic isStealth;
+@dynamic isTime;
+@dynamic latitude;
+@dynamic longitude;
+@dynamic message;
+@dynamic messageID;
+@dynamic time;
+@dynamic userID;
+@dynamic userName;
+@dynamic isSend;
 
 @end

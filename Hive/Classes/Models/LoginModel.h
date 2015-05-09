@@ -20,4 +20,5 @@
 @property (nonatomic, assign) float longitude;
 @property (nonatomic, assign) float latitude;
 @property (nonatomic, assign) int hide;
+@property (nonatomic, strong) NSString *label;
 @end

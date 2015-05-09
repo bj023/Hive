@@ -30,6 +30,20 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    self.navigationController.navigationBarHidden = YES;
+    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+}
+
 - (void)configNavBar
 {
     self.title = @"Follow";
@@ -45,7 +59,8 @@
 
 - (void)backNav
 {
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    //[self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma -mark 初始化 Message TableView
@@ -91,17 +106,26 @@
     userInformationVC.delegate = self;
     userInformationVC.indexPath = indexPath;
     userInformationVC.model = _model;
-    [self presentViewController:userInformationVC animated:YES completion:nil];
+    self.navigationController.navigationBarHidden = YES;
+    [self.navigationController pushViewController:userInformationVC animated:YES];
 }
 
-- (void)followCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath
+- (void)talkCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexpath
+{
+    if ([self.delegate respondsToSelector:@selector(clickFollow_TalkAction:)]) {
+        [self.delegate clickFollow_TalkAction:model];
+        [self.navigationController popToRootViewControllerAnimated:NO];
+    }
+}
+
+- (void)followCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath PUSHTYPE:(PUSH_TYPE)pushType
 {
     [self.dataSource removeObject:model];
     NSIndexPath *reloadIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
     [self.followTable deleteRowsAtIndexPaths:[NSArray arrayWithObject:reloadIndexPath] withRowAnimation:UITableViewRowAnimationNone];
 }
 
-- (void)blockCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath
+- (void)blockCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath PUSHTYPE:(PUSH_TYPE)pushType
 {
     [self.dataSource replaceObjectAtIndex:indexPath.row withObject:model];
     NSIndexPath *reloadIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];

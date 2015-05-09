@@ -325,6 +325,7 @@
     user.userHead = loginModel.iconPath;
     user.userName = loginModel.userName;
     user.userSex = loginModel.gender;
+    user.userIntro = loginModel.label;
     user.userAge  = [NSString stringWithFormat:@"%d",loginModel.age];
     user.xmppPassWord = self.loginView.password;
     user.isStealth = [NSString stringWithFormat:@"%d",loginModel.hide];

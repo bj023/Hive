@@ -112,7 +112,7 @@
 {
     if (indexPath.row == 0) {
         ProfileCell *cell = [ProfileCell cellWithTableView:tableView];
-        [cell setProfileData:@"No Set" IndexPath:indexPath];
+        [cell setProfileData:[[UserInfoManager sharedInstance] getCurrentUserInfo].userIntro IndexPath:indexPath];
         return cell;
     }else if (indexPath.row < 6) {
         NotificationNorCell *cell = [NotificationNorCell cellWithTableView:tableView];

@@ -108,9 +108,12 @@
 }
 
 -(id)initWithNavBarControllers:(NSArray *)controllers navBarBackground:(UIColor *)background showPageControl:(BOOL)addPageControl{
-    NSMutableArray *views = [[NSMutableArray alloc] initWithCapacity:controllers.count];
-    NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:controllers.count];
-    _controllerReferences = [[NSMutableArray alloc] initWithArray:controllers];
+    //NSMutableArray *views = [[NSMutableArray alloc] initWithCapacity:controllers.count];
+    //NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:controllers.count];
+    //_controllerReferences = [[NSMutableArray alloc] initWithArray:controllers];
+    NSMutableArray *views = [NSMutableArray array];
+    NSMutableArray *items = [NSMutableArray array];
+    _controllerReferences = [NSMutableArray arrayWithArray:controllers];
     for(int i =0; i<controllers.count; i++){
         // Be sure we got s subclass of UIViewController
         if([controllers[i] isKindOfClass:UIViewController.class]){
@@ -146,8 +149,11 @@
 
 -(id)initWithNavBarItems:(NSArray *)items navBarBackground:(UIColor *)background controllers:(NSArray *)controllers showPageControl:(BOOL)addPageControl{
 
-    NSMutableArray *views = [[NSMutableArray alloc] initWithCapacity:controllers.count];
-    _controllerReferences = [[NSMutableArray alloc] initWithArray:controllers];
+    //NSMutableArray *views = [[NSMutableArray alloc] initWithCapacity:controllers.count];
+    //_controllerReferences = [[NSMutableArray alloc] initWithArray:controllers];
+    NSMutableArray *views = [NSMutableArray array];
+    _controllerReferences = [NSMutableArray arrayWithArray:controllers];
+    
     
     for(int i =0; i<controllers.count; i++){
         // Be sure we got s subclass of UIViewController

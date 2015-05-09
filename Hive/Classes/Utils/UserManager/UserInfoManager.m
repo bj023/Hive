@@ -24,6 +24,7 @@
     [coder encodeObject:self.xmppUserName forKey:@"xmppUserName"];
     [coder encodeObject:self.xmppPassWord forKey:@"xmppPassWord"];
     [coder encodeObject:self.isStealth forKey:@"isStealth"];
+    [coder encodeObject:self.userIntro forKey:@"userIntro"];
 
 }
 
@@ -43,7 +44,7 @@
         self.xmppUserName    = [decoder decodeObjectForKey:@"xmppUserName"];
         self.xmppPassWord    = [decoder decodeObjectForKey:@"xmppPassWord"];
         self.isStealth       = [decoder decodeObjectForKey:@"isStealth"];
-
+        self.userIntro       = [decoder decodeObjectForKey:@"userIntro"];
     }
     return self;
 }

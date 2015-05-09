@@ -238,11 +238,11 @@
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
+                                             selector:@selector(keyboardWill_Show:)
                                                  name:UIKeyboardWillShowNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
+                                             selector:@selector(keyboardWill_Show:)
                                                  name:UIKeyboardWillChangeFrameNotification
                                                object:nil];
 }
@@ -262,7 +262,7 @@
      }completion:nil];
 }
 
-- (void)keyboardWillShow:(NSNotification*)notification
+- (void)keyboardWill_Show:(NSNotification*)notification
 {
     NSDictionary *userInfo = [notification userInfo];
     NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
@@ -285,5 +285,6 @@
     self.titleLabel = nil;
     self.forgetBtn = nil;
     self.toolView = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 @end

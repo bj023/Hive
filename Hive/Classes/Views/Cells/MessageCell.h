@@ -12,14 +12,27 @@
  */
 //typedef void(^clickUserHeadIMG)(NSIndexPath *indexpath);
 
+@protocol MessageCellDelegate;
+@class ChatModel;
 @interface MessageCell : UITableViewCell
 
 @property (strong, nonatomic)NSIndexPath *indexPath;
-//@property (copy,   nonatomic)clickUserHeadIMG block;
+
+@property (nonatomic, weak) id<MessageCellDelegate>delegate;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView;
 
 + (CGFloat)getMessageCellHeight;
 
-- (void)set_MessageCellData;
+- (void)set_MessageCellData:(ChatModel *)model;
+
+
 @end
+
+@protocol MessageCellDelegate <NSObject>
+
+- (void)deleteMessageCellData:(NSIndexPath *)indexpath;
+- (void)tapHeadImgSendAction:(ChatModel *)model;
+
+@end
+

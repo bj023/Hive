@@ -12,6 +12,12 @@
  *  查看个人主页
  */
 
+typedef enum{
+    PushNextVC = 1,
+    PushNextUpdateVC = 2,
+    PushNextNoneVC = 3,
+} PUSH_TYPE;
+
 @class NearByModel;
 @protocol UserInformationVCDelegate;
 @interface UserInformationController : UIViewController
@@ -19,9 +25,11 @@
 @property (weak, nonatomic) id<UserInformationVCDelegate>delegate;
 @property (strong, nonatomic) NearByModel *model;
 @property (strong, nonatomic) NSIndexPath *indexPath;
+@property (assign, nonatomic) PUSH_TYPE pushType;
 @end
 
 @protocol UserInformationVCDelegate <NSObject>
-- (void)followCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath;
-- (void)blockCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath;
+- (void)talkCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexpath;
+- (void)followCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath PUSHTYPE:(PUSH_TYPE)pushType;
+- (void)blockCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath  PUSHTYPE:(PUSH_TYPE)pushType;
 @end

@@ -21,10 +21,11 @@
 #import "UserInformationController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "ChatViewController.h"
+#import "ChatModel.h"
 
 #define APIKey @"588013a8aa2e427d04f67917d98d0315"
 
-@interface ViewController ()<MAMapViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UserInformationVCDelegate>
+@interface ViewController ()<MAMapViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UserInformationVCDelegate, BlockListControllerDelegate, FollowControllerDelegate>
 {
     SLPagingViewController *pageViewController;
     
@@ -37,7 +38,7 @@
     
     UILabel *_messageLabel; // Message 标题
 }
-@property (strong, nonatomic)UINavigationController *navigationController;
+@property (strong, nonatomic)UINavigationController *nav;
 @end
 
 @implementation ViewController
@@ -50,6 +51,13 @@
     [self clickCellAction];
     [self clickUserHeadAction];
     //[self performSelector:@selector(removeMapView) withObject:nil afterDelay:3];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = YES;
+    debugMethod();
 }
 
 - (void)didReceiveMemoryWarning {
@@ -122,9 +130,9 @@
         }
     };
     
-    _navigationController = [[UINavigationController alloc] initWithRootViewController:pageViewController];
-    [self.view addSubview:_navigationController.view];
-    [self addChildViewController:_navigationController];
+    _nav = [[UINavigationController alloc] initWithRootViewController:pageViewController];
+    [self.view addSubview:_nav.view];
+    [self addChildViewController:_nav];
     //_navigationController.view.alpha = 0;
 
     [pageViewController setCurrentIndex:2 animated:YES];
@@ -239,8 +247,8 @@
             case 0:
             {
                 ProfileController *profile = [[ProfileController alloc] init];
-                UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:profile];
-                [weakSelf.navigationController presentViewController:nav animated:YES completion:nil];
+                [weakSelf.navigationController pushViewController:profile animated:YES];
+
             }
                 break;
             case 1:
@@ -271,15 +279,16 @@
             case 6:
             {
                 FollowController *followVC = [[FollowController alloc] init];
-                UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:followVC];
-                [weakSelf presentViewController:nav animated:YES completion:nil];
+                followVC.delegate = weakSelf;
+                [weakSelf.navigationController pushViewController:followVC animated:YES];
             }
                 break;
             case 7:
             {
                 BlockListController *blockVC = [[BlockListController alloc] init];
-                UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:blockVC];
-                [weakSelf presentViewController:nav animated:YES completion:nil];
+                blockVC.delegate = weakSelf;
+                [weakSelf.navigationController pushViewController:blockVC animated:YES];
+
             }
                 break;
             case 8:
@@ -297,28 +306,57 @@
         }
     };
 }
+
+- (void)clickBlock_TalkAction:(NearByModel *)model
+{
+    [self pushChatViewController:model];
+}
+
+- (void)clickFollow_TalkAction:(NearByModel *)model
+{
+    [self pushChatViewController:model];
+}
+
+- (void)pushChatViewController:(NearByModel *)model
+{
+    [pageViewController setCurrentIndex:1 animated:NO];
+
+    ChatViewController *chatVC = [[ChatViewController alloc] init];
+    chatVC.userID = [NSString stringWithFormat:@"%d",model.userId];
+    chatVC.title = model.userName;
+    [self.navigationController pushViewController:chatVC animated:YES];
+}
+
+- (void)pushChatVC:(ChatModel *)model
+{
+    ChatViewController *chatVC = [[ChatViewController alloc] init];
+    chatVC.userID = model.userID;
+    chatVC.title = model.userName;
+    [self.navigationController pushViewController:chatVC animated:YES];
+}
+
+
 #pragma -mark 点击用户头像 Block 回调
 - (void)clickUserHeadAction
 {
     __weak ViewController *weakSelf = self;
     
-    _hiveVC.mainViewBlock = ^(NSString *userID){
-        //[weakSelf pushUserInformationControllerWithUserID:userID];
+    _hiveVC.hiveBlock = ^(NearByModel *model){
+        [weakSelf pushUserInforMation:model];
     };
     // message
-    _messagesVC.mainViewBlock = ^(NSString *userID){
-        //[weakSelf pushUserInformationControllerWithUserID:userID];
+    _messagesVC.chatBlock = ^(ChatModel *model){
+        [weakSelf pushChatVC:model];
     };
-    _messagesVC.mainViewBlock = ^(NSString *userID){
-        debugLog(@"message->%@",userID);
-        //[HttpTool sendRequestWithUserID:@"79"];
+    
+    _messagesVC.messageBlock = ^(NearByModel *model){
+        [weakSelf pushUserInforMation:model];
     };
     
     // nearBy
     _nearByVC.nearByBlock = ^(NearByModel *model, NSIndexPath *indexpath){
         [weakSelf pushUserInformationController:model IndexPath:indexpath];
     };
-    
     
     _settingsVC.selectBlock = ^(NSString *str){
         if ([str isEqualToString:@"takePhoto"]) {
@@ -334,22 +372,38 @@
     userInformationVC.delegate = self;
     userInformationVC.indexPath = indexpath;
     userInformationVC.model = model;
-    [self presentViewController:userInformationVC animated:YES completion:nil];
+    userInformationVC.pushType = PushNextUpdateVC;
+    [self.navigationController pushViewController:userInformationVC animated:YES];
 }
 
-- (void)pushChatViewController
+- (void)pushUserInforMation:(NearByModel *)model
 {
-    
+    UserInformationController *vc = [[UserInformationController alloc] init];
+    vc.pushType = PushNextVC;
+    vc.delegate = self;
+    vc.model = model;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)followCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath
+
+#pragma -mark 用户信息 代理回调
+- (void)talkCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexpath
 {
-    [_nearByVC updateCellWithNearby:model IndexPath:indexPath];
+    [self pushChatViewController:model];
 }
 
-- (void)blockCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath
+- (void)followCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath PUSHTYPE:(PUSH_TYPE)pushType
 {
-    [_nearByVC removeCellWithNearby:model IndexPath:indexPath];
+    if (pushType == PushNextUpdateVC) {
+        [_nearByVC updateCellWithNearby:model IndexPath:indexPath];
+    }
+}
+
+- (void)blockCellWithNearByModel:(NearByModel *)model IndexPath:(NSIndexPath *)indexPath PUSHTYPE:(PUSH_TYPE)pushType
+{
+    if (pushType == PushNextUpdateVC) {
+        [_nearByVC removeCellWithNearby:model IndexPath:indexPath];
+    }
 }
 
 #pragma -mark 相册选择
@@ -388,4 +442,8 @@
         
     }];
 }
+
+#pragma -mark 页面跳转
+
+
 @end

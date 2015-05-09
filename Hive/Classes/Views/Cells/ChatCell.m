@@ -140,7 +140,7 @@
     BOOL isShow = [message.flag isEqualToString:@"ME"]?YES:NO;
     
     if (!isShow) {
-        [self setCellLeftSubviews:message.message isAname:!IsEmpty(message.isAname)];
+        [self setCellLeftSubviews:message.message isAname:[message.isAname isEqualToString:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID]];
         self.userInforLabel.hidden = NO;
         self.headIMG.hidden = NO;
         
@@ -175,21 +175,19 @@
     CGFloat bubbleH = size.height + self.messageLabel.frame.origin.y * 2;
     self.bubbleIMG.frame = CGRectMake(bubbleX, bubbleY, bubbleW, bubbleH);
     
-    UIImage *image = [UIImage imageNamed:aName?@"chat_gray":@"chat_orange"];
+    UIImage *image = [UIImage imageNamed:aName?@"chat_orange":@"chat_gray"];
     image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
     self.bubbleIMG.image = image;
     
     self.timeLabel.frame = CGRectMake(self.bubbleIMG.frame.size.width + self.bubbleIMG.frame.origin.x + 3, self.bubbleIMG.frame.size.height + self.bubbleIMG.frame.origin.y - 25, 40, 20);
 
     self.messageLabel.textColor = [UIColor blackColor];
-    
 }
 
 #pragma -mark 设置 Cell 子控件
 - (void)setCellRIghtSubviews:(NSString*)message
 {
     CGSize size = [ChatCell sizeMessage:message];
-    
     
     // message
     self.messageLabel.frame = CGRectMake(Message_X - 6, Message_Y, size.width, size.height);

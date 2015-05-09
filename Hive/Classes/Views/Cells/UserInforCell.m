@@ -20,7 +20,7 @@
     static NSString *identifier = @"UserInforCell";
     UserInforCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[UserInforCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        cell = [[UserInforCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
     }
     return cell;
 }
@@ -30,18 +30,37 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        
         self.lineIMG = [[UIImageView alloc] init];
         self.lineIMG.backgroundColor = [UIColorUtil colorWithHexString:@"#cdcdd1"];
         [self.contentView addSubview:self.lineIMG];
-        self.lineIMG.frame = CGRectMake(16, [UserInforCell getUserInforCellHeight] - 1, UIWIDTH - 16, 1);
+        //self.lineIMG.frame = CGRectMake(16, [UserInforCell getUserInforCellHeight] - 1, UIWIDTH - 16, 1);
     }
     
     return self;
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.lineIMG.frame = CGRectMake(16, self.frame.size.height - 1, UIWIDTH - 16, 1);
+    
+    if ([self.textLabel.text isEqualToString:@"Intro"]) {
+        
+        self.textLabel.frame = CGRectMake(16, 10, 40, 20);
+
+        self.detailTextLabel.numberOfLines = 0;
+
+        CGFloat detailX = 16;
+        CGFloat detailY = self.textLabel.frame.origin.y + self.textLabel.frame.size.height + 5;
+        CGFloat detailW = UIWIDTH - detailX *2;
+        CGFloat detailH = self.frame.size.height - self.detailTextLabel.frame.origin.y - 10;
+        self.detailTextLabel.frame = CGRectMake(detailX, detailY, detailW, detailH);
+    }
+}
+
 - (void)awakeFromNib {
     // Initialization code
+
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

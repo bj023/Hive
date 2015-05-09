@@ -18,6 +18,7 @@
 @property (copy, nonatomic) NSString *userAge;
 @property (copy, nonatomic) NSString *userSex;
 @property (copy, nonatomic) NSString *isStealth;
+@property (copy, nonatomic) NSString *userIntro;
 //@property (copy, nonatomic) NSString *userLongitude;
 //@property (copy, nonatomic) NSString *userLatitude;
 

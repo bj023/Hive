@@ -8,6 +8,13 @@
 
 #import "MainViewController.h"
 
+@class NearByModel;
+@class ChatModel;
+typedef void(^MessageControllerBlock)(NearByModel * model);
+typedef void(^MessageChatBlock)(ChatModel * model);
+
 @interface MessagesController : MainViewController
+@property (nonatomic, copy)MessageControllerBlock messageBlock;
+@property (nonatomic, copy)MessageChatBlock chatBlock;
 
 @end

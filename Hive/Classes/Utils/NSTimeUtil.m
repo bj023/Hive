@@ -178,7 +178,27 @@ static CGFloat const chageImageTime = 60.0;
 }
 
 
-
+#pragma -mark 获取距离
++ (NSString *)getDistance:(NSString *)longitude latitude:(NSString *)latitude
+{
+    NSString *distance;
+    double lng1 = [[[NSTimeUtil sharedInstance] getCoordinateLongitude] doubleValue];
+    double lat1 = [[[NSTimeUtil sharedInstance] getCoordinateLatitude] doubleValue];
+    double lng2 = [longitude doubleValue];
+    double lat2 = [latitude doubleValue];
+    
+    double radLat1 = lat1*M_PI/180;
+    double radLat2 = lat2*M_PI/180;
+    double a = radLat1 - radLat2;
+    double b = lng1*M_PI/180 - lng2*M_PI/180;
+    double s = 2 * asin(sqrt(pow(sin(a/2), 2)+cos(radLat1)*cos(radLat2)*pow(sin(b/2), 2)));
+    s *= 6378137.0;
+    s = round(s*10000)/10000;
+    s = s / 1000 ;
+    
+    distance = [NSString stringWithFormat:@"%.2f km",s];
+    return distance;
+}
 
 
 - (void)ok
@@ -237,5 +257,8 @@ static CGFloat const chageImageTime = 60.0;
     }
     return GetMy3G;
 }
+
+
+
 
 @end

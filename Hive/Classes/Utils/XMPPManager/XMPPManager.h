@@ -42,4 +42,12 @@
                   Time:(NSString *)time
                Message:(NSString *)messageID
                isAname:(NSString *)aName;
+
+- (void)sendNewMessage:(NSString *)message
+             MessageID:(NSString *)messageID
+                UserID:(NSString *)userID
+                  Time:(NSString *)time;
+
+
++ (NSString *)getTime:(NSString *)currentTime;
 @end

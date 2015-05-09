@@ -31,6 +31,18 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.navigationController.navigationBarHidden = YES;
+}
+
 - (void)configNavBar
 {
     self.title = @"Profile";
@@ -50,7 +62,7 @@
 
 - (void)backNav
 {
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)configViewBackGround
@@ -80,7 +92,7 @@
     if (section == 0) {
         return 15;
     }else
-        return self.profileTable.frame.size.height - 44 *3 - 30 - 15;
+        return self.profileTable.frame.size.height - 44 * 2 - 120 - 64;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -90,6 +102,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.row == 1 && indexPath.section == 0) {
+        return 120;
+    }
     return [UserInforCell getUserInforCellHeight];
 }
 
@@ -115,7 +130,15 @@
     
     if (indexPath.section == 0) {
         UserInforCell *cell = [UserInforCell cellWithTableView:tableView];
-        cell.textLabel.text = @"name";
+        
+        if (indexPath.row == 0) {
+            cell.textLabel.text = @"Name";
+            cell.detailTextLabel.text = [[UserInfoManager sharedInstance] getCurrentUserInfo].userName;
+        }else{
+            cell.textLabel.text = @"Intro";
+            cell.detailTextLabel.text = [[UserInfoManager sharedInstance] getCurrentUserInfo].userIntro;
+        }
+        
         return cell;
     }else if (indexPath.section == 1){
         LogOutCell *cell = [LogOutCell cellWithTableView:tableView];

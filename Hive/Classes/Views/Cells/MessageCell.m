@@ -9,8 +9,12 @@
 #import "MessageCell.h"
 #import "CustomIMGView.h"
 #import "Utils.h"
+#import "ChatModel.h"
 
 @interface MessageCell ()
+
+@property (strong, nonatomic)ChatModel *chatModel;
+
 @property (strong, nonatomic)CustomIMGView *headIMG;// 用户头像
 @property (strong, nonatomic)UILabel *userNameLabel;// 用户名
 @property (strong, nonatomic)UILabel *dateLabel;// 时间
@@ -111,7 +115,7 @@
     [self addSubview:self.messageLabel];
     [self.contentView addSubview:self.unreadLabel];
 
-    //[self.headIMG addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadIMG:)]];
+    [self.headIMG addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadIMG:)]];
 }
 
 + (CGFloat)getMessageCellHeight
@@ -119,19 +123,76 @@
     return 120/2;
 }
 
-- (void)set_MessageCellData
+- (void)set_MessageCellData:(ChatModel *)model
 {
+    self.chatModel = model;
+    
     self.unreadLabel.hidden = YES;
-    self.userNameLabel.text = @"Tester";
+    self.userNameLabel.text = model.userName;
     self.dateLabel.text = @"13:14";
-    self.messageLabel.text = @"Message";
-    NSString *urlString = @"http://b.hiphotos.baidu.com/image/pic/item/730e0cf3d7ca7bcbdbff9d2ebc096b63f624a82f.jpg";
-    [self.headIMG setImageURLStr:urlString];
+    self.messageLabel.text = model.message;
+    [self.headIMG setImageURLStr:[NSString stringWithFormat:@"http://115.28.51.196/X_USER_ICON/%@.jpg",model.userID]];
+    
+    
 }
 
 - (void)clickHeadIMG:(id)sender
 {
-    //self.block(self.indexPath);
+    if ([self.delegate respondsToSelector:@selector(tapHeadImgSendAction:)]) {
+        [self.delegate tapHeadImgSendAction:self.chatModel];
+    }
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender{
+    if (action == @selector(cut:)){
+        return NO;
+    }
+    else if(action == @selector(copy:)){
+        return NO;
+    }
+    else if(action == @selector(paste:)){
+        return NO;
+    }
+    else if(action == @selector(select:)){
+        return NO;
+    }
+    else if(action == @selector(selectAll:)){
+        return NO;
+    }
+    else if (action == @selector(delete:)) {
+        return YES;
+    }
+    else
+    {
+        return [super canPerformAction:action withSender:sender];
+    }
+}
+
+- (void)delete:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(deleteMessageCellData:)]) {
+        [self.delegate deleteMessageCellData:self.indexPath];
+    }
+}
+
+- (NSString *)getTime:(NSString *)time
+{
+    
+    NSString *d_current = [UtilDate dateFromString:[UtilDate getCurrentTime] withFormat:DateFormat_DD];
+    NSString *d_time = [UtilDate dateFromString:time withFormat:DateFormat_DD];
+    
+    NSString *m_current = [UtilDate dateFromString:[UtilDate getCurrentTime] withFormat:DateFormat_MM];
+    NSString *m_time = [UtilDate dateFromString:time withFormat:DateFormat_MM];
+    
+    if ([d_current intValue]>[d_time intValue] || ([m_current intValue] - [m_time intValue] > 5)) {
+        return [UtilDate dateFromString:time withFormat:DateFormat_MM_dd];
+    }
+    return [UtilDate dateFromString:time withFormat:DateFormat_HM];
 }
 
 - (void)dealloc

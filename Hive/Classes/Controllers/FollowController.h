@@ -7,7 +7,12 @@
 //
 
 #import "MainViewController.h"
-
+@class NearByModel;
+@protocol FollowControllerDelegate;
 @interface FollowController : MainViewController
+@property (nonatomic, weak) id<FollowControllerDelegate>delegate;
+@end
 
+@protocol FollowControllerDelegate <NSObject>
+- (void)clickFollow_TalkAction:(NearByModel *)model;
 @end
