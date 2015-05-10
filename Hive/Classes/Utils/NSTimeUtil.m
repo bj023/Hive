@@ -196,7 +196,7 @@ static CGFloat const chageImageTime = 60.0;
     s = round(s*10000)/10000;
     s = s / 1000 ;
     
-    distance = [NSString stringWithFormat:@"%.2f km",s];
+    distance = [NSString stringWithFormat:@"%.2fkm",s];
     return distance;
 }
 

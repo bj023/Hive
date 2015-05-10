@@ -13,8 +13,9 @@
 @interface NearByCell ()
 @property (strong, nonatomic) CustomIMGView *headIMG;
 @property (strong, nonatomic) UILabel *userNameLabel;
-@property (strong, nonatomic) UILabel *messageLabel;
+@property (strong, nonatomic) UILabel *introLabel;
 @property (strong, nonatomic) UILabel *timeLabel;
+@property (strong, nonatomic) UILabel *sexLabel;
 @end
 
 @implementation NearByCell
@@ -53,9 +54,9 @@
 
 - (void)initNearByCell
 {
-    /*
-    CGFloat headX = 24/2;
-    CGFloat headW = 90/2;
+    /* */
+    CGFloat headX = 22/2;
+    CGFloat headW = 110/2;
     CGFloat headH = headW;
     CGFloat headY = [NearByCell getNearByCellHeight]/2 - headW/2;
     if (!self.headIMG) {
@@ -65,7 +66,7 @@
         self.headIMG.backgroundColor = [UIColorUtil colorWithCoded9d9d9];
     }
     
-    CGFloat padding = 10;
+    CGFloat padding = 11;
     CGFloat timeW = UIWIDTH/2 - padding;
     CGFloat timeX = UIWIDTH/2;
     CGFloat timeH = 20;
@@ -73,9 +74,9 @@
     
     if (!self.timeLabel) {
         self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(timeX, timeY, timeW, timeH)];
-        self.timeLabel.font = [UIFont fontWithName:Font_Light size:12];
+        self.timeLabel.font = [UIFont fontWithName:GothamRoundedBook size:12];
         self.timeLabel.textAlignment = NSTextAlignmentRight;
-        self.timeLabel.textColor = [UIColorUtil colorWithHexString:@"#8e8e8e"];
+        self.timeLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
     }
     
     CGFloat nameX = headX + headW + padding;
@@ -84,20 +85,31 @@
     CGFloat nameW = timeX - nameX;
     if (!self.userNameLabel) {
         self.userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameX, nameY, nameW, nameH)];
-        self.userNameLabel.font = [UIFont fontWithName:Font_Medium size:33/2];
+        self.userNameLabel.font = [UIFont fontWithName:Font_Regular size:17];
         self.userNameLabel.textAlignment = NSTextAlignmentLeft;
         self.userNameLabel.textColor = [UIColor blackColor];
     }
     
     CGFloat messageX = nameX;
     CGFloat messageY = [NearByCell getNearByCellHeight]/2;// 偏移量
-    CGFloat messageW = UIWIDTH - headX - headW -2 * padding;
+    CGFloat messageW = UIWIDTH - headX - headW - 2 * padding - padding;
     CGFloat messageH = 20;
-    if (!self.messageLabel) {
-        self.messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(messageX, messageY, messageW, messageH)];
-        self.messageLabel.font = [UIFont fontWithName:Font_Light size:14];
-        self.messageLabel.textAlignment = NSTextAlignmentLeft;
-        self.messageLabel.textColor = [UIColorUtil colorWithHexString:@"#8e8e8e"];
+    if (!self.introLabel) {
+        self.introLabel = [[UILabel alloc] initWithFrame:CGRectMake(messageX, messageY, messageW, messageH)];
+        self.introLabel.font = [UIFont fontWithName:Font_Helvetica size:14];
+        //self.introLabel.font = [UIFont systemFontOfSize:14];;
+        self.introLabel.textAlignment = NSTextAlignmentLeft;
+        self.introLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
+    }
+    
+    CGFloat sexW = 10;
+    CGFloat sexH = sexW;
+    CGFloat sexX = UIWIDTH - 11 - sexW;
+    CGFloat sexY = [NearByCell getNearByCellHeight]/2 - sexH/2 + 5;
+    if (!self.sexLabel) {
+        self.sexLabel = [[UILabel alloc] initWithFrame:CGRectMake(sexX, sexY, sexW, sexH)];
+        self.sexLabel.layer.cornerRadius = sexH/2;
+        self.sexLabel.layer.masksToBounds = YES;
     }
 
     
@@ -105,11 +117,14 @@
     lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];
     [self addSubview:lineIMG];
     
+    [self addSubview:self.sexLabel];
     [self addSubview:self.headIMG];
     [self addSubview:self.timeLabel];
     [self addSubview:self.userNameLabel];
-    [self addSubview:self.messageLabel];
-     */
+    [self addSubview:self.introLabel];
+    
+    
+    /*
     CGFloat headW = [NearByCell getNearByCellHeight] - 10;
     CGFloat headX = 10;
     CGFloat headH = headW;
@@ -152,6 +167,7 @@
     [self addSubview:self.headIMG];
     [self addSubview:self.timeLabel];
     [self addSubview:self.userNameLabel];
+     */
 }
 
 - (void)set_NearByCellData:(NearByModel *)model
@@ -170,8 +186,13 @@
         self.timeLabel.text = [NSString stringWithFormat:@"%@ km",model.distance];
     }
     
-    self.messageLabel.text = model.label;
+    self.introLabel.text = model.label;
     [self.headIMG setImageURLStr:model.iconPath];
+
+    debugLog(@"%@",model.gender);
+    UIColor *sexColor = [model.gender isEqualToString:@"1"]?[UIColorUtil colorWithHexString:@"#64baff"]:[UIColorUtil colorWithHexString:@"#ff5b2f"];
+
+    self.sexLabel.backgroundColor = sexColor;
 }
 
 
@@ -195,12 +216,12 @@ static NSString *DateFormatMDHM = @"MM-dd HH:mm";
 - (void)dealloc
 {
     self.userNameLabel = nil;
-    self.messageLabel = nil;
+    self.introLabel = nil;
     self.timeLabel = nil;
 }
 
 + (CGFloat)getNearByCellHeight
 {
-    return 120/2;
+    return 138/2;
 }
 @end

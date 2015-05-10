@@ -44,6 +44,7 @@ install_resource()
   esac
 }
           install_resource "AMap3DMap/MAMapKit.framework/Versions/2.4.2.c9ef2cc.60159/Resources/AMap.bundle"
+                    install_resource "MJRefresh/MJRefreshExample/MJRefreshExample/MJRefresh/MJRefresh.bundle"
                     install_resource "XMPPFramework/Extensions/Roster/CoreDataStorage/XMPPRoster.xcdatamodel"
                     install_resource "XMPPFramework/Extensions/XEP-0045/CoreDataStorage/XMPPRoom.xcdatamodeld"
                     install_resource "XMPPFramework/Extensions/XEP-0045/CoreDataStorage/XMPPRoom.xcdatamodeld/XMPPRoom.xcdatamodel"

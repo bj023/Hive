@@ -1,23 +1,23 @@
 PODS:
-  - AFNetworking (2.5.2):
+  - AFNetworking (2.5.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.5.2):
+  - AFNetworking/NSURLConnection (2.5.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.2):
+  - AFNetworking/NSURLSession (2.5.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.2)
-  - AFNetworking/Security (2.5.2)
-  - AFNetworking/Serialization (2.5.2)
-  - AFNetworking/UIKit (2.5.2):
+  - AFNetworking/Reachability (2.5.3)
+  - AFNetworking/Security (2.5.3)
+  - AFNetworking/Serialization (2.5.3)
+  - AFNetworking/UIKit (2.5.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - AMap3DMap (2.4.2)
@@ -33,11 +33,12 @@ PODS:
     - MagicalRecord/Core
   - MagicalRecord/Core (2.2)
   - MBProgressHUD (0.9.1)
+  - MJRefresh (1.4.6)
   - Reachability (3.2)
   - SDWebImage (3.7.2):
     - SDWebImage/Core
   - SDWebImage/Core (3.7.2)
-  - XHRefreshControl (3.8)
+  - XHRefreshControl (3.9)
   - XMPPFramework (3.6.4):
     - XMPPFramework/Authentication
     - XMPPFramework/BandwidthMonitor
@@ -185,22 +186,24 @@ DEPENDENCIES:
   - JSONModel (~> 1.0.1)
   - MagicalRecord (~> 2.2)
   - MBProgressHUD (~> 0.9.1)
+  - MJRefresh (~> 1.4.6)
   - Reachability (~> 3.2)
   - SDWebImage (~> 3.7.1)
   - XHRefreshControl (~> 3.8)
   - XMPPFramework (~> 3.6.4)
 
 SPEC CHECKSUMS:
-  AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
+  AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
   AMap3DMap: 6929b8f2191007dc9863553a582b9d7ba78ac1bf
   CocoaAsyncSocket: 94c582a5bef4bb0f51b6ebf3e1b561d9091a68ba
   CocoaLumberjack: 5e26ebef5a48962d1713ae6cb01da30384f3f14e
   JSONModel: 6ffcb4ffa3659c9e9a2e5d45d6c7705bab187c03
   MagicalRecord: f8a56bb87ab6552f20c4bb8681a1958a197ea3cd
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
+  MJRefresh: 2eaa3fd8f67fbb86497840fb0167446f7eb61dc7
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
-  XHRefreshControl: 833db097933bedb76308c03e14b56664326fe603
+  XHRefreshControl: 2a898cade2cc3c8fb8f21074a25c4cebcd18d494
   XMPPFramework: 05ee0992d696217f25c78091b275eb0ed4d27c04
 
 COCOAPODS: 0.34.4

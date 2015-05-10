@@ -58,8 +58,9 @@
         //已读
         _hasRead = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE)];
         _hasRead.text = @"已读";
+        _hasRead.textColor = [UIColor whiteColor];
         _hasRead.textAlignment = NSTextAlignmentCenter;
-        _hasRead.backgroundColor = [UIColor grayColor];
+        _hasRead.backgroundColor = [UIColorUtil colorWithHexString:@"e8e8e8"];
         _hasRead.layer.cornerRadius = 10;
         _hasRead.layer.masksToBounds = YES;
         _hasRead.hidden = YES;

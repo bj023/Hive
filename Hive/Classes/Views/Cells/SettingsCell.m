@@ -47,9 +47,9 @@
         }
         
         self.lineIMG = [[UIImageView alloc] init];
-        self.lineIMG.backgroundColor = [UIColorUtil colorWithHexString:@"#cdcdd1"];
+        self.lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];
         [self.contentView addSubview:self.lineIMG];
-        self.lineIMG.frame = CGRectMake(16, [SettingsCell getSettingsCellHeight] - 0.5, UIWIDTH - 16, 0.5);
+        self.lineIMG.frame = CGRectMake(16, [SettingsCell getSettingsCellHeight] - 1, UIWIDTH - 16, 1);
         
     }
     return self;

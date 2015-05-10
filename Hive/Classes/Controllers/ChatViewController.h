@@ -10,4 +10,6 @@
 
 @interface ChatViewController : UIViewController
 @property (nonatomic, strong) NSString *userID;
+@property (nonatomic, strong) NSString *userName;
+
 @end

@@ -11,8 +11,8 @@
 #import "ChatTimeView.h"
 #import "ChatBubbleView.h"
 
-#define HEAD_SIZE 40 // 头像大小
-#define HEAD_PADDING 10 // 头像到cell的内间距和头像到bubble的间距
+#define HEAD_SIZE 55 // 头像大小
+#define HEAD_PADDING 11 // 头像到cell的内间距和头像到bubble的间距
 #define CELLPADDING 8 // Cell之间间距
 
 #define NAME_LABEL_WIDTH 180 // nameLabel宽度
@@ -21,6 +21,7 @@
 #define NAME_LABEL_FONT_SIZE 14 // 字体
 #define TIME_LABEL_WIDTH 40
 
+#define TIME_HEIGHT 22 // 时间周期高度
 
 @class ChatModel;
 @interface ChatBaseCell : UITableViewCell

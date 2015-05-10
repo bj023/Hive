@@ -11,7 +11,8 @@
 #import "NearByModel.h"
 
 @interface ResponseManagerModel : JSONModel
-
+@property (nonatomic, assign) int RETURN_CODE;
+@property (nonatomic, strong) NSDictionary *RETURN_OBJ;
 @end
 
 #pragma -mark 登陆

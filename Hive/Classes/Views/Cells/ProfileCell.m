@@ -62,14 +62,14 @@
         }
         
         UIImageView *lineIMG = [[UIImageView alloc] init];
-        lineIMG.frame = CGRectMake(0, 0,  UIWIDTH - 0, 0.5);
-        lineIMG.backgroundColor = [UIColorUtil colorWithHexString:@"#cdcdd1"];
+        lineIMG.frame = CGRectMake(0, 0,  UIWIDTH - 0, 1);
+        lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];
         [self.contentView addSubview:lineIMG];
         
         self.lineIMG = [[UIImageView alloc] init];
-        self.lineIMG.backgroundColor = [UIColorUtil colorWithHexString:@"#cdcdd1"];
+        self.lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];
         [self.contentView addSubview:self.lineIMG];
-        self.lineIMG.frame = CGRectMake(16, [ProfileCell getProfileCellHeight] - 0.5, UIWIDTH - 16, 0.5);
+        self.lineIMG.frame = CGRectMake(16, [ProfileCell getProfileCellHeight] - 1, UIWIDTH - 16, 1);
         
     }
     

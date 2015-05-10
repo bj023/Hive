@@ -10,3 +10,4 @@ pod 'XHRefreshControl', '~> 3.8'
 pod 'AMap3DMap', '~> 2.4.2' #3D地图SDK(2D地图和3D地图不能同时使用)
 pod 'AFNetworking', '~> 2.5.2'
 pod 'XMPPFramework', '~> 3.6.4'
+pod 'MJRefresh', '~> 1.4.6'

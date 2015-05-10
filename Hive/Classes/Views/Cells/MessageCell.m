@@ -10,6 +10,7 @@
 #import "CustomIMGView.h"
 #import "Utils.h"
 #import "ChatModel.h"
+#import "UtilDate.h"
 
 @interface MessageCell ()
 
@@ -58,8 +59,8 @@
 #pragma -mark 自定义 Cell
 - (void)initMessageCell
 {
-    CGFloat headX = 24/2;
-    CGFloat headW = 90/2;
+    CGFloat headX = 22/2;
+    CGFloat headW = 55;
     CGFloat headH = headW;
     CGFloat headY = [MessageCell getMessageCellHeight]/2 - headW/2;
     if (!self.headIMG) {
@@ -69,7 +70,7 @@
         self.headIMG.backgroundColor = [UIColorUtil colorWithCoded9d9d9];
     }
     
-    CGFloat padding = 10;
+    CGFloat padding = 11;
     CGFloat timeW = UIWIDTH/2 - padding;
     CGFloat timeX = UIWIDTH/2;
     CGFloat timeH = 20;
@@ -77,9 +78,9 @@
     
     if (!self.dateLabel) {
         self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(timeX, timeY, timeW, timeH)];
-        self.dateLabel.font = [UIFont fontWithName:Font_Light size:12];
         self.dateLabel.textAlignment = NSTextAlignmentRight;
-        self.dateLabel.textColor = [UIColorUtil colorWithHexString:@"#8e8e8e"];
+        self.dateLabel.font = [UIFont systemFontOfSize:12];
+        self.dateLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
     }
     
     CGFloat nameX = headX + headW + padding;
@@ -88,7 +89,7 @@
     CGFloat nameW = timeX - nameX;
     if (!self.userNameLabel) {
         self.userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameX, nameY, nameW, nameH)];
-        self.userNameLabel.font = [UIFont fontWithName:Font_Medium size:33/2];
+        self.userNameLabel.font = [UIFont fontWithName:Font_Regular size:17];
         self.userNameLabel.textAlignment = NSTextAlignmentLeft;
         self.userNameLabel.textColor = [UIColor blackColor];
     }
@@ -99,14 +100,14 @@
     CGFloat messageH = 20;
     if (!self.messageLabel) {
         self.messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(messageX, messageY, messageW, messageH)];
-        self.messageLabel.font = [UIFont fontWithName:Font_Light size:14];
+        self.messageLabel.font = [UIFont fontWithName:Font_Helvetica size:14];
         self.messageLabel.textAlignment = NSTextAlignmentLeft;
-        self.messageLabel.textColor = [UIColorUtil colorWithHexString:@"#8e8e8e"];
+        self.messageLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
     }
     
     
-    UIImageView *lineIMG = [[UIImageView alloc] initWithFrame:CGRectMake(headX + headW + padding, [MessageCell getMessageCellHeight] - 0.5, UIWIDTH - headX - headW - padding, 0.5)];
-    lineIMG.backgroundColor = [UIColorUtil colorWithHexString:@"#cdcdd1"];
+    UIImageView *lineIMG = [[UIImageView alloc] initWithFrame:CGRectMake(headX + headW + padding, [MessageCell getMessageCellHeight] - 1, UIWIDTH - headX - headW - padding, 1)];
+    lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];
     [self addSubview:lineIMG];
     
     [self addSubview:self.headIMG];
@@ -120,19 +121,32 @@
 
 + (CGFloat)getMessageCellHeight
 {
-    return 120/2;
+    return 138/2;
 }
 
 - (void)set_MessageCellData:(ChatModel *)model
 {
     self.chatModel = model;
-    
     self.unreadLabel.hidden = YES;
     self.userNameLabel.text = model.userName;
-    self.dateLabel.text = @"13:14";
+    //self.dateLabel.text = @"13:14";
     self.messageLabel.text = model.message;
     [self.headIMG setImageURLStr:[NSString stringWithFormat:@"http://115.28.51.196/X_USER_ICON/%@.jpg",model.userID]];
     
+    NSString *current_time = [UtilDate dateFromString:[UtilDate getCurrentTime] withFormat:DateFormat_MM];
+    NSString *publis_time = [UtilDate dateFromString:model.time withFormat:DateFormat_MM];
+    // 时间判断
+    if ([current_time intValue]>[publis_time intValue]) {
+        self.dateLabel.text = [UtilDate dateFromString:model.time withFormat:DateFormat_MM_dd];
+    }else{
+        current_time = [UtilDate dateFromString:[UtilDate getCurrentTime] withFormat:DateFormat_DD];
+        publis_time = [UtilDate dateFromString:model.time withFormat:DateFormat_DD];
+        
+        if ([current_time intValue]>[publis_time intValue]) {
+            self.dateLabel.text = [UtilDate dateFromString:model.time withFormat:DateFormat_MM_dd];
+        }else
+            self.dateLabel.text = [UtilDate dateFromString:model.time withFormat:DateFormat_HM];
+    }
     
 }
 

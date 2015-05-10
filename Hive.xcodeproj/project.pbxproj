@@ -35,8 +35,11 @@
 		96AFB6891AD3C4D400D6128E /* ResponseManagerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96AFB6881AD3C4D400D6128E /* ResponseManagerModel.m */; };
 		96AFB68C1AD3C8E700D6128E /* LoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96AFB68B1AD3C8E700D6128E /* LoginModel.m */; };
 		96AFB68F1AD421D500D6128E /* NearByModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96AFB68E1AD421D500D6128E /* NearByModel.m */; };
-		96C397F31AFDF80E005E1BCA /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C397F21AFDF80E005E1BCA /* SearchViewController.m */; };
 		96C8A64B1AD6311D00372AF8 /* NSDataUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C8A64A1AD6311D00372AF8 /* NSDataUtil.m */; };
+		96CE0C931AFF393400004505 /* GothamRounded-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 96CE0C911AFF393400004505 /* GothamRounded-Bold.otf */; };
+		96CE0C941AFF393400004505 /* GothamRounded-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 96CE0C921AFF393400004505 /* GothamRounded-Book.otf */; };
+		96CE0C951AFF394700004505 /* GothamRounded-Bold.otf in Sources */ = {isa = PBXBuildFile; fileRef = 96CE0C911AFF393400004505 /* GothamRounded-Bold.otf */; };
+		96CE0C961AFF394700004505 /* GothamRounded-Book.otf in Sources */ = {isa = PBXBuildFile; fileRef = 96CE0C921AFF393400004505 /* GothamRounded-Book.otf */; };
 		96FCDE6D1AE4D2930040688F /* UIView+Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FCDE6C1AE4D2930040688F /* UIView+Common.m */; };
 		96FCDE701AE4D99C0040688F /* MBProgressHUD+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FCDE6F1AE4D99C0040688F /* MBProgressHUD+Helper.m */; };
 		E6446D771AC967FE0099AFF1 /* HttpManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E6446D761AC967FE0099AFF1 /* HttpManager.m */; };
@@ -145,10 +148,10 @@
 		96AFB68B1AD3C8E700D6128E /* LoginModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginModel.m; sourceTree = "<group>"; };
 		96AFB68D1AD421D500D6128E /* NearByModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NearByModel.h; sourceTree = "<group>"; };
 		96AFB68E1AD421D500D6128E /* NearByModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NearByModel.m; sourceTree = "<group>"; };
-		96C397F11AFDF80E005E1BCA /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
-		96C397F21AFDF80E005E1BCA /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewController.m; sourceTree = "<group>"; };
 		96C8A6491AD6311D00372AF8 /* NSDataUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataUtil.h; sourceTree = "<group>"; };
 		96C8A64A1AD6311D00372AF8 /* NSDataUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataUtil.m; sourceTree = "<group>"; };
+		96CE0C911AFF393400004505 /* GothamRounded-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamRounded-Bold.otf"; sourceTree = "<group>"; };
+		96CE0C921AFF393400004505 /* GothamRounded-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamRounded-Book.otf"; sourceTree = "<group>"; };
 		96FCDE6B1AE4D2930040688F /* UIView+Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Common.h"; sourceTree = "<group>"; };
 		96FCDE6C1AE4D2930040688F /* UIView+Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Common.m"; sourceTree = "<group>"; };
 		96FCDE6E1AE4D99C0040688F /* MBProgressHUD+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+Helper.h"; sourceTree = "<group>"; };
@@ -483,6 +486,8 @@
 		E6A8083F1ABE55CB005E48C2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				96CE0C911AFF393400004505 /* GothamRounded-Bold.otf */,
+				96CE0C921AFF393400004505 /* GothamRounded-Book.otf */,
 				E6A808401ABE55CB005E48C2 /* Info.plist */,
 				E6A808411ABE55CB005E48C2 /* main.m */,
 			);
@@ -544,8 +549,6 @@
 				96A3F4FF1AE3B7D600A03BA2 /* FollowController.m */,
 				966C5D131AEC9929004EE35D /* ChatViewController.h */,
 				966C5D141AEC9929004EE35D /* ChatViewController.m */,
-				96C397F11AFDF80E005E1BCA /* SearchViewController.h */,
-				96C397F21AFDF80E005E1BCA /* SearchViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -735,10 +738,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96CE0C941AFF393400004505 /* GothamRounded-Book.otf in Resources */,
 				E65ADB591ABF0C9C00093199 /* 3-bg.png in Resources */,
 				E65ADB5A1ABF0C9C00093199 /* 3-bt.png in Resources */,
 				E6A8084E1ABE55CC005E48C2 /* Main.storyboard in Resources */,
 				E65ADB571ABF0C9C00093199 /* 1.png in Resources */,
+				96CE0C931AFF393400004505 /* GothamRounded-Bold.otf in Resources */,
 				E65ADB581ABF0C9C00093199 /* 2.png in Resources */,
 				E6A808531ABE55CC005E48C2 /* LaunchScreen.xib in Resources */,
 				E6A808501ABE55CC005E48C2 /* Images.xcassets in Resources */,
@@ -785,6 +790,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96CE0C951AFF394700004505 /* GothamRounded-Bold.otf in Sources */,
+				96CE0C961AFF394700004505 /* GothamRounded-Book.otf in Sources */,
 				E687147C1ACCEC11000ED631 /* UserInformationView.m in Sources */,
 				E6B8BAE81AC7CD1F003CA484 /* BaseView.m in Sources */,
 				966C5D151AEC9929004EE35D /* ChatViewController.m in Sources */,
@@ -847,7 +854,6 @@
 				965485D11AD55C550021F33D /* MessageModel.m in Sources */,
 				E6B8BAEE1AC7DA3C003CA484 /* RegisterThirdView.m in Sources */,
 				969378CF1AE23D4200BE585F /* UserInforCell.m in Sources */,
-				96C397F31AFDF80E005E1BCA /* SearchViewController.m in Sources */,
 				967D52E41AFB8BF400BF77E1 /* ChatRoomCell.m in Sources */,
 				E65D07E91ACA4FDC0074A3FB /* ProfileCell.m in Sources */,
 				9675D9EC1AD957440001B8F9 /* BlockListController.m in Sources */,
@@ -983,6 +989,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Hive/Classes/Libs/XMPP/Vendor/libidn",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1055,6 +1062,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Hive/Classes/Libs/XMPP/Vendor/libidn",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

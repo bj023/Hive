@@ -72,24 +72,34 @@
  *
  *  @return 返回 字典
  */
-+ (NSMutableDictionary *)parameterWithLongitude:(NSString *)longitude Latitude:(NSString *)latitude Gender:(NSString *)gender
++ (NSMutableDictionary *)parameterWithLongitude:(NSString *)longitude
+                                       Latitude:(NSString *)latitude
+                                         Gender:(NSString *)gender
+                                    StartNumber:(NSInteger)startNum
+                                    NumberCount:(NSInteger)numCount
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setObject:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID forKey:@"userId"];
     [parameters setObject:longitude forKey:@"longitude"];
     [parameters setObject:gender forKey:@"gender"];
     [parameters setObject:latitude forKey:@"latitude"];
+    
+    [parameters setObject:[NSString stringWithFormat:@"%ld",startNum] forKey:@"start"];
+    [parameters setObject:[NSString stringWithFormat:@"%ld",numCount] forKey:@"num"];
+
     return parameters;
 }
 // 附近人
 + (void)sendRequestWithLongitude:(NSString *)longitude
                         Latitude:(NSString *)latitude
-                          Gender:(NSString *)gender // 性别
+                          Gender:(NSString *)gender
+                     StartNumber:(NSInteger)startNum
+                     NumberCount:(NSInteger)numCount
                          success:(ResponseSuccBlcok)success
                          faliure:(HttpFailBlcok)faliure
 {
     NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_NearBy];
-    NSMutableDictionary *dict = [HttpTool parameterWithLongitude:longitude Latitude:latitude Gender:gender];
+    NSMutableDictionary *dict = [HttpTool parameterWithLongitude:longitude Latitude:latitude Gender:gender StartNumber:startNum NumberCount:numCount];
     [HttpManager postRequestWithBaseUrl:urlString params:dict success:^(id response) {
         success(response);
     } Fail:^(NSError *error) {

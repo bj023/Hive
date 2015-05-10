@@ -251,7 +251,7 @@
     
     [HttpTool sendRequestRegisterPhoneNum:_registerFirst.phoneNumText.text success:^(id json) {
         
-        ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:nil];
+        ResponseManagerModel *res = [[ResponseManagerModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
 
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -272,7 +272,7 @@
 
     [HttpTool sendRequestRegisterCode:[self.registerSecond hponeCode] success:^(id json) {
         
-        ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:nil];
+        ResponseManagerModel *res = [[ResponseManagerModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
 
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -294,7 +294,7 @@
     [HttpTool sendRequestRegisterEmail:_registerThird.emailText.text UserName:_registerThird.userNameText.text Passwowd:_registerThird.passwordText.text success:^(id json) {
         
         
-        ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:nil];
+        ResponseManagerModel *res = [[ResponseManagerModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
 
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];

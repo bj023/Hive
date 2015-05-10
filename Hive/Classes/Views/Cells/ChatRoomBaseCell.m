@@ -48,8 +48,8 @@
     [self.contentView addSubview:_headImgaeView];
     
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _nameLabel.textColor = [UIColor blackColor];
-    _nameLabel.font = [UIFont systemFontOfSize:12];
+    _nameLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
+    _nameLabel.font = [UIFont fontWithName:GothamRoundedBook size:12];
     [self.contentView addSubview:_nameLabel];
     
     _bubbleView = [[ChatBubbleView alloc] initWithFrame:CGRectZero];
@@ -58,7 +58,7 @@
     
     _timeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     _timeLabel.font = [UIFont systemFontOfSize:12];
-    _timeLabel.textColor = [UIColor grayColor];
+    _timeLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
     _timeLabel.textAlignment = NSTextAlignmentCenter;
     [self.contentView addSubview:_timeLabel];
 }
@@ -87,33 +87,36 @@
     
     CGFloat width = 80;
     CGFloat x = UIWIDTH/2 - width/2;
-    CGFloat y = CELLPADDING;
-    CGFloat height = IsEmpty(_message.isTime)?0:NAME_LABEL_HEIGHT;
+    CGFloat y = CELLPADDING + (IsEmpty(_message.isTime)?0:5);
+    CGFloat height = IsEmpty(_message.isTime)?0:TIME_HEIGHT;
     // 时间周期
     _timeView.frame = CGRectMake(x, y, width, height);
     
     // 头像
-    y = _timeView.frame.origin.y + height + CELLPADDING;
+    y = _timeView.frame.origin.y + height + CELLPADDING ;
     _headImgaeView.frame = CGRectMake(HEAD_PADDING, y, HEAD_SIZE, HEAD_SIZE);
     
     // 姓名
     x = _headImgaeView.frame.origin.x + _headImgaeView.frame.size.width + HEAD_PADDING;
-    _nameLabel.frame = CGRectMake(x, y, NAME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
+    _nameLabel.frame = CGRectMake(x, y + (IsEmpty(_message.isTime)?0:5), NAME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
     
     // 气泡
-    width = messageSize.width + kMessage_Left * 2;
-    height = messageSize.height + kMessage_Top * 2;
-    y = _nameLabel.frame.origin.y + _nameLabel.frame.size.height + 5;
+    width = messageSize.width + kMessage_Left + kMessage_Right;
+    height = messageSize.height + kMessage_Top  + kMessage_Buttom;
+    y = _nameLabel.frame.origin.y + _nameLabel.frame.size.height + 2;
     _bubbleView.frame = CGRectMake(x, y, width, height);
     
     // 发表时间
-    x = _bubbleView.frame.origin.x + _bubbleView.frame.size.width + HEAD_PADDING;
-    y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT;
+    x = _bubbleView.frame.origin.x + _bubbleView.frame.size.width + HEAD_PADDING - 6;
+    y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT - 6;
     _timeLabel.frame = CGRectMake(x, y, TIME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
     
     // 设置气泡
     BOOL isAname = [_message.isAname isEqualToString:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID];
-    UIImage *image = [UIImage imageNamed:isAname?@"chat_orange":@"chat_gray"];
+    //UIImage *image = [UIImage imageNamed:isAname?@"chat_orange":@"chat_gray"];
+    _bubbleView.messageLabel.textColor = isAname?[UIColor whiteColor]:[UIColorUtil colorWithHexString:@"#1a1a1a"];
+    
+    UIImage *image = [UIImage imageNamed:isAname?@"WeChat_Orange":@"WeChat_gray"];
     image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
     _bubbleView.image = image;
 }
@@ -122,25 +125,25 @@
 {
     CGFloat width = 80;
     CGFloat x = UIWIDTH/2 - width/2;
-    CGFloat y = CELLPADDING;
-    CGFloat height = IsEmpty(_message.isTime)?0:NAME_LABEL_HEIGHT;
+    CGFloat y = CELLPADDING + (IsEmpty(_message.isTime)?0:5);
+    CGFloat height = IsEmpty(_message.isTime)?0:TIME_HEIGHT;
     // 时间周期
     _timeView.frame = CGRectMake(x, y, width, height);
     
     // 气泡
-    width = messageSize.width + kMessage_Left * 2;
-    height = messageSize.height + kMessage_Top * 2;
-    x = UIWIDTH - width;
+    width = messageSize.width + kMessage_Left + kMessage_Right;
+    height = messageSize.height + kMessage_Top  + kMessage_Buttom;
+    x = UIWIDTH - width - HEAD_PADDING + 6;
     y = _timeView.frame.origin.y + _timeView.frame.size.height + 5;
     _bubbleView.frame = CGRectMake(x, y, width, height);
     
     // 发表时间
-    x = _bubbleView.frame.origin.x - TIME_LABEL_WIDTH - HEAD_PADDING;
-    y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT;
+    x = _bubbleView.frame.origin.x - TIME_LABEL_WIDTH - HEAD_PADDING + 4;
+    y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT - 6;
     _timeLabel.frame = CGRectMake(x, y, TIME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
     
     // 设置气泡
-    UIImage *image = [UIImage imageNamed:@"myChat"];
+    UIImage *image = [UIImage imageNamed:@"WeChat"];//myChat
     image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
     _bubbleView.image = image;
 }
@@ -162,7 +165,7 @@
         if ([message.isStealth isEqualToString:@"1"]){
             _nameLabel.text = [NSString stringWithFormat:@"隐身用户 %@",distance];
         }else
-            _nameLabel.text = [NSString stringWithFormat:@"%@ %@",_message.userName,distance];
+            _nameLabel.text = [NSString stringWithFormat:@"%@  %@",_message.userName,distance];
     }
     
     self.timeLabel.text = [UtilDate dateFromString:_message.time withFormat:DateFormat_HM];
@@ -188,7 +191,7 @@
     
     height = height + (isShow?0:NAME_LABEL_HEIGHT) + CELLPADDING ;
     
-    height = height + (IsEmpty(message.isTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING)) + CELLPADDING;
+    height = height + (IsEmpty(message.isTime)?CELLPADDING:(TIME_HEIGHT + 10 + 5)) + CELLPADDING;
     
     return height;
 }

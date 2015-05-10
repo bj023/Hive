@@ -7,14 +7,13 @@
 //
 
 #import "ChatBubbleView.h"
+#import "Utils.h"
 
 #define MESSAGE_FONT_SIZE [UIFont systemFontOfSize:16] // 字体
 
 
 @interface ChatBubbleView ()
-{
-    UILabel *_messageLabel;
-}
+
 @end
 
 @implementation ChatBubbleView
@@ -41,9 +40,9 @@
     [super layoutSubviews];
     
     CGFloat messageY = kMessage_Top;
-    CGFloat messageX = kMessage_Left - (_isMe?2:-3);
-    CGFloat messageW = self.frame.size.width - 2 * kMessage_Left;
-    CGFloat messageH = self.frame.size.height - 2 * kMessage_Top;
+    CGFloat messageX = kMessage_Left ;//- (_isMe?2:-3);
+    CGFloat messageW = self.frame.size.width -  kMessage_Left - kMessage_Right;
+    CGFloat messageH = self.frame.size.height - kMessage_Top - kMessage_Buttom;
     
     _messageLabel.frame = CGRectMake(messageX, messageY, messageW, messageH);
 }
@@ -56,6 +55,6 @@
 - (void)setIsMe:(BOOL)isMe
 {
     _isMe = isMe;
-    _messageLabel.textColor = isMe?[UIColor whiteColor]:[UIColor blackColor];
+    _messageLabel.textColor = isMe?[UIColor whiteColor]:[UIColorUtil colorWithHexString:@"#1a1a1a"];
 }
 @end

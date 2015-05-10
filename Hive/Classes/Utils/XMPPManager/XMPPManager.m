@@ -360,6 +360,8 @@ static XMPPManager *sharedManager;
 
 }
 
+
+
 #pragma -mark 保存收到的消息
 // 聊天室
 - (void)receiveChatRoomMessage:(XMPPMessage *)message
@@ -374,20 +376,18 @@ static XMPPManager *sharedManager;
     NSString *latitude = [[message attributeForName:@"latitude"] stringValue];
     NSString *isTime = [XMPPManager getTime:time];
     
-    /**/
+    /*
     UIApplication *application = [UIApplication sharedApplication];
     
     __block UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
         [application endBackgroundTask:bgTask];
         bgTask = UIBackgroundTaskInvalid;
     }];
-    
+    */
 
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         
-        NSInteger idStart = [ChatRoomModel MR_findAll].count;
-
         ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
         model.userID = [self getUserId:from];
         model.message = [[message elementForName:@"body"]  stringValue];
@@ -400,12 +400,15 @@ static XMPPManager *sharedManager;
         model.userName = name;
         model.isStealth = [[message attributeForName:@"isStealth"] stringValue];
         model.isTime = isTime;
-        model.id = @(idStart++);
+        NSInteger count = [ChatRoomModel MR_countOfEntitiesWithContext:localContext];
+        model.id = @(count+1);
+        
+        debugLog(@"/n/n/nchatRoom->%@/n/n/n",model.id);
         
     } completion:^(BOOL success, NSError *error) {
         
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
+        //[application endBackgroundTask:bgTask];
+        //bgTask = UIBackgroundTaskInvalid;
         
         if ([self.delegate respondsToSelector:@selector(receiveChatRoomMessageWithMessageID:)]) {
             [self.delegate receiveChatRoomMessageWithMessageID:msgId];
@@ -449,11 +452,10 @@ static XMPPManager *sharedManager;
         bgTask = UIBackgroundTaskInvalid;
     }];
      
-    
     /**/
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         
-        NSInteger idStart = [ChatModel MR_findAll].count;
+        //NSInteger idStart = [ChatModel MR_findAllInContext:localContext].count;
 
         ChatModel *model = [ChatModel MR_createInContext:localContext];
         model.userID = [self getUserId:from];
@@ -467,9 +469,11 @@ static XMPPManager *sharedManager;
         model.hasStealth = hasStealth;
         model.hasRead = @"NO";
         model.hasTime = isTime;
-        
-        model.id = @(idStart++);
-        
+        NSInteger count = [ChatModel MR_countOfEntitiesWithContext:localContext];
+        model.id = @(count+1);
+
+        debugLog(@"/n/n/nchat->%@/n/n/n",model.id);
+
     } completion:^(BOOL success, NSError *error) {
      
         [application endBackgroundTask:bgTask];

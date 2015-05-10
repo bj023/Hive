@@ -7,6 +7,7 @@
 //
 
 #import "SLPagingViewController.h"
+#import "UIColorUtil.h"
 
 @interface SLPagingViewController () <UIScrollViewDelegate>
 
@@ -238,6 +239,9 @@
     [super viewWillLayoutSubviews];
     
     self.navigationBarView.frame = (CGRect){0, 0, SCREEN_SIZE.width, 44};
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, SCREEN_SIZE.width, 1)];
+    [self.navigationBarView addSubview:lineView];
+    lineView.backgroundColor = [UIColorUtil colorWithHexString:@"e5e5ea"];
 }
 
 #pragma mark - public methods
@@ -355,7 +359,7 @@
     CGFloat distance = (SCREEN_SIZE.width/2) - self.navigationSideItemsStyle;
     CGSize vSize = ([v isKindOfClass:[UILabel class]])? [self getLabelSize:(UILabel*)v] : v.frame.size;
     CGFloat originX = (SCREEN_SIZE.width/2 - vSize.width/2) + self.navItemsViews.count*distance;
-    v.frame = (CGRect){originX, 8, vSize.width, vSize.height};
+    v.frame = (CGRect){originX, 16, vSize.width, vSize.height};
     v.tag = tag;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(tapOnHeader:)];
@@ -495,10 +499,12 @@
 -(void)updateNavItems:(CGFloat) xOffset{
     __block int i = 0;
     [self.navItemsViews enumerateObjectsUsingBlock:^(UIView* v, NSUInteger idx, BOOL *stop) {
+     
         CGFloat distance = (SCREEN_SIZE.width/2) - self.navigationSideItemsStyle;
+        
         CGSize vSize     = ([v isKindOfClass:[UILabel class]])? [self getLabelSize:(UILabel*)v] : v.frame.size;
         CGFloat originX  = ((SCREEN_SIZE.width/2 - vSize.width/2) + i*distance) - xOffset/(SCREEN_SIZE.width/distance);
-        v.frame          = (CGRect){originX, 8, vSize.width, vSize.height};
+        v.frame          = (CGRect){originX, 16, vSize.width, vSize.height};
         i++;
     }];
 }

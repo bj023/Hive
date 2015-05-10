@@ -73,9 +73,9 @@
             }
             
             self.lineIMG = [[UIImageView alloc] init];
-            self.lineIMG.backgroundColor = [UIColorUtil colorWithHexString:@"#cdcdd1"];
+            self.lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];//[UIColorUtil colorWithHexString:@"#e8e8e8"];
             [self.contentView addSubview:self.lineIMG];
-            self.lineIMG.frame = CGRectMake(16, [NotificationNorCell getNotificationCellHeight] - 0.5, UIWIDTH - 16, 0.5);
+            self.lineIMG.frame = CGRectMake(16, [NotificationNorCell getNotificationCellHeight] - 1, UIWIDTH - 16, 1);
         }
     }
     return self;

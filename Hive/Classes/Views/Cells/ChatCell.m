@@ -175,7 +175,9 @@
     CGFloat bubbleH = size.height + self.messageLabel.frame.origin.y * 2;
     self.bubbleIMG.frame = CGRectMake(bubbleX, bubbleY, bubbleW, bubbleH);
     
-    UIImage *image = [UIImage imageNamed:aName?@"chat_orange":@"chat_gray"];
+    //UIImage *image = [UIImage imageNamed:aName?@"chat_orange":@"chat_gray"];
+    //UIImage *image = [UIImage imageNamed:aName?@"WeChat_Orange":@"WeChat_gray"];
+    UIImage *image = [UIImage imageNamed:@"WeChat_gray"];
     image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
     self.bubbleIMG.image = image;
     
@@ -198,7 +200,7 @@
     CGFloat bubbleH = size.height + Message_Y * 2;
     self.bubbleIMG.frame = CGRectMake(bubbleX, bubbleY, bubbleW, bubbleH);
     
-    UIImage *image = [UIImage imageNamed:@"myChat"];
+    UIImage *image = [UIImage imageNamed:@"WeChat"];//myChat
     image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
     self.bubbleIMG.image = image;
     

@@ -43,10 +43,16 @@
 #define SettingsFont [UIFont fontWithName:Font_Regular size:17]//设置页字体
 // 提示字体
 #define HintFont [UIFont fontWithName:Font_Medium size:16]
-#define TextFont [UIFont fontWithName:Font_Medium size:18]
-#define TitleFont [UIFont fontWithName:Font_Medium size:22]
-#define ActionSheetFont [UIFont fontWithName:@"fafafa" size:18]
-#define NavTitleFont [UIFont fontWithName:Font_Medium size:18]
+#define TitleFont [UIFont fontWithName:Font_Medium size:18]
+#define ActionSheetFont [UIFont fontWithName:@"regular" size:18]//fafafa
+
+
+#define NavTitleFont [UIFont fontWithName:GothamRoundedBold size:18]
+#define TextFont [UIFont fontWithName:GothamRoundedBold size:18]
+
+#define GothamRoundedBook @"GothamRounded-Book"
+#define GothamRoundedBold @"GothamRounded-Bold"
+
 // 中号字体
 #define Font_Medium @"HelveticaNeue-Medium"
 #define Font_Helvetica @"HelveticaNeue"

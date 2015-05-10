@@ -44,6 +44,8 @@ typedef void(^ResponseSuccBlcok)(id json);
 + (void)sendRequestWithLongitude:(NSString *)longitude
                         Latitude:(NSString *)latitude
                           Gender:(NSString *)gender
+                     StartNumber:(NSInteger)startNum
+                     NumberCount:(NSInteger)numCount
                          success:(ResponseSuccBlcok)success
                          faliure:(HttpFailBlcok)faliure;
 

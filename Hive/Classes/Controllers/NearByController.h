@@ -9,6 +9,12 @@
 #import "MainViewController.h"
 #import "NearByModel.h"
 
+typedef enum{
+    All = 0,
+    Male = 1,
+    Female = 3,
+} SelectType;
+
 typedef void(^NearByControllerBlock)(NearByModel * model, NSIndexPath *indexpath);
 
 @interface NearByController : MainViewController

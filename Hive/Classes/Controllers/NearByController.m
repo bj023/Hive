@@ -11,12 +11,14 @@
 #import "NearByCell.h"
 #import "CustomActionSheetView.h"
 #import "NSTimeUtil.h"
+#import <MJRefresh.h>
 
 @interface NearByController ()<UITableViewDataSource, UITableViewDelegate>
 @property (strong, nonatomic) UITableView *nearByTable;
 @property (strong, nonatomic) NSMutableArray *dataSource;
 @property (strong, nonatomic) UIButton *selectBtn;
 @property (strong, nonatomic) CustomActionSheetView *sheet;
+@property (assign, nonatomic) SelectType selectType;
 @end
 
 @implementation NearByController
@@ -36,7 +38,7 @@
     if (!_selectBtn) {
         _selectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_selectBtn setTitle:@"Select" forState:UIControlStateNormal];
-        [_selectBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_selectBtn setTitleColor:[UIColorUtil colorWithHexString:@"#1e2d3b"] forState:UIControlStateNormal];
         _selectBtn.titleLabel.font = [UIFont fontWithName:Font_Light size:15];
         _selectBtn.frame = CGRectMake(UIWIDTH - 70, 0, 60, 44);
         [_selectBtn addTarget:self action:@selector(clickSelectAction) forControlEvents:UIControlEventTouchUpInside];
@@ -52,8 +54,10 @@
     __weak NearByController *weakSelf = self;
     self.sheet.clickActionSheetAtIdex = ^(NSInteger index){
         if (index == 0) {
+            weakSelf.selectType = (int)index;
             [weakSelf sendNearByActionWithGender:@""];
         }else if (index == 1 || index == 2) {
+            weakSelf.selectType = (int)index;
             [weakSelf sendNearByActionWithGender:[NSString stringWithFormat:@"%ld",index]];
         }
     };
@@ -76,6 +80,9 @@
         self.nearByTable.delegate        = self;
         self.nearByTable.dataSource      = self;
         [self.view addSubview:self.nearByTable];
+        
+        [self.nearByTable addLegendFooterWithRefreshingTarget:self refreshingAction:@selector(loadMoreData:)];
+
     }
 }
 
@@ -130,6 +137,11 @@
     }
 }
 
+- (void)loadMoreData:(id)sender
+{
+    [self sendNearByActionWithGender:[NSString stringWithFormat:@"%d",self.selectType]];
+}
+
 - (void)sendNearByActionWithGender:(NSString *)gender
 {
     
@@ -143,24 +155,33 @@
     }
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    //gender 性别
-    [HttpTool sendRequestWithLongitude:longitude Latitude:latitude Gender:gender success:^(id json) {
-        
 
+    [HttpTool sendRequestWithLongitude:longitude Latitude:latitude Gender:gender StartNumber:self.dataSource.count NumberCount:10 success:^(id json) {
+        
         NSError *error = nil;
         ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:&error];
         if (!error) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-
-            self.dataSource = [NSMutableArray arrayWithArray:res.content];
+            
+            if (self.dataSource.count<10) {
+                self.dataSource = [NSMutableArray arrayWithArray:res.content];
+            }else
+                [self.dataSource addObjectsFromArray:res.content];
+            
             [self.nearByTable reloadData];
         }else
             [self showHudWith:ErrorRequestText];
         
+        [self.nearByTable.footer endRefreshing];
+
         
     } faliure:^(NSError *error) {
+
+        [self.nearByTable.footer endRefreshing];
+
         [self showHudWith:ErrorText];
     }];
+    
 }
 
 - (void)showHudWith:(NSString *)text

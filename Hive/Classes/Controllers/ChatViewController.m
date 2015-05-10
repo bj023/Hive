@@ -88,7 +88,7 @@
 {
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [backBtn setTitle:@"Back" forState:UIControlStateNormal];
-    [backBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [backBtn setTitleColor:[UIColorUtil colorWithHexString:@"#1e2d3b"] forState:UIControlStateNormal];
     backBtn.frame = CGRectMake(0, 0, 60, 30);
     backBtn.titleLabel.font = NavTitleFont;
     UIBarButtonItem *bacgItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
@@ -252,6 +252,7 @@
         ChatModel *model = [ChatModel MR_createInContext:localContext];
         model.id = [NSNumber numberWithInteger:(self.mesgaeArr.count + 1)];
         model.userID = self.userID;
+        model.userName = self.userName;
         model.message = message;
         model.time = currentTime;
         model.flag = @"ME";

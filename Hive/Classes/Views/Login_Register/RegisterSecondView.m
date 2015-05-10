@@ -86,6 +86,16 @@
     self.introLabel.textColor = [UIColorUtil colorWithCodea0a0a0];
     self.introLabel.text = EnterCodeString;
     [self addSubview:self.introLabel];
+    
+    self.validationText1.userInteractionEnabled = YES;
+    self.validationText2.userInteractionEnabled = YES;
+    self.validationText3.userInteractionEnabled = YES;
+    self.validationText4.userInteractionEnabled = YES;
+    [self.validationText1 addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(become_FirstResponder)]];
+    [self.validationText2 addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(become_FirstResponder)]];
+
+    [self.validationText3 addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(become_FirstResponder)]];
+    [self.validationText4 addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(become_FirstResponder)]];
 }
 
 #pragma -mark UITextField 代理

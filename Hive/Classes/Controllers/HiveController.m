@@ -49,8 +49,8 @@
 - (void)configMessageArr
 {
     
-    NSArray *ret = [DataBaseModel NSManagedObject:[ChatRoomModel class] findStart:1 andCount:1];
-    
+    //NSArray *ret = [DataBaseModel NSManagedObject:[ChatRoomModel class] findStart:1 andCount:1];
+    NSArray *ret = [ChatRoomModel MR_findAll];
     debugLog(@"获取数据->%ld",ret.count);
     self.mesgaeArr = [NSMutableArray arrayWithArray:ret];
     

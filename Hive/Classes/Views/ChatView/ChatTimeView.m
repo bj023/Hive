@@ -39,12 +39,12 @@
 {
     self.layer.cornerRadius = 10;
     self.layer.masksToBounds = YES;
-    self.backgroundColor = [UIColor lightGrayColor];
+    self.backgroundColor = [UIColorUtil colorWithHexString:@"e8e8e8"];
     
 
     if (!_timeLabel) {
         _timeLabel = [[UILabel alloc] init];
-        _timeLabel.textColor = [UIColor blackColor];
+        _timeLabel.textColor = [UIColor whiteColor];
         _timeLabel.textAlignment = NSTextAlignmentCenter;
         _timeLabel.font = [UIFont systemFontOfSize:12];
         [self addSubview:_timeLabel];

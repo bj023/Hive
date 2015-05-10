@@ -33,6 +33,7 @@
     MessagesController *_messagesVC;
     HiveController *_hiveVC;
     NearByController *_nearByVC;
+    //MessageTableViewController *_messagesVC;
     
     MAMapView *_mapView;
     
@@ -51,6 +52,7 @@
     [self clickCellAction];
     [self clickUserHeadAction];
     //[self performSelector:@selector(removeMapView) withObject:nil afterDelay:3];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -68,15 +70,15 @@
 #pragma -mark TWitter 导航效果
 - (void)configPagingVC
 {
-    UIColor *orange = [UIColorUtil colorWithHexString:@"#ffffff"];
-    UIColor *gray = [UIColorUtil colorWithHexString:@"#5a5e66"];
-
+    UIColor *orange = [UIColorUtil colorWithHexString:@"#1e2d3b"];
+    UIColor *gray = [UIColorUtil colorWithHexString:@"#ced3d7"];
+//[UIColorUtil colorWithHexString:@"#1b2430"]
     pageViewController = [[SLPagingViewController alloc] initWithNavBarItems:[self titlesArr]
-                                                            navBarBackground:[UIColorUtil colorWithHexString:@"#1b2430"]
+                                                            navBarBackground:[UIColor whiteColor]
                                                                  controllers:[self twitterVC]
                                                              showPageControl:NO];
     
-    pageViewController.navigationSideItemsStyle = SLNavigationSideItemsStyleDefault;
+    pageViewController.navigationSideItemsStyle = SLNavigationSideItemsStyleOnBounds;
     // Tinder Like
     pageViewController.pagingViewMoving = ^(NSArray *subviews){
         //int i = 0;
@@ -87,7 +89,7 @@
                 // Left part
                 c = [UIColorUtil gradient:v.frame.origin.x
                                top:46
-                            bottom:144
+                            bottom:140
                               init:orange
                               goal:gray];
             else if(v.frame.origin.x > 145
@@ -140,46 +142,48 @@
 
 - (NSArray *)twitterVC
 {
-    if (!_settingsVC)
-        _settingsVC = [[SettingsController alloc] init];
-    if (!_messagesVC){
-        _messagesVC = [[MessagesController alloc] init];
-    }
-    if (!_hiveVC)
-        _hiveVC     = [[HiveController alloc] init];
-    if (!_nearByVC)
-        _nearByVC   = [[NearByController alloc] init];
+    _settingsVC = [[SettingsController alloc] init];
+    _messagesVC = [[MessagesController alloc] init];
+    UINavigationController *mesNav = [[UINavigationController alloc] initWithRootViewController:_messagesVC];
+    _messagesVC.navigationController.navigationBarHidden = YES;
+    _hiveVC     = [[HiveController alloc] init];
+    _nearByVC   = [[NearByController alloc] init];
     _settingsVC.view.frame = self.view.bounds;
     _messagesVC.view.frame = self.view.bounds;
     _hiveVC.view.frame = self.view.bounds;
     _nearByVC.view.frame = self.view.bounds;
 
-    return @[_settingsVC,_messagesVC,_hiveVC,_nearByVC];
+    return @[_settingsVC,mesNav,_hiveVC,_nearByVC];
 }
 
 - (NSArray *)titlesArr
-{
-    UILabel *ticketNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-    [ticketNameLabel setText:@"Setting"];
-    [ticketNameLabel setTextColor:[UIColor whiteColor]];
+{    
+    UILabel *ticketNameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    [ticketNameLabel setText:@"SETTINGS"];
+    //[ticketNameLabel setTextColor:[UIColor whiteColor]];
     [ticketNameLabel setFont:TextFont];
     
-    _messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-    [_messageLabel setText:@"Message"];
-    [_messageLabel setTextColor:[UIColor whiteColor]];
+    _messageLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    [_messageLabel setText:@"CHATS"];
+    //[_messageLabel setTextColor:[UIColor whiteColor]];
     [_messageLabel setFont:TextFont];
     
-    UILabel *ticketNameLabel3 = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    UILabel *ticketNameLabel3 = [[UILabel alloc] initWithFrame:CGRectZero];
     
-    [ticketNameLabel3 setText:@"We"];
-    [ticketNameLabel3 setTextColor:[UIColor whiteColor]];
-    [ticketNameLabel3 setFont:TitleFont];
+    [ticketNameLabel3 setText:@"WEWE"];
+    //[ticketNameLabel3 setTextColor:[UIColor whiteColor]];
+    [ticketNameLabel3 setFont:TextFont];
     
-    UILabel *ticketNameLabel4 = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    UILabel *ticketNameLabel4 = [[UILabel alloc] initWithFrame:CGRectZero];
     
-    [ticketNameLabel4 setText:@"Nearby"];
-    [ticketNameLabel4 setTextColor:[UIColor whiteColor]];
+    [ticketNameLabel4 setText:@"NEARBY"];
+    //[ticketNameLabel4 setTextColor:[UIColor whiteColor]];
     [ticketNameLabel4 setFont:TextFont];
+    
+//    ticketNameLabel.backgroundColor = [UIColor redColor];
+//    ticketNameLabel3.backgroundColor = [UIColor blackColor];
+//    ticketNameLabel4.backgroundColor = [UIColor blueColor];
+//    _messageLabel.backgroundColor = [UIColor greenColor];
     
     return @[ticketNameLabel,_messageLabel,ticketNameLabel3,ticketNameLabel4];
 }
@@ -323,6 +327,7 @@
 
     ChatViewController *chatVC = [[ChatViewController alloc] init];
     chatVC.userID = [NSString stringWithFormat:@"%d",model.userId];
+    chatVC.userName = model.userName;
     chatVC.title = model.userName;
     [self.navigationController pushViewController:chatVC animated:YES];
 }
@@ -331,6 +336,7 @@
 {
     ChatViewController *chatVC = [[ChatViewController alloc] init];
     chatVC.userID = model.userID;
+    chatVC.userName = model.userName;
     chatVC.title = model.userName;
     [self.navigationController pushViewController:chatVC animated:YES];
 }
