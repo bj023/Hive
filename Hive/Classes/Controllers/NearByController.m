@@ -18,6 +18,8 @@
 #define kSelectBtnHeight 26
 #define kSelectBtnWidth 60
 
+#define kTopViewHeight 50/2
+
 @interface NearByController ()<UITableViewDataSource, UITableViewDelegate>
 {
     UIRefreshControl *_refreshControl;
@@ -33,6 +35,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self configPeopleNearBy];
     [self configTableView];
 }
 
@@ -79,12 +82,28 @@
     _selectBtn.frame = CGRectMake(padding - kSelectBtnRightPadding, kSelectBtnTopPadding, kSelectBtnWidth, kSelectBtnHeight);
 }
 
+#pragma -mark people nearby
+- (void)configPeopleNearBy
+{
+    UIView *peopleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, kTopViewHeight)];
+    peopleView.backgroundColor = [UIColorUtil colorWithHexString:@"#f1efee"];
+    [self.view addSubview:peopleView];
+    
+    UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 200, kTopViewHeight)];
+    titleLab.backgroundColor = [UIColor clearColor];
+    titleLab.textColor = [UIColor grayColor];
+    titleLab.font = [UIFont fontWithName:GothamRoundedBook size:14];
+    titleLab.text = @"People Nearby";
+    [peopleView addSubview:titleLab];
+}
+
 #pragma -mark 初始化 Message TableView
 - (void)configTableView
 {
     if (!self.nearByTable) {
         CGRect frame = self.view.bounds;
-        frame.size.height -= 64;
+        frame.origin.y = kTopViewHeight;
+        frame.size.height -= (64 + kTopViewHeight);
         self.nearByTable                 = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
         self.nearByTable.backgroundColor = [UIColor clearColor];
         self.nearByTable.separatorStyle  = UITableViewCellSeparatorStyleNone;

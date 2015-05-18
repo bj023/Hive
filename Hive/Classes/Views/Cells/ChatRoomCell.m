@@ -35,27 +35,30 @@
         
         self.delegate = delegate;
         
-        // 发送进度显示view
-        _activityView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE)];
-        [_activityView setHidden:NO];
-        [self.contentView addSubview:_activityView];
-        
-        
         // 菊花
+        /*
         _activtiy = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         _activtiy.frame = CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
         _activtiy.backgroundColor = [UIColor clearColor];
         [_activityView addSubview:_activtiy];
+        */
         
-        
+        _activtiyImg = [[UIImageView alloc] init];
+
+        _activtiyImg.animationImages = @[[UIImage imageNamed:@"load1"],
+                                         [UIImage imageNamed:@"load2"],
+                                         [UIImage imageNamed:@"load3"]];
+        _activtiyImg.animationDuration = 0.8;
+        [self.contentView addSubview:_activtiyImg];
+        [_activtiyImg startAnimating];
         // 重发按钮
         _retryButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        _retryButton.frame = CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
+        //_retryButton.frame = CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
         //[_retryButton addTarget:self action:@selector(retryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_retryButton setBackgroundImage:[UIImage imageNamed:@"messageSendFail.png"] forState:UIControlStateNormal];
         [_retryButton setBackgroundColor:[UIColor whiteColor]];
-        [_activityView addSubview:_retryButton];
-        _retryButton.hidden = YES;
+        [self.contentView addSubview:_retryButton];
+         //_retryButton.hidden = YES;
         
         /*
          
@@ -99,41 +102,43 @@
     
     BOOL isShow = [self.message.msg_flag isEqualToString:@"ME"]?YES:NO;
     BOOL isSend = [self.message.msg_isSend boolValue];
-
-    _activityView.frame = CGRectMake(0, self.bubbleView.frame.origin.y, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
-    
-    
-    _activtiy.frame = CGRectMake(self.timeLabel.frame.origin.x - SEND_STATUS_SIZE, 0, SEND_STATUS_SIZE, isShow?SEND_STATUS_SIZE:0);
-    
-    _retryButton.frame = CGRectMake(self.timeLabel.frame.origin.x - SEND_STATUS_SIZE, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
-
-    if (!isSend) {
-        [_activtiy startAnimating];
-    }
     
     if (isShow) {
-        _activityView.hidden = isSend;
-        _retryButton.hidden = isSend;
-        _activtiy.hidden = isSend;
+        
+        if (!isSend) {
+            _retryButton.hidden = NO;
+            //_activtiyImg.hidden = YES;
+            [self updateBubbleFrame];
+        }else{
+            _retryButton.hidden = YES;
+            //[_activtiyImg stopAnimating];
+            //_activtiyImg.hidden = YES;
+        }
+        
     }else{
-        _activityView.hidden = YES;
-        _activtiy.hidden = YES;
-        _hasRead.hidden = YES;
+        _retryButton.hidden = YES;
+        _activtiyImg.hidden = YES;
     }
-    
 }
 
-- (void)set_sendMessageState:(BOOL)isSend
+- (void)updateBubbleFrame
 {
+    CGFloat padding = 10;
+    CGFloat retryW = 30;
+    CGFloat retryH = retryW;
+    CGFloat retryX = UIWIDTH - retryW - padding;
+    CGFloat retryY = self.bubbleView.frame.origin.y + 2;
+    _retryButton.frame = CGRectMake(retryX, retryY, retryW, retryH);
+    CGRect bubbleF = self.bubbleView.frame;
+    bubbleF.origin.x -= (retryW + padding + 5);
+    self.bubbleView.frame = bubbleF;
     
-    if (isSend) {
-        [_activtiy stopAnimating];
-        _activtiy.hidden = YES;
-        _retryButton.hidden = YES;
-    }else
-    {
-        _retryButton.hidden = NO;
-    }
+    CGRect timeF = self.timeLabel.frame;
+    timeF.origin.x -= (retryW + padding + 5);
+    self.timeLabel.frame = timeF;
+    
+    _activtiyImg.frame = CGRectMake(self.timeLabel.frame.origin.x + 7, self.timeLabel.frame.origin.y - 5, SEND_STATUS_SIZE, 4);
+
 }
 
 - (void)setMessage:(ChatRoomModel *)message
@@ -158,10 +163,8 @@
 
 #pragma -mark 长按气泡 弹出菜单
 - (void)longPressChatRoomAction:(UIGestureRecognizer *)recognizer{
+    
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        
-        debugLog(@"%lf-%lf",recognizer.view.frame.origin.x,recognizer.view.frame.origin.y);
-        
         
         UIView *view = recognizer.view;
         [self becomeFirstResponder];

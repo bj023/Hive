@@ -16,6 +16,7 @@
 #import "UserInformationController.h"
 #import "DataBaseModel.h"
 
+
 @interface HiveController ()<MessageToolBarDelegate, UITableViewDataSource, UITableViewDelegate, ChatPublicMessageDelegate, ChatRoomViewCellDelegate>
 {
     NSString *_isAname;
@@ -68,6 +69,7 @@
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.mesgaeArr.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     });
 }
+
 
 
 #pragma -mark 初始化 表格
@@ -254,6 +256,7 @@
         model.msg_Interval_time = [NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970]];
         
     } completion:^(BOOL success, NSError *error) {
+        
         [self scrollToRowWithMessageID:messageID];
         
         [[XMPPManager sharedInstance] sendNewMessage:message Time:currentTime Message:messageID isAname:_isAname];
@@ -278,15 +281,15 @@
 
             } completion:^(BOOL success, NSError *error) {
                 
-                debugLog(@"修改成功");
+                debugLog(@"已发送->修改成功");
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    //ChatRoomCell *cell = (ChatRoomCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                    //[cell set_sendMessageState:isSend];
+                    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                });
                 
             }];
-
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                ChatRoomCell *cell = (ChatRoomCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                [cell set_sendMessageState:isSend];
-            });
             
             return;
         }
@@ -326,23 +329,6 @@
 - (void)set_HiddenKeyboard
 {
     [self.chatToolBar endEditing:YES];
-}
-
-#pragma -mark  Menu菜单
-//允许 Menu菜单
-- (BOOL)tableView:(UITableView *)tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return YES;
-}
-//每个cell都会点击出现Menu菜单
-- (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
-{
-    return YES;
-}
-
-- (void)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
-{
-    debugMethod();
 }
 
 - (void)dealloc

@@ -114,7 +114,7 @@
         {
             showString = @"正在使用wifi网络";
             if ([[UserInfoManager sharedInstance] checkUserIsLogin]) {
-               // [[XMPPManager sharedInstance] connect];
+                [[XMPPManager sharedInstance] connect];
             }
         }
             break;

@@ -32,7 +32,7 @@
 
     
     [self configTableView];
-    [self configSearBtn];
+    //[self configSearBtn];
     
 }
 
