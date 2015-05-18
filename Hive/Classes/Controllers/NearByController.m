@@ -13,7 +13,15 @@
 #import "NSTimeUtil.h"
 #import <MJRefresh.h>
 
+#define kSelectBtnTopPadding 9
+#define kSelectBtnRightPadding 70
+#define kSelectBtnHeight 26
+#define kSelectBtnWidth 60
+
 @interface NearByController ()<UITableViewDataSource, UITableViewDelegate>
+{
+    UIRefreshControl *_refreshControl;
+}
 @property (strong, nonatomic) UITableView *nearByTable;
 @property (strong, nonatomic) NSMutableArray *dataSource;
 @property (strong, nonatomic) UIButton *selectBtn;
@@ -38,9 +46,12 @@
     if (!_selectBtn) {
         _selectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_selectBtn setTitle:@"Select" forState:UIControlStateNormal];
-        [_selectBtn setTitleColor:[UIColorUtil colorWithHexString:@"#1e2d3b"] forState:UIControlStateNormal];
-        _selectBtn.titleLabel.font = [UIFont fontWithName:Font_Light size:15];
-        _selectBtn.frame = CGRectMake(UIWIDTH - 70, 0, 60, 44);
+        [_selectBtn setTitleColor:[UIColorUtil colorWithHexString:@"#64baff"] forState:UIControlStateNormal];
+        _selectBtn.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:16];
+        _selectBtn.frame = CGRectMake(UIWIDTH - kSelectBtnRightPadding, kSelectBtnTopPadding, kSelectBtnWidth, kSelectBtnHeight);
+        _selectBtn.layer.borderColor = [UIColorUtil colorWithHexString:@"#64baff"].CGColor;
+        _selectBtn.layer.cornerRadius = 5;
+        _selectBtn.layer.borderWidth = 1;
         [_selectBtn addTarget:self action:@selector(clickSelectAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _selectBtn;
@@ -55,17 +66,17 @@
     self.sheet.clickActionSheetAtIdex = ^(NSInteger index){
         if (index == 0) {
             weakSelf.selectType = (int)index;
-            [weakSelf sendNearByActionWithGender:@""];
+            [weakSelf sendNearByActionWithRequestType:RequestCommonType];
         }else if (index == 1 || index == 2) {
             weakSelf.selectType = (int)index;
-            [weakSelf sendNearByActionWithGender:[NSString stringWithFormat:@"%ld",index]];
+            [weakSelf sendNearByActionWithRequestType:RequestCommonType];
         }
     };
 }
 
 - (void)moveSelectButtonWithPadding:(CGFloat)padding
 {
-    _selectBtn.frame = CGRectMake(padding - 70, 0, 60, 44);
+    _selectBtn.frame = CGRectMake(padding - kSelectBtnRightPadding, kSelectBtnTopPadding, kSelectBtnWidth, kSelectBtnHeight);
 }
 
 #pragma -mark 初始化 Message TableView
@@ -83,13 +94,19 @@
         
         [self.nearByTable addLegendFooterWithRefreshingTarget:self refreshingAction:@selector(loadMoreData:)];
 
+        [self.nearByTable.footer setTitle:@"" forState:MJRefreshFooterStateIdle];
+        
+        _refreshControl = [[UIRefreshControl alloc] init];
+        //refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"刷新中"];
+        [_refreshControl addTarget:self action:@selector(beginPullDownRefreshing:) forControlEvents:UIControlEventValueChanged];
+        [self.nearByTable addSubview:_refreshControl];
     }
 }
 
 #pragma -mark TableView 回调
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.dataSource.count;
+    return self.dataSource.count+1;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -99,19 +116,29 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     NearByCell *cell = [NearByCell cellWithTableView:tableView];
     cell.indexPath = indexPath;
     
-    [cell set_NearByCellData:self.dataSource[indexPath.row]];
+    if (indexPath.row == 0) {
+        [cell set_NearByCellUserData];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }else{
+        [cell set_NearByCellData:self.dataSource[indexPath.row -1]];
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }
 
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NearByModel *_model = self.dataSource[indexPath.row];
-    
-    self.nearByBlock(_model,indexPath);// 传递用户ID
+    if (indexPath.row == 0) {
+        self.nearByBlock(nil,indexPath);// 传递用户ID
+    }else{
+        NearByModel *_model = self.dataSource[indexPath.row-1];
+        self.nearByBlock(_model,indexPath);// 传递用户ID
+    }
 }
 
 - (void)updateCellWithNearby:(NearByModel *)model IndexPath:(NSIndexPath *)indexpath
@@ -130,19 +157,24 @@
 }
 
 #pragma -mark 请求网络
+- (void)beginPullDownRefreshing:(id)sender
+{
+    [self sendNearByActionWithRequestType:RequestRefreshType];
+}
+
 - (void)sendNearByAction
 {
     if (self.dataSource.count == 0) {
-        [self sendNearByActionWithGender:@""];
+        [self sendNearByActionWithRequestType:RequestCommonType];
     }
 }
 
 - (void)loadMoreData:(id)sender
 {
-    [self sendNearByActionWithGender:[NSString stringWithFormat:@"%d",self.selectType]];
+    [self sendNearByActionWithRequestType:RequestLoadMoreType];
 }
 
-- (void)sendNearByActionWithGender:(NSString *)gender
+- (void)sendNearByActionWithRequestType:(SendRequestType)sendType
 {
     
     NSString *latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
@@ -156,17 +188,38 @@
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-    [HttpTool sendRequestWithLongitude:longitude Latitude:latitude Gender:gender StartNumber:self.dataSource.count NumberCount:10 success:^(id json) {
-        
+    NSInteger startNum = sendType==RequestLoadMoreType ? self.dataSource.count:0;
+    NSString *gender = self.selectType == All?@"":[NSString stringWithFormat:@"%d",self.selectType];
+    [HttpTool sendRequestWithLongitude:longitude Latitude:latitude Gender:gender StartNumber:startNum NumberCount:10 success:^(id json) {
+        if (sendType == RequestRefreshType) {
+            [_refreshControl endRefreshing];
+        }
         NSError *error = nil;
         ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:&error];
         if (!error) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             
-            if (self.dataSource.count == 0) {
-                self.dataSource = [NSMutableArray arrayWithArray:res.content];
-            }else
-                [self.dataSource addObjectsFromArray:res.content];
+            switch (sendType) {
+                case RequestCommonType:
+                {
+                    self.dataSource = [NSMutableArray arrayWithArray:res.content];
+
+                }
+                    break;
+                case RequestRefreshType:
+                {
+                    NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1,[res.content count])];
+                    [self.dataSource insertObjects:res.content atIndexes:indexes];
+                }
+                    break;
+                case RequestLoadMoreType:
+                {
+                    [self.dataSource addObjectsFromArray:res.content];
+                }
+                    break;
+                default:
+                    break;
+            }
             
             [self.nearByTable reloadData];
         }else
@@ -178,7 +231,9 @@
     } faliure:^(NSError *error) {
 
         [self.nearByTable.footer endRefreshing];
-
+        if (sendType == RequestRefreshType) {
+            [_refreshControl endRefreshing];
+        }
         [self showHudWith:ErrorText];
     }];
     

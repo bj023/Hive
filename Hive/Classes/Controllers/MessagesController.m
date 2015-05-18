@@ -66,13 +66,13 @@
 
 - (void)configSearBtn
 {
-    
+    /**/
     UISearchController * _mySearchController = [[UISearchController alloc]initWithSearchResultsController:nil];
     _mySearchController.searchResultsUpdater = self;
     _mySearchController.dimsBackgroundDuringPresentation = YES;
     [_mySearchController.searchBar sizeToFit];
     self.messageTable.tableHeaderView = _mySearchController.searchBar;
-
+     
     /*
     if (!_topView) {
         _topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, 44)];
@@ -114,8 +114,8 @@
     _searchController.dimsBackgroundDuringPresentation = NO;
 
     // 因为搜索是控制器，所以要使用模态推出（必须是模态，不可是push）
-    self.messageTable.tableHeaderView = _searchController.searchBar;
-    //[self presentViewController:_searchController animated:YES completion:nil];
+    //self.messageTable.tableHeaderView = _searchController.searchBar;
+    [self presentViewController:_searchController animated:YES completion:nil];
 
 }
 

@@ -196,6 +196,13 @@
     //self.sexLabel.backgroundColor = sexColor;
 }
 
+- (void)set_NearByCellUserData
+{
+    self.userNameLabel.text = [[UserInfoManager sharedInstance] getCurrentUserInfo].userName;
+    NSString *urlString = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    [self.headIMG setImageURLStr:User_Head(urlString)];
+}
+
 static NSString *DateFormatMDHM = @"MM-dd HH:mm";
 /**
  *  日期转换成字符串

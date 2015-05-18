@@ -55,7 +55,7 @@
     
     self.mesgaeArr = [NSMutableArray array];
     
-    NSArray *array = [DataBaseModel getChatWithStartChatRoom:nil andCount:10];
+    NSArray *array = [DataBaseModel getChatWithStartChatRoom:nil andCount:100];
     NSRange range = NSMakeRange(0, [array count]);
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
     [self.mesgaeArr insertObjects:array atIndexes:indexSet];

@@ -31,7 +31,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self configNavBar];
+    //[self configNavBar];
     [self setBackGround];
     [self configMessageArr];
     [self configTableView];

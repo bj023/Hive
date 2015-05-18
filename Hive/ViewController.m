@@ -61,6 +61,7 @@
     [self performSelector:@selector(configWelcomeView) withObject:nil afterDelay:0.5];
     [self checkNetwork];
     [self addNotification];
+    
 }
 
 - (void)addNotification
@@ -73,7 +74,7 @@
 {
     debugLog(@"收到消息通知");
     
-    [self setChatSUnReadCount];
+    [self setChatsUnReadCount];
     [_messagesVC reloadChatMessage];
     
 
@@ -224,13 +225,17 @@
     [self.view addSubview:_nav.view];
     [self addChildViewController:_nav];
 
-    [_pageViewController setCurrentIndex:2 animated:YES];
-    [self setChatSUnReadCount];
+    [_pageViewController setCurrentIndex:2 animated:NO];
+    [self setChatsUnReadCount];
+    
+    debugLog(@"viewcontroller->%@",_pageViewController.viewControllers);
+
 }
 
 - (NSArray *)twitterVC
 {
     _settingsVC = [[SettingsController alloc] init];
+    
     _messagesVC = [[MessagesController alloc] init];
     
     //更改
@@ -239,10 +244,6 @@
 
     _hiveVC     = [[HiveController alloc] init];
     _nearByVC   = [[NearByController alloc] init];
-    _settingsVC.view.frame = self.view.bounds;
-    _messagesVC.view.frame = self.view.bounds;
-    _hiveVC.view.frame = self.view.bounds;
-    _nearByVC.view.frame = self.view.bounds;
 
     return @[_settingsVC,_messagesVC,_hiveVC,_nearByVC];
 }
@@ -280,7 +281,7 @@
     return @[ticketNameLabel,_messageLabel,ticketNameLabel3,ticketNameLabel4];
 }
 
-- (void)setChatSUnReadCount
+- (void)setChatsUnReadCount
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([[ChatManager chatMessageUnreadCount] isEqualToString:@"0"]) {
@@ -478,14 +479,19 @@
 
 - (void)pushUserInformationController:(NearByModel *)model IndexPath:(NSIndexPath *)indexpath
 {
-    UserInformationController *userInformationVC = [[UserInformationController alloc] init];
-    userInformationVC.delegate = self;
-    userInformationVC.indexPath = indexpath;
-    userInformationVC.model = model;
-    userInformationVC.pushType = PushNextUpdateVC;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self presentViewController:userInformationVC animated:YES completion:nil];
-    });
+    if (indexpath.row == 0) {
+        //跳转到个人修改页
+        [self pushProfileViewController];
+    }else{
+        UserInformationController *userInformationVC = [[UserInformationController alloc] init];
+        userInformationVC.delegate = self;
+        userInformationVC.indexPath = indexpath;
+        userInformationVC.model = model;
+        userInformationVC.pushType = PushNextUpdateVC;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:userInformationVC animated:YES completion:nil];
+        });
+    }
 }
 
 - (void)pushUserInforMation:(NearByModel *)model

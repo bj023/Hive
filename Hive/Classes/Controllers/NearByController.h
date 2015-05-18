@@ -15,6 +15,12 @@ typedef enum{
     Female = 3,
 } SelectType;
 
+typedef enum{
+    RequestCommonType = 1,
+    RequestRefreshType = 2,
+    RequestLoadMoreType = 3,
+} SendRequestType;
+
 typedef void(^NearByControllerBlock)(NearByModel * model, NSIndexPath *indexpath);
 
 @interface NearByController : MainViewController

@@ -252,6 +252,7 @@ static XMPPManager *sharedManager;
     debugLog(@"%@-%@",d_current,d_time);
     
     if (([d_current intValue] - [d_time intValue] >= 1)) {
+        [NSDataUtil setChatRoomTime:currentTime];
         return currentTime;
     }
     return @"";
@@ -274,6 +275,7 @@ static XMPPManager *sharedManager;
     debugLog(@"%@-%@",d_current,d_time);
     
     if (([d_current intValue] - [d_time intValue] >= 1)) {
+        [NSDataUtil setChatTime:currentTime ToUserID:userID];
         return currentTime;
     }
     return @"";

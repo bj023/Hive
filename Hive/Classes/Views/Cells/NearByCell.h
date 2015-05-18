@@ -23,4 +23,6 @@
 
 - (void)set_NearByCellData:(NearByModel *)model;
 
+- (void)set_NearByCellUserData;
+
 @end
