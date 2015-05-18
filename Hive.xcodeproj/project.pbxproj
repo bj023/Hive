@@ -10,18 +10,21 @@
 		81F8AAD06AFC3B08D9C2DAA2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B40D61FF317180402DFC4F3 /* libPods.a */; };
 		964698D81AD1634400FE7C4F /* XMPPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 964698D71AD1634400FE7C4F /* XMPPManager.m */; };
 		965111531AD4B3810045EBA5 /* ChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 965111521AD4B3810045EBA5 /* ChatCell.m */; };
-		965485D11AD55C550021F33D /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 965485D01AD55C550021F33D /* MessageModel.m */; };
 		96663C521AF893A50015FBB6 /* ChatModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96663C511AF893A50015FBB6 /* ChatModel.m */; };
 		966C1DE91AD238F8004D33DA /* MessageTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966C1DE81AD238F8004D33DA /* MessageTextView.m */; };
 		966C1DEC1AD239FD004D33DA /* MessageToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 966C1DEB1AD239FD004D33DA /* MessageToolBar.m */; };
 		966C1DEF1AD265FD004D33DA /* FaceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966C1DEE1AD265FD004D33DA /* FaceView.m */; };
-		966C5D151AEC9929004EE35D /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966C5D141AEC9929004EE35D /* ChatViewController.m */; };
 		966C5D181AECA059004EE35D /* ChatRoomModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 966C5D171AECA059004EE35D /* ChatRoomModel.m */; };
 		966ECFD11AD38EC900C93440 /* UIColor+SLAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 966ECFCB1AD38EC900C93440 /* UIColor+SLAddition.m */; };
 		966ECFD21AD38EC900C93440 /* UIScrollView+UpdateContentSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 966ECFCD1AD38EC900C93440 /* UIScrollView+UpdateContentSize.m */; };
 		966ECFD31AD38EC900C93440 /* SLPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966ECFD01AD38EC900C93440 /* SLPagingViewController.m */; };
+		967166621B0712AC00FE1D6D /* ChatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 967166611B0712AC00FE1D6D /* ChatManager.m */; };
+		967166641B07168A00FE1D6D /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 967166631B07168A00FE1D6D /* ChatViewController.m */; };
+		967386D31B06F99F0018777C /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 967386D21B06F99F0018777C /* MessageModel.m */; };
 		9673950D1AEA1EDF0065D239 /* NSTimeUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 9673950C1AEA1EDF0065D239 /* NSTimeUtil.m */; };
 		9675D9EC1AD957440001B8F9 /* BlockListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9675D9EB1AD957440001B8F9 /* BlockListController.m */; };
+		967C0D3D1B02E54E00943536 /* MyAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 967C0D3C1B02E54E00943536 /* MyAppDelegate.m */; };
+		967C0D3F1B02E7A400943536 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 967C0D3E1B02E7A400943536 /* SystemConfiguration.framework */; };
 		967D52E11AFB8B8000BF77E1 /* ChatRoomBaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 967D52E01AFB8B8000BF77E1 /* ChatRoomBaseCell.m */; };
 		967D52E41AFB8BF400BF77E1 /* ChatRoomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 967D52E31AFB8BF400BF77E1 /* ChatRoomCell.m */; };
 		96838D8D1AF127490081CF59 /* DataBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96838D8C1AF127490081CF59 /* DataBaseModel.m */; };
@@ -32,6 +35,7 @@
 		969378CF1AE23D4200BE585F /* UserInforCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 969378CE1AE23D4200BE585F /* UserInforCell.m */; };
 		96A3F4FD1AE3603C00A03BA2 /* UtilDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A3F4FC1AE3603C00A03BA2 /* UtilDate.m */; };
 		96A3F5001AE3B7D600A03BA2 /* FollowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A3F4FF1AE3B7D600A03BA2 /* FollowController.m */; };
+		96A47C6B1B00680800837F7E /* WelcomeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A47C6A1B00680800837F7E /* WelcomeView.m */; };
 		96AFB6891AD3C4D400D6128E /* ResponseManagerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96AFB6881AD3C4D400D6128E /* ResponseManagerModel.m */; };
 		96AFB68C1AD3C8E700D6128E /* LoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96AFB68B1AD3C8E700D6128E /* LoginModel.m */; };
 		96AFB68F1AD421D500D6128E /* NearByModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96AFB68E1AD421D500D6128E /* NearByModel.m */; };
@@ -96,8 +100,6 @@
 		964698D71AD1634400FE7C4F /* XMPPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPManager.m; sourceTree = "<group>"; };
 		965111511AD4B3810045EBA5 /* ChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCell.h; sourceTree = "<group>"; };
 		965111521AD4B3810045EBA5 /* ChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatCell.m; sourceTree = "<group>"; };
-		965485CF1AD55C550021F33D /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
-		965485D01AD55C550021F33D /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
 		96663C501AF893A50015FBB6 /* ChatModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatModel.h; sourceTree = "<group>"; };
 		96663C511AF893A50015FBB6 /* ChatModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatModel.m; sourceTree = "<group>"; };
 		966C1DE71AD238F8004D33DA /* MessageTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTextView.h; sourceTree = "<group>"; };
@@ -107,7 +109,6 @@
 		966C1DED1AD265FD004D33DA /* FaceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FaceView.h; sourceTree = "<group>"; };
 		966C1DEE1AD265FD004D33DA /* FaceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FaceView.m; sourceTree = "<group>"; };
 		966C5D131AEC9929004EE35D /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
-		966C5D141AEC9929004EE35D /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		966C5D161AECA059004EE35D /* ChatRoomModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatRoomModel.h; sourceTree = "<group>"; };
 		966C5D171AECA059004EE35D /* ChatRoomModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatRoomModel.m; sourceTree = "<group>"; };
 		966C5D191AECD7C5004EE35D /* ChatMessageDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessageDelegate.h; sourceTree = "<group>"; };
@@ -118,10 +119,18 @@
 		966ECFCE1AD38EC900C93440 /* ShareResources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareResources.h; sourceTree = "<group>"; };
 		966ECFCF1AD38EC900C93440 /* SLPagingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLPagingViewController.h; sourceTree = "<group>"; };
 		966ECFD01AD38EC900C93440 /* SLPagingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLPagingViewController.m; sourceTree = "<group>"; };
+		967166601B0712AC00FE1D6D /* ChatManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatManager.h; sourceTree = "<group>"; };
+		967166611B0712AC00FE1D6D /* ChatManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatManager.m; sourceTree = "<group>"; };
+		967166631B07168A00FE1D6D /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
+		967386D11B06F99F0018777C /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
+		967386D21B06F99F0018777C /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
 		9673950B1AEA1EDF0065D239 /* NSTimeUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSTimeUtil.h; sourceTree = "<group>"; };
 		9673950C1AEA1EDF0065D239 /* NSTimeUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSTimeUtil.m; sourceTree = "<group>"; };
 		9675D9EA1AD957440001B8F9 /* BlockListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockListController.h; sourceTree = "<group>"; };
 		9675D9EB1AD957440001B8F9 /* BlockListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockListController.m; sourceTree = "<group>"; };
+		967C0D3B1B02E54E00943536 /* MyAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAppDelegate.h; sourceTree = "<group>"; };
+		967C0D3C1B02E54E00943536 /* MyAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAppDelegate.m; sourceTree = "<group>"; };
+		967C0D3E1B02E7A400943536 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		967D52DF1AFB8B8000BF77E1 /* ChatRoomBaseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatRoomBaseCell.h; sourceTree = "<group>"; };
 		967D52E01AFB8B8000BF77E1 /* ChatRoomBaseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatRoomBaseCell.m; sourceTree = "<group>"; };
 		967D52E21AFB8BF400BF77E1 /* ChatRoomCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatRoomCell.h; sourceTree = "<group>"; };
@@ -142,6 +151,8 @@
 		96A3F4FC1AE3603C00A03BA2 /* UtilDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilDate.m; sourceTree = "<group>"; };
 		96A3F4FE1AE3B7D600A03BA2 /* FollowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowController.h; sourceTree = "<group>"; };
 		96A3F4FF1AE3B7D600A03BA2 /* FollowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowController.m; sourceTree = "<group>"; };
+		96A47C691B00680800837F7E /* WelcomeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeView.h; sourceTree = "<group>"; };
+		96A47C6A1B00680800837F7E /* WelcomeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeView.m; sourceTree = "<group>"; };
 		96AFB6871AD3C4D400D6128E /* ResponseManagerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResponseManagerModel.h; sourceTree = "<group>"; };
 		96AFB6881AD3C4D400D6128E /* ResponseManagerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResponseManagerModel.m; sourceTree = "<group>"; };
 		96AFB68A1AD3C8E700D6128E /* LoginModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginModel.h; sourceTree = "<group>"; };
@@ -257,6 +268,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				967C0D3F1B02E7A400943536 /* SystemConfiguration.framework in Frameworks */,
 				81F8AAD06AFC3B08D9C2DAA2 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -267,6 +279,7 @@
 		00CC2BF06E764A2484FA40F7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				967C0D3E1B02E7A400943536 /* SystemConfiguration.framework */,
 				E6511A091AC98B9100DA14BA /* libxml2.2.dylib */,
 				E6511A071AC9850B00DA14BA /* libxml2.dylib */,
 				9B40D61FF317180402DFC4F3 /* libPods.a */,
@@ -280,6 +293,13 @@
 				962B2E7D1AFC5FF8005E9993 /* UserTalkDelegate.h */,
 			);
 			path = Protocol;
+			sourceTree = "<group>";
+		};
+		966806CB1B0399E30061E7EF /* HUB */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = HUB;
 			sourceTree = "<group>";
 		};
 		966C1DE61AD238AA004D33DA /* MessageToolBar */ = {
@@ -328,12 +348,23 @@
 			path = ChatView;
 			sourceTree = "<group>";
 		};
+		96A47C681B00678700837F7E /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				96A47C691B00680800837F7E /* WelcomeView.h */,
+				96A47C6A1B00680800837F7E /* WelcomeView.m */,
+			);
+			path = Welcome;
+			sourceTree = "<group>";
+		};
 		96A74F7D1AD11DFD00963A6E /* XMPPManager */ = {
 			isa = PBXGroup;
 			children = (
 				964698D61AD1634400FE7C4F /* XMPPManager.h */,
 				964698D71AD1634400FE7C4F /* XMPPManager.m */,
 				966C5D191AECD7C5004EE35D /* ChatMessageDelegate.h */,
+				967166601B0712AC00FE1D6D /* ChatManager.h */,
+				967166611B0712AC00FE1D6D /* ChatManager.m */,
 			);
 			path = XMPPManager;
 			sourceTree = "<group>";
@@ -374,14 +405,14 @@
 				E6F95CF41ACD764E005CE112 /* MessageCell.m */,
 				E6F95CF61ACD8469005CE112 /* NearByCell.h */,
 				E6F95CF71ACD8469005CE112 /* NearByCell.m */,
+				969378CD1AE23D4200BE585F /* UserInforCell.h */,
+				969378CE1AE23D4200BE585F /* UserInforCell.m */,
 				968703941AEF2C7E00088718 /* ChatBaseCell.h */,
 				968703951AEF2C7E00088718 /* ChatBaseCell.m */,
 				9687039E1AEF402E00088718 /* chatViewCell.h */,
 				9687039F1AEF402E00088718 /* chatViewCell.m */,
 				965111511AD4B3810045EBA5 /* ChatCell.h */,
 				965111521AD4B3810045EBA5 /* ChatCell.m */,
-				969378CD1AE23D4200BE585F /* UserInforCell.h */,
-				969378CE1AE23D4200BE585F /* UserInforCell.m */,
 				967D52DF1AFB8B8000BF77E1 /* ChatRoomBaseCell.h */,
 				967D52E01AFB8B8000BF77E1 /* ChatRoomBaseCell.m */,
 				967D52E21AFB8BF400BF77E1 /* ChatRoomCell.h */,
@@ -548,7 +579,7 @@
 				96A3F4FE1AE3B7D600A03BA2 /* FollowController.h */,
 				96A3F4FF1AE3B7D600A03BA2 /* FollowController.m */,
 				966C5D131AEC9929004EE35D /* ChatViewController.h */,
-				966C5D141AEC9929004EE35D /* ChatViewController.m */,
+				967166631B07168A00FE1D6D /* ChatViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -564,6 +595,8 @@
 		E6A8086B1ABE5EE6005E48C2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				967386D11B06F99F0018777C /* MessageModel.h */,
+				967386D21B06F99F0018777C /* MessageModel.m */,
 				96663C501AF893A50015FBB6 /* ChatModel.h */,
 				96663C511AF893A50015FBB6 /* ChatModel.m */,
 				966C5D161AECA059004EE35D /* ChatRoomModel.h */,
@@ -574,8 +607,6 @@
 				96AFB68B1AD3C8E700D6128E /* LoginModel.m */,
 				96AFB68D1AD421D500D6128E /* NearByModel.h */,
 				96AFB68E1AD421D500D6128E /* NearByModel.m */,
-				965485CF1AD55C550021F33D /* MessageModel.h */,
-				965485D01AD55C550021F33D /* MessageModel.m */,
 				96838D8B1AF127490081CF59 /* DataBaseModel.h */,
 				96838D8C1AF127490081CF59 /* DataBaseModel.m */,
 			);
@@ -611,6 +642,8 @@
 		E6A8086D1ABE5EE6005E48C2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				966806CB1B0399E30061E7EF /* HUB */,
+				96A47C681B00678700837F7E /* Welcome */,
 				968703971AEF2FE400088718 /* ChatView */,
 				966C1DE61AD238AA004D33DA /* MessageToolBar */,
 				E68714791ACCEBF1000ED631 /* ProfileView */,
@@ -630,6 +663,8 @@
 				E6A8084A1ABE55CC005E48C2 /* ViewController.m */,
 				E6A8084C1ABE55CC005E48C2 /* Main.storyboard */,
 				E6A808511ABE55CC005E48C2 /* LaunchScreen.xib */,
+				967C0D3B1B02E54E00943536 /* MyAppDelegate.h */,
+				967C0D3C1B02E54E00943536 /* MyAppDelegate.m */,
 			);
 			name = Main;
 			sourceTree = "<group>";
@@ -794,9 +829,9 @@
 				96CE0C961AFF394700004505 /* GothamRounded-Book.otf in Sources */,
 				E687147C1ACCEC11000ED631 /* UserInformationView.m in Sources */,
 				E6B8BAE81AC7CD1F003CA484 /* BaseView.m in Sources */,
-				966C5D151AEC9929004EE35D /* ChatViewController.m in Sources */,
 				E6F95CF81ACD8469005CE112 /* NearByCell.m in Sources */,
 				96838D8D1AF127490081CF59 /* DataBaseModel.m in Sources */,
+				96A47C6B1B00680800837F7E /* WelcomeView.m in Sources */,
 				967D52E11AFB8B8000BF77E1 /* ChatRoomBaseCell.m in Sources */,
 				965111531AD4B3810045EBA5 /* ChatCell.m in Sources */,
 				E6A808481ABE55CC005E48C2 /* Hive.xcdatamodeld in Sources */,
@@ -809,6 +844,8 @@
 				9687039D1AEF399000088718 /* ChatBubbleView.m in Sources */,
 				E69F08551ABE9A3D00E5ADD3 /* NearByController.m in Sources */,
 				968703A01AEF402E00088718 /* chatViewCell.m in Sources */,
+				967C0D3D1B02E54E00943536 /* MyAppDelegate.m in Sources */,
+				967166641B07168A00FE1D6D /* ChatViewController.m in Sources */,
 				E6446D771AC967FE0099AFF1 /* HttpManager.m in Sources */,
 				E6B8BAEB1AC7DA27003CA484 /* RegisterSecondView.m in Sources */,
 				E650FA7F1AC8BD490010DD06 /* LoginToolView.m in Sources */,
@@ -842,6 +879,7 @@
 				E6A808451ABE55CC005E48C2 /* AppDelegate.m in Sources */,
 				9673950D1AEA1EDF0065D239 /* NSTimeUtil.m in Sources */,
 				E6B8BAF21AC7E036003CA484 /* RegisterFourView.m in Sources */,
+				967386D31B06F99F0018777C /* MessageModel.m in Sources */,
 				966C1DEC1AD239FD004D33DA /* MessageToolBar.m in Sources */,
 				E69F084F1ABE99D400E5ADD3 /* MessagesController.m in Sources */,
 				E6737FE31ACA2657004AC5E1 /* ProfileController.m in Sources */,
@@ -851,12 +889,12 @@
 				96AFB68F1AD421D500D6128E /* NearByModel.m in Sources */,
 				E69F084C1ABE99B700E5ADD3 /* SettingsController.m in Sources */,
 				E69F08491ABE999F00E5ADD3 /* MainViewController.m in Sources */,
-				965485D11AD55C550021F33D /* MessageModel.m in Sources */,
 				E6B8BAEE1AC7DA3C003CA484 /* RegisterThirdView.m in Sources */,
 				969378CF1AE23D4200BE585F /* UserInforCell.m in Sources */,
 				967D52E41AFB8BF400BF77E1 /* ChatRoomCell.m in Sources */,
 				E65D07E91ACA4FDC0074A3FB /* ProfileCell.m in Sources */,
 				9675D9EC1AD957440001B8F9 /* BlockListController.m in Sources */,
+				967166621B0712AC00FE1D6D /* ChatManager.m in Sources */,
 				E6A8084B1ABE55CC005E48C2 /* ViewController.m in Sources */,
 				96FCDE701AE4D99C0040688F /* MBProgressHUD+Helper.m in Sources */,
 				96FCDE6D1AE4D2930040688F /* UIView+Common.m in Sources */,

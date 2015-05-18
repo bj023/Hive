@@ -11,8 +11,10 @@
 #import "CustomIMGView.h"
 #import "UserInformationView.h"
 #import "CustomButtonView.h"
+#import "NearByModel.h"
 
-#define TopGrayBackGroundHeight 286/2
+#define TopGrayBackGroundHeight 321/2
+#define kHeadSize 178/2
 
 @interface UserInformationController ()<CustomButtonViewDelegate, UIAlertViewDelegate>
 {
@@ -41,10 +43,9 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+//
 - (void)viewWillAppear:(BOOL)animated
 {
-    debugLog(@"%@",self.model);
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 }
@@ -76,9 +77,10 @@
     toolBtn.frame =CGRectMake(0, UIHEIGHT - 50, UIWIDTH, 50);
     [toolBtn setTitle:@"Close" forState:UIControlStateNormal];
     [toolBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithWhite:0 alpha:0.5] size:toolBtn.frame.size] forState:UIControlStateNormal];
-    [toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithWhite:0 alpha:0.6] size:toolBtn.frame.size] forState:UIControlStateHighlighted];
-
+    //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.5] size:toolBtn.frame.size] forState:UIControlStateNormal];
+    //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.6] size:toolBtn.frame.size] forState:UIControlStateHighlighted];
+    //关闭颜色
+    toolBtn.backgroundColor = [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1];
     toolBtn.titleLabel.font = [UIFont systemFontOfSize:18];
     [self.view addSubview:toolBtn];
     [toolBtn addTarget:self action:@selector(clickCloseBtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -86,8 +88,7 @@
 // 关闭按钮点击事件
 - (void)clickCloseBtn:(id)sender
 {
-    //[self dismissViewControllerAnimated:YES completion:nil];
-    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (UIImage *)buttonImageFromColor:(UIColor *)color size:(CGSize)size
@@ -114,25 +115,28 @@
 #pragma -mark 初始化 用户头像
 - (void)configHeadView
 {
-    CGFloat headW = 162/2; // 改变 头像大小 只需改变 headW
+    CGFloat headW = kHeadSize; // 改变 头像大小 只需改变 headW
     CGFloat HeadH = headW;
     CGFloat headX = UIWIDTH/2 - HeadH/2;
     CGFloat headY = _topGrayBackGroundHeight - HeadH/2;
     
     
     if (!self.headIMG) {
+        /*
         CGFloat lineW = 6; // 代表2 像素
         UIImageView *headBG = [[UIImageView alloc] initWithFrame:CGRectMake(headX - lineW, headY - lineW, headW + lineW, HeadH + lineW)];
         headBG.layer.cornerRadius = headBG.frame.size.height/2;
         headBG.clipsToBounds = YES;
         headBG.backgroundColor = [UIColor whiteColor];
         [self.view addSubview:headBG];
+        */
         
-        self.headIMG = [[CustomIMGView alloc] initWithFrame:CGRectMake(lineW/2, lineW/2, headW, HeadH)];
+        self.headIMG = [[CustomIMGView alloc] initWithFrame:CGRectMake(headX, headY, headW, HeadH)];
         self.headIMG.layer.cornerRadius = HeadH/2;
         self.headIMG.clipsToBounds = YES;
         self.headIMG.backgroundColor = [UIColor lightTextColor];
-        [headBG addSubview:self.headIMG];
+        [self.view addSubview:self.headIMG];
+
     }
     
     CGFloat nameX = 20;
@@ -141,7 +145,7 @@
     CGFloat nameH = 44;
     if (!self.nameLabel) {
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameX, nameY, nameW, nameH)];
-        self.nameLabel.font = [UIFont fontWithName:Font_Medium size:20];
+        self.nameLabel.font = [UIFont fontWithName:Font_Regular size:17];
         self.nameLabel.backgroundColor = [UIColor clearColor];
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
         self.nameLabel.textColor = [UIColor blackColor];
@@ -208,7 +212,8 @@
     }
     
     CGFloat buttonX = 0;
-    CGFloat buttonY = introY + self.introText.frame.size.height + 40;// 偏移量
+    //CGFloat buttonY = introY + self.introText.frame.size.height + 40;// 偏移量
+    CGFloat buttonY = 807/2;
     CGFloat buttonW = UIWIDTH;
     CGFloat buttonH = 134/2;
     if (!self.buttonView) {
@@ -221,7 +226,8 @@
     
     self.scrollerView.contentSize = CGSizeMake(self.view.frame.size.width, buttonH + buttonY);
     
-    NSString *urlString = self.model.iconPath;
+    NSString *urlString = [NSString stringWithFormat:@"%d",self.model.userId];
+    urlString = User_Head(urlString);
     [self.headIMG setImageURLStr:urlString];
     self.nameLabel.text = self.model.userName;
     self.introLabel.text = introString;
@@ -242,7 +248,7 @@
     switch (index) {
         case 0:
             if (self.pushType == PushNextNoneVC) {
-                [self.navigationController popViewControllerAnimated:YES];
+                [self clickCloseBtn:nil];
             }else
                 [self clickTalk];
             break;
@@ -359,7 +365,7 @@
 - (void)clickTalk
 {
     if ([self.delegate respondsToSelector:@selector(talkCellWithNearByModel:IndexPath:)]) {
-        [self.navigationController popViewControllerAnimated:NO];
+        [self dismissViewControllerAnimated:YES completion:nil];
         [self.delegate talkCellWithNearByModel:self.model IndexPath:self.indexPath];
     }
 }

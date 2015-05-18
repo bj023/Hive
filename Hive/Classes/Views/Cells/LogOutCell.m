@@ -31,14 +31,14 @@
     if (self) {
         
         self.selectionStyle  = UITableViewCellSelectionStyleNone;
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColorUtil colorWithHexString:@"#ff5b2f"];
         
         if (!self.titleLabel) {
             
             self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, self.frame.size.height)];
             
             self.titleLabel.font = SettingsFont;
-            self.titleLabel.textColor = [UIColor blackColor];
+            self.titleLabel.textColor = [UIColor whiteColor];
             self.titleLabel.backgroundColor = [UIColor clearColor];
             self.titleLabel.textAlignment = NSTextAlignmentCenter;
             [self.contentView addSubview:self.titleLabel];

@@ -2,7 +2,7 @@
 //  ChatModel.h
 //  
 //
-//  Created by 那宝军 on 15/5/6.
+//  Created by mac on 15/5/12.
 //
 //
 
@@ -12,19 +12,20 @@
 
 @interface ChatModel : NSManagedObject
 
-@property (nonatomic, retain) NSString * distance;
-@property (nonatomic, retain) NSString * flag;
 @property (nonatomic, retain) NSString * hasRead;
-@property (nonatomic, retain) NSString * hasStealth;
-@property (nonatomic, retain) NSString * hasTime;
 @property (nonatomic, retain) NSNumber * id;
-@property (nonatomic, retain) NSString * latitude;
-@property (nonatomic, retain) NSString * longitude;
-@property (nonatomic, retain) NSString * message;
 @property (nonatomic, retain) NSString * messageID;
-@property (nonatomic, retain) NSString * time;
-@property (nonatomic, retain) NSString * userID;
+@property (nonatomic, retain) NSString * msg_userID;// 聊天的用户ID
 @property (nonatomic, retain) NSString * userName;
-@property (nonatomic, retain) NSString * isSend;
+@property (nonatomic, retain) NSString * msg_time;
+@property (nonatomic, retain) NSString * msg_message;
+@property (nonatomic, retain) NSString * msg_longitude;
+@property (nonatomic, retain) NSString * msg_latitude;
+@property (nonatomic, retain) NSString * msg_isSend;
+@property (nonatomic, retain) NSString * msg_hasTime;
+@property (nonatomic, retain) NSString * msg_hasStealth;
+@property (nonatomic, retain) NSString * msg_flag;
+@property (nonatomic, retain) NSString * msg_distance;
+@property (nonatomic, retain) NSString * user_ID;
 
 @end

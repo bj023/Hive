@@ -9,12 +9,12 @@
 #import "MessageCell.h"
 #import "CustomIMGView.h"
 #import "Utils.h"
-#import "ChatModel.h"
+#import "MessageModel.h"
 #import "UtilDate.h"
 
 @interface MessageCell ()
 
-@property (strong, nonatomic)ChatModel *chatModel;
+@property (strong, nonatomic)MessageModel *chatModel;
 
 @property (strong, nonatomic)CustomIMGView *headIMG;// 用户头像
 @property (strong, nonatomic)UILabel *userNameLabel;// 用户名
@@ -60,7 +60,7 @@
 - (void)initMessageCell
 {
     CGFloat headX = 22/2;
-    CGFloat headW = 55;
+    CGFloat headW = 114/2;
     CGFloat headH = headW;
     CGFloat headY = [MessageCell getMessageCellHeight]/2 - headW/2;
     if (!self.headIMG) {
@@ -80,7 +80,7 @@
         self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(timeX, timeY, timeW, timeH)];
         self.dateLabel.textAlignment = NSTextAlignmentRight;
         self.dateLabel.font = [UIFont systemFontOfSize:12];
-        self.dateLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
+        self.dateLabel.textColor = [UIColorUtil colorWithHexString:@"#929292"];
     }
     
     CGFloat nameX = headX + headW + padding;
@@ -89,9 +89,9 @@
     CGFloat nameW = timeX - nameX;
     if (!self.userNameLabel) {
         self.userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameX, nameY, nameW, nameH)];
-        self.userNameLabel.font = [UIFont fontWithName:Font_Regular size:17];
+        self.userNameLabel.font = [UIFont fontWithName:Font_Regular size:16];
         self.userNameLabel.textAlignment = NSTextAlignmentLeft;
-        self.userNameLabel.textColor = [UIColor blackColor];
+        self.userNameLabel.textColor = [UIColorUtil colorWithHexString:@"#111111"];
     }
     
     CGFloat messageX = nameX;
@@ -100,21 +100,37 @@
     CGFloat messageH = 20;
     if (!self.messageLabel) {
         self.messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(messageX, messageY, messageW, messageH)];
-        self.messageLabel.font = [UIFont fontWithName:Font_Helvetica size:14];
+        self.messageLabel.font = [UIFont fontWithName:Font_Helvetica size:12];
         self.messageLabel.textAlignment = NSTextAlignmentLeft;
-        self.messageLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
+        self.messageLabel.textColor = [UIColorUtil colorWithHexString:@"#929292"];
     }
     
     
-    UIImageView *lineIMG = [[UIImageView alloc] initWithFrame:CGRectMake(headX + headW + padding, [MessageCell getMessageCellHeight] - 1, UIWIDTH - headX - headW - padding, 1)];
-    lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];
+    CGFloat readX = UIWIDTH - 40;
+    CGFloat readY = [MessageCell getMessageCellHeight] - 40;
+    CGFloat readW = 26;
+    CGFloat readH = readW;
+    if (!self.unreadLabel) {
+        self.unreadLabel = [[UILabel alloc] init];
+        self.unreadLabel.frame = CGRectMake(readX, readY, readW, readH);
+        self.unreadLabel.textAlignment = NSTextAlignmentCenter;
+        self.unreadLabel.font = [UIFont systemFontOfSize:11];
+        self.unreadLabel.backgroundColor = [UIColor redColor];
+        self.unreadLabel.textColor = [UIColor whiteColor];
+        self.unreadLabel.layer.cornerRadius = readH/2;
+        self.unreadLabel.layer.masksToBounds = YES;
+    }
+    
+    
+    UIImageView *lineIMG = [[UIImageView alloc] initWithFrame:CGRectMake(headX + headW + padding, [MessageCell getMessageCellHeight] - kLine_Height, UIWIDTH - headX - headW - padding, kLine_Height)];
+    lineIMG.backgroundColor = [UIColorUtil colorWithHexString:@"#e6e7ea"];
     [self addSubview:lineIMG];
     
     [self addSubview:self.headIMG];
     [self addSubview:self.dateLabel];
     [self addSubview:self.userNameLabel];
     [self addSubview:self.messageLabel];
-    [self.contentView addSubview:self.unreadLabel];
+    [self addSubview:self.unreadLabel];
 
     [self.headIMG addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadIMG:)]];
 }
@@ -124,30 +140,42 @@
     return 138/2;
 }
 
-- (void)set_MessageCellData:(ChatModel *)model
+- (void)set_MessageCellData:(MessageModel *)model
 {
     self.chatModel = model;
-    self.unreadLabel.hidden = YES;
-    self.userNameLabel.text = model.userName;
-    //self.dateLabel.text = @"13:14";
-    self.messageLabel.text = model.message;
-    [self.headIMG setImageURLStr:[NSString stringWithFormat:@"http://115.28.51.196/X_USER_ICON/%@.jpg",model.userID]];
+    self.userNameLabel.text = model.toUserName;
+
+    self.messageLabel.text = model.msg_content;
+    [self.headIMG setImageURLStr:User_Head(model.toUserID)];
     
     NSString *current_time = [UtilDate dateFromString:[UtilDate getCurrentTime] withFormat:DateFormat_MM];
-    NSString *publis_time = [UtilDate dateFromString:model.time withFormat:DateFormat_MM];
+    NSString *publis_time = [UtilDate dateFromString:model.msg_time withFormat:DateFormat_MM];
     // 时间判断
     if ([current_time intValue]>[publis_time intValue]) {
-        self.dateLabel.text = [UtilDate dateFromString:model.time withFormat:DateFormat_MM_dd];
+        self.dateLabel.text = [UtilDate dateFromString:model.msg_time withFormat:DateFormat_MM_dd];
     }else{
         current_time = [UtilDate dateFromString:[UtilDate getCurrentTime] withFormat:DateFormat_DD];
-        publis_time = [UtilDate dateFromString:model.time withFormat:DateFormat_DD];
+        publis_time = [UtilDate dateFromString:model.msg_time withFormat:DateFormat_DD];
         
         if ([current_time intValue]>[publis_time intValue]) {
-            self.dateLabel.text = [UtilDate dateFromString:model.time withFormat:DateFormat_MM_dd];
+            self.dateLabel.text = [UtilDate dateFromString:model.msg_time withFormat:DateFormat_MM_dd];
         }else
-            self.dateLabel.text = [UtilDate dateFromString:model.time withFormat:DateFormat_HM];
+            self.dateLabel.text = [UtilDate dateFromString:model.msg_time withFormat:DateFormat_HM];
     }
     
+
+    debugLog(@"未读数->%@",_chatModel.unReadCount);
+    
+    if ([_chatModel.unReadCount isEqualToString:@"0"]) {
+        self.unreadLabel.hidden = YES;
+    }else{
+        self.unreadLabel.hidden = NO;
+        if ([_chatModel.unReadCount intValue] > 99) {
+            _unreadLabel.text = @"99+";
+        }else
+            _unreadLabel.text = _chatModel.unReadCount;
+    }
+
 }
 
 - (void)clickHeadIMG:(id)sender

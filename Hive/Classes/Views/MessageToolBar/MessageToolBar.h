@@ -2,7 +2,7 @@
 //  MessageToolBar.h
 //  Hive
 //
-//  Created by 那宝军 on 15/4/6.
+//  Created by mac on 15/4/6.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -30,6 +30,8 @@
  *  文字输入区域最大高度，必须 > KInputTextViewMinHeight(最小高度)并且 < KInputTextViewMaxHeight，否则设置无效
  */
 @property (nonatomic) CGFloat maxTextInputViewHeight;
+
+- (id)initWithFrame:(CGRect)frame isPulicChat:(BOOL)isShow;
 
 + (CGFloat)defaultHeight;
 @end

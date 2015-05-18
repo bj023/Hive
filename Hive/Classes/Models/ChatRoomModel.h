@@ -2,28 +2,30 @@
 //  ChatRoomModel.h
 //  
 //
-//  Created by 那宝军 on 15/5/8.
+//  Created by mac on 15/5/13.
 //
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+
 @interface ChatRoomModel : NSManagedObject
 
-@property (nonatomic, retain) NSString * distance;
-@property (nonatomic, retain) NSString * flag;
+@property (nonatomic, retain) NSString * hasAname;
 @property (nonatomic, retain) NSNumber * id;
-@property (nonatomic, retain) NSString * isAname;
-@property (nonatomic, retain) NSString * isStealth;
-@property (nonatomic, retain) NSString * isTime;
-@property (nonatomic, retain) NSString * latitude;
-@property (nonatomic, retain) NSString * longitude;
-@property (nonatomic, retain) NSString * message;
 @property (nonatomic, retain) NSString * messageID;
-@property (nonatomic, retain) NSString * time;
+@property (nonatomic, retain) NSString * msg_distance;
+@property (nonatomic, retain) NSString * msg_flag;
+@property (nonatomic, retain) NSString * msg_hasStealth;
+@property (nonatomic, retain) NSString * msg_hasTime;
+@property (nonatomic, retain) NSString * msg_isSend;
+@property (nonatomic, retain) NSString * msg_latitude;
+@property (nonatomic, retain) NSString * msg_longitude;
+@property (nonatomic, retain) NSString * msg_message;
+@property (nonatomic, retain) NSString * msg_time;
 @property (nonatomic, retain) NSString * userID;
 @property (nonatomic, retain) NSString * userName;
-@property (nonatomic, retain) NSString * isSend;
+@property (nonatomic, retain) NSNumber * msg_Interval_time;
 
 @end

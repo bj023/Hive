@@ -22,4 +22,18 @@
     return [[def objectForKey:@"firstuse"] length] == 0;
 }
 
++ (void)setDeviceToken:(NSString *)token
+{
+    [[NSUserDefaults standardUserDefaults] setObject:token forKey:@"deviceToken"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+}
+
++ (NSString *)getDeviceToken
+{
+
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    return [def objectForKey:@"deviceToken"];
+}
+
 @end

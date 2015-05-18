@@ -47,8 +47,8 @@
 #define ActionSheetFont [UIFont fontWithName:@"regular" size:18]//fafafa
 
 
-#define NavTitleFont [UIFont fontWithName:GothamRoundedBold size:18]
-#define TextFont [UIFont fontWithName:GothamRoundedBold size:18]
+#define NavTitleFont [UIFont fontWithName:GothamRoundedBold size:16]
+#define TextFont [UIFont fontWithName:GothamRoundedBold size:16]
 
 #define GothamRoundedBook @"GothamRounded-Book"
 #define GothamRoundedBold @"GothamRounded-Bold"
@@ -57,7 +57,7 @@
 #define Font_Medium @"HelveticaNeue-Medium"
 #define Font_Helvetica @"HelveticaNeue"
 #define Font_Light @"HelveticaNeue-Light"
-#define Font_Regular @"regular"
+#define Font_Regular @"regular-Medium"
 
 // 错误提示
 #define ErrorText @"似乎已断开了互联网连接"
@@ -72,10 +72,17 @@
 // 判断字符串是否为空
 #define IsEmpty(str) (![str respondsToSelector:@selector(isEqualToString:)] || [str isEqualToString:@""])
 
+// 用户头像
+#define User_Head(str) [NSString stringWithFormat:@"http://115.28.51.196/X_USER_ICON/%@.jpg",str]
+
 #pragma mark -
 #pragma mark --- 判断是否为ios8
 // 判断是否为ios8
 #define iOS8 ([[[UIDevice currentDevice] systemVersion] floatValue] - 8. >= 0 ? YES : NO)
 #define navigation_Y (iOS8 ? 0 : 64)
 #define present_Navigation_Y (iOS8 ? 64 : 0)
+
+// 所有界面线条高度
+#define kLine_Height 0.5 
+
 #endif

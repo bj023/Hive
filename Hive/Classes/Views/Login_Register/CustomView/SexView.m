@@ -10,6 +10,9 @@
 #import "Utils.h"
 
 @interface SexView ()
+{
+    NSString *_sexString;
+}
 @property (strong, nonatomic)UIImageView *leftIMG;
 @property (strong, nonatomic)UIImageView *rightIMG;
 @property (strong, nonatomic)UILabel *leftLabel;
@@ -113,6 +116,7 @@
 
 - (void)clickLeftAction:(id)sender
 {
+    _sexString = @"1";
     self.leftSelectIMG.hidden = NO;
     self.rightSelectIMG.hidden = YES;
     
@@ -125,6 +129,7 @@
 
 - (void)clickRightAction:(id)sender
 {
+    _sexString = @"2";
     self.leftSelectIMG.hidden = YES;
     self.rightSelectIMG.hidden = NO;
     
@@ -133,6 +138,12 @@
     
     self.rightIMG.layer.borderColor = [UIColor whiteColor].CGColor;
     self.rightLabel.textColor = [UIColor whiteColor];
+}
+
+- (NSString *)getSex
+{
+    
+    return _sexString;
 }
 
 - (void)dealloc

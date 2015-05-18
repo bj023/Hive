@@ -2,7 +2,7 @@
 //  UserInforCell.m
 //  Hive
 //
-//  Created by 那宝军 on 15/4/18.
+//  Created by mac on 15/4/18.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -42,7 +42,7 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.lineIMG.frame = CGRectMake(16, self.frame.size.height - 1, UIWIDTH - 16, 1);
+    self.lineIMG.frame = CGRectMake(16, self.frame.size.height - kLine_Height, UIWIDTH - 16, kLine_Height);
     
     if ([self.textLabel.text isEqualToString:@"Intro"]) {
         

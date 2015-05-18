@@ -14,6 +14,7 @@
 #import "RegisterThirdView.h"
 #import "RegisterFourView.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "AppDelegate.h"
 
 @interface LoginController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
@@ -114,20 +115,49 @@
 
         }else if ([str isEqualToString:@"Forget"]){
             // 点击忘记密码
-           
         }
     };
     
     self.registerFirst.block = ^(NSString *str){
-        [weakSelf sendRequestFist:str];
+
+        if ([str isEqualToString:@"Back"]) {
+            CGRect frame = weakSelf.view.bounds;
+            [weakSelf.loginView become_FirstResponder];
+            frame.origin.x = 0;
+            [weakSelf.scrollerView scrollRectToVisible:frame animated:YES];
+
+        }else{
+            [weakSelf sendRequestFist:str];
+        }
+        
     };
     
     self.registerSecond.block = ^(NSString *str){
-        [weakSelf sendRequestSecond:str];
+        
+        if ([str isEqualToString:@"Back"]) {
+            CGRect frame = weakSelf.view.bounds;
+            [weakSelf.registerFirst become_FirstResponder];
+            frame.origin.x = UIWIDTH;
+            [weakSelf.scrollerView scrollRectToVisible:frame animated:YES];
+
+        }else{
+            [weakSelf sendRequestSecond:str];
+        }
     };
     
     self.registerThird.block = ^(NSString *str){
-        
+        /*
+        if ([str isEqualToString:@"Back"]) {
+            CGRect frame = weakSelf.view.bounds;
+            [weakSelf.registerFirst become_FirstResponder];
+            frame.origin.x = UIWIDTH;
+            [weakSelf.scrollerView scrollRectToVisible:frame animated:YES];
+
+        }else{
+            
+        }
+         */
+        [weakSelf sendRequestThird:str];
     };
     
     self.registerFour.block = ^(NSString *str){
@@ -142,6 +172,7 @@
             [weakSelf getImageSourceWithType:UIImagePickerControllerSourceTypePhotoLibrary];
         } else{
             debugLog(@"开始注册");
+            [weakSelf sendRequestFour:str];
         }
     };
 }
@@ -175,8 +206,6 @@
         [[UIApplication sharedApplication] setStatusBarHidden:YES];
         // 上传图片
         [self.registerFour setHeadImgae:img];
-//        _urlStr = [NSString stringWithFormat:@"%@/image/upload",__HOST__];
-//        [[HttpRequestManager sharedManager]upLoadImgWithUrl:_urlStr andImage:img andObj:self andSelector:@selector(uploadimgSuccess:) andFailedSelector:nil];
         
     }];
 }
@@ -231,11 +260,15 @@
         
         NSError *error = nil;
         ResponseLoginModel *res = [[ResponseLoginModel alloc] initWithString:json error:&error];
+        
+        debugLog(@"%d-%@",res.RETURN_CODE,res.content);
+
+        
         if (res.RETURN_CODE == 200) {
             
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 
-            [self handleLoginCenterManager:res.content];
+            [self handleLoginCenterManager:res.content Password:self.loginView.password];
             [self handleSetRootViewController];
         }else
             [self showErrorWithText:ErrorRequestText];
@@ -269,15 +302,42 @@
 - (void)sendRequestSecond:(NSString *)navStr
 {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-
-    [HttpTool sendRequestRegisterCode:[self.registerSecond hponeCode] success:^(id json) {
-        
+    
+    [HttpTool sendRequestRegisterCode:[_registerSecond hponeCode] PhoneNum:_registerFirst.phoneNumText.text success:^(id json) {
         ResponseManagerModel *res = [[ResponseManagerModel alloc] initWithString:json error:nil];
+        if (res.RETURN_CODE == 200) {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            
+            [self pushThirdRegister:navStr];
+            
+        }else
+            [self showErrorWithText:ErrorRequestText];
+    } faliure:^(NSError *error) {
+        [self showErrorWithText:ErrorText];
+    }];
+}
+
+- (void)sendRequestThird:(NSString *)navStr
+{
+    debugLog(@"注册第三步");
+
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
+    [HttpTool sendRequestRegisterEmail:_registerThird.emailText.text UserName:_registerThird.userNameText.text Passwowd:_registerThird.passwordText.text PhoneNum:_registerFirst.phoneNumText.text success:^(id json) {
+        
+        NSError *error = nil;
+        ResponseLoginModel *res = [[ResponseLoginModel alloc] initWithString:json error:&error];
+        
+        debugLog(@"%d-%@",res.RETURN_CODE,res.content);
+        
         if (res.RETURN_CODE == 200) {
 
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+           
+            [self handleLoginCenterManager:res.content Password:_registerThird.passwordText.text];
 
-            [self pushThirdRegister:navStr];
+            [self pushFourRegister:navStr];
             
         }else
             [self showErrorWithText:ErrorRequestText];
@@ -287,23 +347,45 @@
     }];
 }
 
-- (void)sendRequestThird:(NSString *)navStr
+- (void)sendRequestFour:(NSString *)navStr
 {
+    debugLog(@"注册第四步");
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-    [HttpTool sendRequestRegisterEmail:_registerThird.emailText.text UserName:_registerThird.userNameText.text Passwowd:_registerThird.passwordText.text success:^(id json) {
-        
+    [HttpTool sendRequestRegisterUserInforSex:[_registerFour getSex] Age:[_registerFour getAge] success:^(id json) {
         
         ResponseManagerModel *res = [[ResponseManagerModel alloc] initWithString:json error:nil];
+
         if (res.RETURN_CODE == 200) {
-
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-
-            [self pushFourRegister:navStr];
+            
+            [self uploadHeadImg];
             
         }else
             [self showErrorWithText:ErrorRequestText];
         
+    } faliure:^(NSError *error) {
+        [self showErrorWithText:ErrorText];
+    }];
+
+}
+
+- (void)uploadHeadImg
+{
+    NSData *imgData = UIImageJPEGRepresentation([_registerFour getImgData], 0.1);
+    [HttpTool sendRequestUploadHeadImg:imgData success:^(id json) {
+        
+        ResponseManagerModel *res = [[ResponseManagerModel alloc] initWithString:json error:nil];
+
+        if (res.RETURN_CODE == 200) {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            
+            [self handleSetRootViewController];
+            
+        }else
+            [self showErrorWithText:ErrorRequestText];
+        
+
     } faliure:^(NSError *error) {
         [self showErrorWithText:ErrorText];
     }];
@@ -317,7 +399,7 @@
 }
 
 #pragma -mark 保存用户信息到本地
-- (void)handleLoginCenterManager:(LoginModel *)loginModel
+- (void)handleLoginCenterManager:(LoginModel *)loginModel Password:(NSString *)xmpp_password
 {
     CurrentUserInfo *user = [[CurrentUserInfo alloc]init];
     user.deviceToken = loginModel.deviceToken;
@@ -327,7 +409,7 @@
     user.userSex = loginModel.gender;
     user.userIntro = loginModel.label;
     user.userAge  = [NSString stringWithFormat:@"%d",loginModel.age];
-    user.xmppPassWord = self.loginView.password;
+    user.xmppPassWord = xmpp_password;
     user.isStealth = [NSString stringWithFormat:@"%d",loginModel.hide];
     UserInfoManager *manager = [UserInfoManager sharedInstance];
     [manager saveUserInfoToDisk:user];

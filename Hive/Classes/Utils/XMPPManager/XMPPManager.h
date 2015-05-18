@@ -2,7 +2,7 @@
 //  XMPPManager.h
 //  Hive
 //
-//  Created by 那宝军 on 15/4/5.
+//  Created by mac on 15/4/5.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -20,7 +20,8 @@
     XMPPRoom *xmppRoom;
 }
 
-@property (nonatomic, weak)id<ChatMessageDelegate>delegate;
+@property (nonatomic, weak)id<ChatPublicMessageDelegate>publicDelegate;
+@property (nonatomic, weak)id<ChatPrivateMessageDelegate>privatedelegate;
 
 + (XMPPManager*)sharedInstance;
 
@@ -49,5 +50,6 @@
                   Time:(NSString *)time;
 
 
-+ (NSString *)getTime:(NSString *)currentTime;
++ (NSString *)getChatRoomTime:(NSString *)currentTime;
++ (NSString *)getChatTime:(NSString *)currentTime ToUserID:(NSString *)userID;
 @end

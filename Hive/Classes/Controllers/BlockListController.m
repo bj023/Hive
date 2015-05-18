@@ -2,7 +2,7 @@
 //  BlockListController.m
 //  Hive
 //
-//  Created by 那宝军 on 15/4/11.
+//  Created by mac on 15/4/11.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -55,6 +55,10 @@
     UIBarButtonItem *bacgItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
     self.navigationItem.leftBarButtonItem = bacgItem;
     [backBtn addTarget:self action:@selector(backNav) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, UIWIDTH, 1)];
+    lineView.backgroundColor = [UIColorUtil colorWithHexString:@"e5e5ea"];
+    [self.navigationController.navigationBar addSubview:lineView];
 }
 
 - (void)backNav
@@ -106,8 +110,9 @@
     userInformationVC.delegate = self;
     userInformationVC.indexPath = indexPath;
     userInformationVC.model = _model;
-    self.navigationController.navigationBarHidden = YES;
-    [self.navigationController pushViewController:userInformationVC animated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:userInformationVC animated:YES completion:nil];
+    });
 }
 
 // 点击 talk 回调

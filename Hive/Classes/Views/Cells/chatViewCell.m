@@ -2,7 +2,7 @@
 //  chatViewCell.m
 //  Hive
 //
-//  Created by 那宝军 on 15/4/28.
+//  Created by mac on 15/4/28.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -53,15 +53,16 @@
         _activtiy = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         _activtiy.frame = CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
         _activtiy.backgroundColor = [UIColor clearColor];
+        _activtiy.hidden = YES;
         [_activityView addSubview:_activtiy];
         
         //已读
         _hasRead = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE)];
-        _hasRead.text = @"已读";
+        _hasRead.text = @"Read";
         _hasRead.textColor = [UIColor whiteColor];
         _hasRead.textAlignment = NSTextAlignmentCenter;
         _hasRead.backgroundColor = [UIColorUtil colorWithHexString:@"e8e8e8"];
-        _hasRead.layer.cornerRadius = 10;
+        _hasRead.layer.cornerRadius = 8;
         _hasRead.layer.masksToBounds = YES;
         _hasRead.hidden = YES;
         _hasRead.font = [UIFont systemFontOfSize:12];
@@ -108,30 +109,39 @@
 {
     [super layoutSubviews];
     
+    
+    BOOL isShow = [self.message.msg_flag isEqualToString:@"ME"]?YES:NO;
+    BOOL isSend = [self.message.msg_isSend boolValue];
+    BOOL isRead = [self.message.hasRead boolValue];
+
+    
     _activityView.frame = CGRectMake(0, self.bubbleView.frame.origin.y, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
     
-    _hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x - SEND_STATUS_SIZE *2, 0, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE);
-    _activtiy.frame = CGRectMake(self.timeLabel.frame.origin.x - SEND_STATUS_SIZE, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
-
-    BOOL isShow = [self.message.flag isEqualToString:@"ME"]?YES:NO;
-    BOOL isSend = [self.message.isSend boolValue];
-    BOOL isRead = [self.message.hasRead boolValue];
+    _hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x, 3, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE - 5);
+    _activtiy.frame = CGRectMake(self.timeLabel.frame.origin.x - SEND_STATUS_SIZE, 0, SEND_STATUS_SIZE, isShow?SEND_STATUS_SIZE:0);
+    _retryButton.frame = CGRectMake(self.timeLabel.frame.origin.x - SEND_STATUS_SIZE, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
 
     [_activtiy startAnimating];
     if (isShow) {
-        if (isSend) {
-            _activtiy.hidden = YES;
-        }else
-            _activtiy.hidden = NO;
+        _activityView.hidden = isSend;
+        _retryButton.hidden = isSend;
+        _activtiy.hidden = isSend;
         
         if (isRead) {
             _hasRead.hidden = NO;
-        }else
+            _activityView.hidden = NO;
+
+        }else{
             _hasRead.hidden = YES;
+            _activityView.hidden = YES;
+        }
+        
         
     }else{
+        _activityView.hidden = YES;
         _activtiy.hidden = YES;
         _hasRead.hidden = YES;
+        _retryButton.hidden = YES;
     }
     
 }
@@ -140,7 +150,7 @@
 {
     [_activtiy stopAnimating];
     _activtiy.hidden = YES;
-
+    
     if (isSend) {
         _retryButton.hidden = YES;
     }else
@@ -151,6 +161,8 @@
 
 - (void)set_hasReadMessageState:(BOOL)isSend
 {
+    _activityView.hidden = NO;
+
     _hasRead.hidden = !isSend;
 }
 
@@ -168,14 +180,17 @@
 
 #pragma -mark 长按气泡 弹出菜单
 - (void)longPressAction:(UIGestureRecognizer *)recognizer{
-    
     if (recognizer.state == UIGestureRecognizerStateBegan) {
+        
+        debugLog(@"%lf-%lf",recognizer.view.frame.origin.x,recognizer.view.frame.origin.y);
+
+        
         UIView *view = recognizer.view;
         [self becomeFirstResponder];
         UIMenuItem *flag = [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(copyMessage:)];
         UIMenuController *menu = [UIMenuController sharedMenuController];
         [menu setMenuItems:[NSArray arrayWithObjects:flag, nil]];
-        [menu setTargetRect:view.frame inView:recognizer.view];
+        [menu setTargetRect:view.frame inView:self];
         [menu setMenuVisible:YES animated:YES];
     }
 }
@@ -213,6 +228,6 @@
 }
 - (void)copyMessage:(id)sender {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    [pasteboard setString:self.message.message];
+    [pasteboard setString:self.message.msg_message];
 }
 @end

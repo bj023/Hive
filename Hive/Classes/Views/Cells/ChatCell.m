@@ -2,7 +2,7 @@
 //  ChatCell.m
 //  Hive
 //
-//  Created by 那宝军 on 15/4/8.
+//  Created by mac on 15/4/8.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -137,29 +137,29 @@
 - (void)set_DataWithMessage:(ChatRoomModel *)message
 {
     
-    BOOL isShow = [message.flag isEqualToString:@"ME"]?YES:NO;
+    BOOL isShow = [message.msg_flag isEqualToString:@"ME"]?YES:NO;
     
     if (!isShow) {
-        [self setCellLeftSubviews:message.message isAname:[message.isAname isEqualToString:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID]];
+        [self setCellLeftSubviews:message.msg_message isAname:[message.hasAname isEqualToString:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID]];
         self.userInforLabel.hidden = NO;
         self.headIMG.hidden = NO;
         
-        if ([message.isStealth isEqualToString:@"1"]) {
+        if ([message.msg_hasStealth isEqualToString:@"1"]) {
             self.userInforLabel.text = @"隐身用户 0.1 km";
         }else
             self.userInforLabel.text = message.userName;
 
-        [self.headIMG setImageURLStr:[NSString stringWithFormat:@"http://115.28.51.196/X_USER_ICON/%@.jpg",message.userID]];
+        [self.headIMG setImageURLStr:User_Head(message.userID)];
         
     }else{
-        [self setCellRIghtSubviews:message.message];
+        [self setCellRIghtSubviews:message.msg_message];
         self.userInforLabel.hidden = YES;
         self.headIMG.hidden = YES;
     }
     
-    self.messageLabel.text = message.message;
+    self.messageLabel.text = message.msg_message;
 
-    self.timeLabel.text = [[message.time componentsSeparatedByString:@" "] objectAtIndex:1];
+    self.timeLabel.text = [[message.msg_time componentsSeparatedByString:@" "] objectAtIndex:1];
 }
 
 - (void)setCellLeftSubviews:(NSString *)message isAname:(BOOL)aName

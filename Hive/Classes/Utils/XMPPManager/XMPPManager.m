@@ -2,15 +2,17 @@
 //  XMPPManager.m
 //  Hive
 //
-//  Created by 那宝军 on 15/4/5.
+//  Created by mac on 15/4/5.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
 #import "XMPPManager.h"
 #import "Utils.h"
 #import "NSTimeUtil.h"
+#import "NSDataUtil.h"
 #import "ChatRoomModel.h"
 #import "ChatModel.h"
+#import "ChatManager.h"
 
 #define kXMPPHost @"115.28.51.196"
 #define LITTLEBIRD @"ay130718210956811b81z"
@@ -41,10 +43,10 @@ static XMPPManager *sharedManager;
     
     [self setupStream];
     
-    NSString *userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
-    
+    NSString *user_ID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    debugLog(@"要连接XMPP的用户ID->%@",user_ID);
     //从本地取得用户名，密码和服务器地址
-    NSString *userId = [NSString stringWithFormat:@"%@@%@",userID,LITTLEBIRD];
+    NSString *userId = [NSString stringWithFormat:@"%@@%@",user_ID,LITTLEBIRD];
     NSString *pass = [[UserInfoManager sharedInstance] getCurrentUserInfo].xmppPassWord;
     NSString *server = @"115.28.51.196";
     //@"42.96.168.50";
@@ -63,7 +65,7 @@ static XMPPManager *sharedManager;
     [xmppStream setHostName:server];
     //密码
     password = pass;
-    
+
     //连接服务器
     NSError *error = nil;
     if (![xmppStream connectWithTimeout:30 error:&error]) {
@@ -72,6 +74,8 @@ static XMPPManager *sharedManager;
     }
     return YES;
 }
+
+
 
 //连接服务器
 - (void)xmppStreamDidConnect:(XMPPStream *)sender{
@@ -153,7 +157,7 @@ static XMPPManager *sharedManager;
 
 - (void)signOut
 {
-    
+    [self disconnect];
 }
 
 #pragma -mark 发送消息
@@ -208,17 +212,21 @@ static XMPPManager *sharedManager;
         
         if (messageState && !isSend) {
             isSend = YES;
-            if ([self.delegate respondsToSelector:@selector(sendPublicMessageSuccessMessageID:)]) {
-                [self.delegate sendPublicMessageSuccessMessageID:messageID];
-            }
-        }
-        
-        if (messageState)
             NSLog(@"chatRoom->消息已发送");
-        else
-            NSLog(@"chatRoom->消息发送失败");
-        
+            [self sendPublisChatMessageID:messageID Send:YES];
+        }
         //debugLog(@"%@",mes);
+    }
+    
+    if (!isSend) {
+        [self sendPublisChatMessageID:messageID Send:NO];
+    }
+}
+
+- (void)sendPublisChatMessageID:(NSString *)messageID Send:(BOOL)isSend
+{
+    if ([self.publicDelegate respondsToSelector:@selector(sendPublicMessageSuccessMessageID:Send:)]) {
+        [self.publicDelegate sendPublicMessageSuccessMessageID:messageID Send:isSend];
     }
 }
 
@@ -229,29 +237,47 @@ static XMPPManager *sharedManager;
     return [email stringByPaddingToLength:range.location withString:nil startingAtIndex:0];
 }
 
-+ (NSString *)getTime:(NSString *)currentTime
++ (NSString *)getChatRoomTime:(NSString *)currentTime
 {
-    NSArray *array = [ChatRoomModel MR_findAll];
-    if (array.count == 0) {
+    NSString *time = [NSDataUtil getChatRoomTime];
+    if (IsEmpty(time)) {
+        [NSDataUtil setChatRoomTime:currentTime];
         return currentTime;
     }
     
-    ChatRoomModel *model = [array lastObject];
 
-    NSString *h_current = [UtilDate dateFromString:currentTime withFormat:DateFormat_HH];
-    NSString *h_time = [UtilDate dateFromString:model.time withFormat:DateFormat_HH];
-
-    NSString *m_current = [UtilDate dateFromString:currentTime withFormat:DateFormat_mm];
-    NSString *m_time = [UtilDate dateFromString:model.time withFormat:DateFormat_mm];
+    NSString *d_current = [UtilDate dateFromString:currentTime withFormat:DateFormat_DD];
+    NSString *d_time = [UtilDate dateFromString:time withFormat:DateFormat_DD];
     
-    debugLog(@"%@-%@  %@-%@",h_current,h_time,m_current,m_time);
+    debugLog(@"%@-%@",d_current,d_time);
     
-    if ([h_current intValue]>[h_time intValue] || ([m_current intValue] - [m_time intValue] > 5)) {
+    if (([d_current intValue] - [d_time intValue] >= 1)) {
         return currentTime;
     }
     return @"";
 }
 
++ (NSString *)getChatTime:(NSString *)currentTime ToUserID:(NSString *)userID
+{
+    NSString *time = [NSDataUtil getChatTimeWithToUserID:userID];
+    if (IsEmpty(time)) {
+        [NSDataUtil setChatTime:currentTime ToUserID:userID];
+        return currentTime;
+    }
+    
+    //NSString *h_current = [UtilDate dateFromString:currentTime withFormat:DateFormat_HH];
+    //NSString *h_time = [UtilDate dateFromString:model.time withFormat:DateFormat_HH];
+    
+    NSString *d_current = [UtilDate dateFromString:currentTime withFormat:DateFormat_DD];
+    NSString *d_time = [UtilDate dateFromString:time withFormat:DateFormat_DD];
+    
+    debugLog(@"%@-%@",d_current,d_time);
+    
+    if (([d_current intValue] - [d_time intValue] >= 1)) {
+        return currentTime;
+    }
+    return @"";
+}
 
 #pragma -mark 私聊 发送消息
 - (void)sendNewMessage:(NSString *)message
@@ -298,10 +324,9 @@ static XMPPManager *sharedManager;
     [xmppStream sendElement:mes andGetReceipt:&receipt];
     BOOL messageState =[receipt wait:-1];
 
-    if (messageState) {
-        if ([self.delegate respondsToSelector:@selector(sendPrivateMessageSuccessMessage:)]) {
-            [self.delegate sendPrivateMessageSuccessMessage:messageID];
-        }
+    
+    if ([self.privatedelegate respondsToSelector:@selector(sendPrivateMessageSuccessMessage:Send:)]) {
+        [self.privatedelegate sendPrivateMessageSuccessMessage:messageID Send:messageState];
     }
     
     if (messageState)
@@ -317,6 +342,7 @@ static XMPPManager *sharedManager;
 {
     NSXMLElement *body;
     NSXMLElement *mes;
+    
     //生成<body>文档
     body = [NSXMLElement elementWithName:@"body"];
     //生成XML消息文档
@@ -328,7 +354,7 @@ static XMPPManager *sharedManager;
     //[mes addAttributeWithName:@"time" stringValue:time];
     [mes addAttributeWithName:@"messageID" stringValue:messageID];
     [mes addAttributeWithName:@"receipts" stringValue:@"YES"];
-
+    
     //NSString *longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
     //NSString *latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
     //[mes addAttributeWithName:@"longitude" stringValue:longitude];
@@ -356,8 +382,6 @@ static XMPPManager *sharedManager;
         NSLog(@"回复->消息已发送");
     else
         NSLog(@"回复->消息发送失败");
-
-
 }
 
 
@@ -374,47 +398,41 @@ static XMPPManager *sharedManager;
     NSString *name = [[message attributeForName:@"name"] stringValue];
     NSString *longitude = [[message attributeForName:@"longitude"] stringValue];
     NSString *latitude = [[message attributeForName:@"latitude"] stringValue];
-    NSString *isTime = [XMPPManager getTime:time];
+    NSString *isTime = [XMPPManager getChatRoomTime:time];
     
-    /*
-    UIApplication *application = [UIApplication sharedApplication];
-    
-    __block UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    }];
-    */
 
-    
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+        
+        NSInteger start = [ChatRoomModel MR_findAllInContext:localContext].count;
+
+        
+        start = start + 1;
         
         ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
         model.userID = [self getUserId:from];
-        model.message = [[message elementForName:@"body"]  stringValue];
-        model.time = time;
-        model.flag = @"YOU";
-        model.isAname = at;
-        model.longitude = longitude;
-        model.latitude = latitude;
+        model.msg_message = [[message elementForName:@"body"]  stringValue];
+        model.msg_time = time;
+        model.msg_flag = @"YOU";
+        model.hasAname = at;
+        model.msg_longitude = longitude;
+        model.msg_latitude = latitude;
         model.messageID = msgId;
         model.userName = name;
-        model.isStealth = [[message attributeForName:@"isStealth"] stringValue];
-        model.isTime = isTime;
-        NSInteger count = [ChatRoomModel MR_countOfEntitiesWithContext:localContext];
-        model.id = @(count+1);
-        
+        model.msg_hasStealth = [[message attributeForName:@"isStealth"] stringValue];
+        model.msg_hasTime = isTime;
+        model.id = @(start++);
+        model.msg_Interval_time = [NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970]];
+
         debugLog(@"/n/n/nchatRoom->%@/n/n/n",model.id);
         
     } completion:^(BOOL success, NSError *error) {
         
-        //[application endBackgroundTask:bgTask];
-        //bgTask = UIBackgroundTaskInvalid;
-        
-        if ([self.delegate respondsToSelector:@selector(receiveChatRoomMessageWithMessageID:)]) {
-            [self.delegate receiveChatRoomMessageWithMessageID:msgId];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.publicDelegate respondsToSelector:@selector(receiveChatRoomMessageWithMessageID:)]) {
+                [self.publicDelegate receiveChatRoomMessageWithMessageID:msgId];
+            }
+        });
     }];
-     
 }
 
 // 私聊
@@ -428,8 +446,14 @@ static XMPPManager *sharedManager;
     NSString *latitude = [[message attributeForName:@"latitude"] stringValue];
     NSString *receipts = [[message attributeForName:@"receipts"] stringValue];//已读操作
     NSString *hasStealth = [[message attributeForName:@"isStealth"] stringValue];
-    NSString *isTime = [XMPPManager getTime:time];
+    NSString *isTime = [XMPPManager getChatTime:time ToUserID:[self getUserId:from]];
+    NSString *msg_content = [[message elementForName:@"body"]  stringValue];
     
+    [ChatManager insertChatMessageWith:[self getUserId:from]
+                              UserName:name
+                             MessageID:msgId
+                        MessageContent:msg_content
+                           MessageTime:time isShow:NO];
     /*
     dispatch_queue_t myCustomQueue2 = dispatch_queue_create("example.MyCustomQueue2", NULL);
     dispatch_async(myCustomQueue2, ^{
@@ -445,12 +469,6 @@ static XMPPManager *sharedManager;
         }
     });
     */
-    UIApplication *application = [UIApplication sharedApplication];
-    
-    __block UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    }];
      
     /**/
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
@@ -458,17 +476,18 @@ static XMPPManager *sharedManager;
         //NSInteger idStart = [ChatModel MR_findAllInContext:localContext].count;
 
         ChatModel *model = [ChatModel MR_createInContext:localContext];
-        model.userID = [self getUserId:from];
-        model.message = [[message elementForName:@"body"]  stringValue];
-        model.time = time;
-        model.flag = @"YOU";
-        model.longitude = longitude;
-        model.latitude = latitude;
-        model.messageID = msgId;
+        model.msg_userID = [self getUserId:from];
         model.userName = name;
-        model.hasStealth = hasStealth;
+        model.user_ID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+        model.msg_message = msg_content;
+        model.msg_time = time;
+        model.msg_flag = @"YOU";
+        model.msg_longitude = longitude;
+        model.msg_latitude = latitude;
+        model.messageID = msgId;
+        model.msg_hasStealth = hasStealth;
         model.hasRead = @"NO";
-        model.hasTime = isTime;
+        model.msg_hasTime = isTime;
         NSInteger count = [ChatModel MR_countOfEntitiesWithContext:localContext];
         model.id = @(count+1);
 
@@ -476,17 +495,17 @@ static XMPPManager *sharedManager;
 
     } completion:^(BOOL success, NSError *error) {
      
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-     
         debugLog(@"receipts->%@",receipts);
         // 已读操作
         [self receiptsMessage:msgId ToUserID:[self getUserId:from]];
         
-        if ([self.delegate respondsToSelector:@selector(receiveChatMessageWithMessageID:)]) {
-            [self.delegate receiveChatMessageWithMessageID:msgId];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.privatedelegate respondsToSelector:@selector(receiveChatMessageWithMessageID:)]) {
+                [self.privatedelegate receiveChatMessageWithMessageID:msgId];
+            }
+        });
     }];
+
 }
 
 - (void)receiptsChatMessage:(XMPPMessage *)message
@@ -494,10 +513,10 @@ static XMPPManager *sharedManager;
     NSString *msgId = [[message attributeForName:@"messageID"] stringValue];
     NSString *receipts = [[message attributeForName:@"receipts"] stringValue];//已读操作
 
-    debugLog(@"receipts->%@",receipts);
+    debugLog(@"已读操作->%@",receipts);
 
-    if ([self.delegate respondsToSelector:@selector(receiptsChatMessageWithMessageID:)]) {
-        [self.delegate receiptsChatMessageWithMessageID:msgId];
+    if ([self.privatedelegate respondsToSelector:@selector(receiptsChatMessageWithMessageID:)]) {
+        [self.privatedelegate receiptsChatMessageWithMessageID:msgId];
     }
     
 }

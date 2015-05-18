@@ -13,7 +13,7 @@
 //typedef void(^clickUserHeadIMG)(NSIndexPath *indexpath);
 
 @protocol MessageCellDelegate;
-@class ChatModel;
+@class MessageModel;
 @interface MessageCell : UITableViewCell
 
 @property (strong, nonatomic)NSIndexPath *indexPath;
@@ -24,7 +24,7 @@
 
 + (CGFloat)getMessageCellHeight;
 
-- (void)set_MessageCellData:(ChatModel *)model;
+- (void)set_MessageCellData:(MessageModel *)model;
 
 
 @end
@@ -32,7 +32,7 @@
 @protocol MessageCellDelegate <NSObject>
 
 - (void)deleteMessageCellData:(NSIndexPath *)indexpath;
-- (void)tapHeadImgSendAction:(ChatModel *)model;
+- (void)tapHeadImgSendAction:(MessageModel *)model;
 
 @end
 

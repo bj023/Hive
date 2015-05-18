@@ -2,14 +2,13 @@
 //  NSTimeUtil.m
 //  Hive
 //
-//  Created by 那宝军 on 15/4/24.
+//  Created by mac on 15/4/24.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
 #import "NSTimeUtil.h"
 #import "Utils.h"
 #import <CoreLocation/CoreLocation.h>
-#import <Reachability.h>
 
 static CGFloat const chageImageTime = 60.0;
 
@@ -111,13 +110,13 @@ static CGFloat const chageImageTime = 60.0;
             break;
     }
     
-    if (!_isShowAlert) {
-        _isShowAlert = YES;
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:errorString delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert show];
-
-    }
+//    if (!_isShowAlert) {
+//        _isShowAlert = YES;
+//        
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:errorString delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+//        [alert show];
+//
+//    }
 }
 
 - (NSString *)getCoordinateLatitude
@@ -163,17 +162,26 @@ static CGFloat const chageImageTime = 60.0;
     }
     
     
-    
     [HttpTool sendRequestChatRoomWithLongitude:_coordinateLongitude Latitude:_coordinateLatitude success:^(id json) {
         
         ResponseChatUsersModel *res = [[ResponseChatUsersModel alloc] initWithString:json error:nil];
         
         if (res.RETURN_CODE == 200) {
             _userIDs = res.userIDs;
+            [self sendRequestUpdateLocation];
         }
         
     } faliure:^(NSError *error) {
         // 获取聊天大厅用户列表失败
+    }];
+}
+
+- (void)sendRequestUpdateLocation
+{
+    [HttpTool sendRequestUpdateUserLocation:_coordinateLongitude Latitude:_coordinateLatitude success:^(id json) {
+        debugLog(@"更新用户位置成功");
+    } faliure:^(NSError *error) {
+        debugLog(@"更新用户位置失败");
     }];
 }
 
@@ -231,34 +239,5 @@ static CGFloat const chageImageTime = 60.0;
     });
     
 }
-
-+(BOOL)Request3G
-{
-    BOOL GetMy3G = NO;
-    //监测网络
-    Reachability *r = [Reachability reachabilityWithHostName:@"www.baidu.com"];
-    switch ([r currentReachabilityStatus])
-    {
-        case NotReachable:
-            // 没有网络连接
-            NSLog(@"没有网络");
-            GetMy3G = NO;
-            break;
-        case ReachableViaWWAN:
-            // 使用3G网络
-            NSLog(@"正在使用3G网络");
-            GetMy3G = YES;
-            break;
-        case ReachableViaWiFi:
-            // 使用WiFi网络
-            NSLog(@"正在使用wifi网络");
-            GetMy3G = YES;
-            break;
-    }
-    return GetMy3G;
-}
-
-
-
 
 @end

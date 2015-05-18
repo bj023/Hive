@@ -9,7 +9,8 @@
 #import "MessagesController.h"
 #import "MessageCell.h"
 #import "Utils.h"
-#import "ChatModel.h"
+#import "MessageModel.h"
+
 
 @interface MessagesController ()<UITableViewDataSource, UITableViewDelegate, MessageCellDelegate ,UISearchResultsUpdating, UISearchBarDelegate>
 {
@@ -28,9 +29,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self configMessageData];
+
+    
     [self configTableView];
     [self configSearBtn];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -41,25 +44,52 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = YES;
+    //self.navigationController.navigationBarHidden = YES;
+}
+
+- (void)reloadChatMessage
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.messageArr removeAllObjects];
+        NSString *userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+        debugLog(@"聊天用户->%@",userID);
+        self.messageArr = [NSMutableArray arrayWithArray:[MessageModel MR_findAllSortedBy:@"msg_time" ascending:NO]];
+        debugLog(@"/n/n/n/n/n加载聊天记录->%ld/n/n/n/n/n/n/n/n",self.messageArr.count);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+
+            [self.messageTable reloadData];
+            
+        });
+    });
 }
 
 - (void)configSearBtn
 {
-    /* */
-    _topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, 44)];
-    _topView.backgroundColor = [UIColorUtil colorWithHexString:@"#eeeeee"];
-    self.messageTable.tableHeaderView = _topView;
     
-    UIButton *searBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    searBtn.frame = CGRectMake(8 , 7, UIWIDTH - 16, 30);
-    searBtn.backgroundColor = [UIColor whiteColor];
-    searBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    searBtn.layer.cornerRadius = 5;
-    [searBtn setTitle:@"Search" forState:UIControlStateNormal];
-    [searBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    [searBtn addTarget:self action:@selector(searchBarButtonItemAction:) forControlEvents:UIControlEventTouchUpInside];
-    [_topView addSubview:searBtn];
+    UISearchController * _mySearchController = [[UISearchController alloc]initWithSearchResultsController:nil];
+    _mySearchController.searchResultsUpdater = self;
+    _mySearchController.dimsBackgroundDuringPresentation = YES;
+    [_mySearchController.searchBar sizeToFit];
+    self.messageTable.tableHeaderView = _mySearchController.searchBar;
+
+    /*
+    if (!_topView) {
+        _topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, 44)];
+        _topView.backgroundColor = [UIColorUtil colorWithHexString:@"#eeeeee"];
+        self.messageTable.tableHeaderView = _topView;
+        
+        UIButton *searBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        searBtn.frame = CGRectMake(8 , 7, UIWIDTH - 16, 30);
+        searBtn.backgroundColor = [UIColor whiteColor];
+        searBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        searBtn.layer.cornerRadius = 5;
+        [searBtn setTitle:@"Search" forState:UIControlStateNormal];
+        [searBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [searBtn addTarget:self action:@selector(searchBarButtonItemAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_topView addSubview:searBtn];
+    }
+     */
 }
 
 #pragma mark 搜索按钮事件（点击搜索按钮，推出搜索控制器）
@@ -78,8 +108,15 @@
     _searchController.searchBar.placeholder = @"输入要查找的内容";
     _searchController.searchBar.prompt = @"Search";
     _searchController.searchBar.delegate = self;
+    _searchController.searchBar.backgroundColor = [UIColor redColor];
+    _searchController.searchBar.tintColor = [UIColor blueColor];
+    //_searchController.searchBar.barTintColor = [UIColor lightGrayColor];
+    _searchController.dimsBackgroundDuringPresentation = NO;
+
     // 因为搜索是控制器，所以要使用模态推出（必须是模态，不可是push）
-    [self presentViewController:_searchController animated:YES completion:nil];
+    self.messageTable.tableHeaderView = _searchController.searchBar;
+    //[self presentViewController:_searchController animated:YES completion:nil];
+
 }
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
@@ -96,11 +133,6 @@
     [_topView removeFromSuperview];
 }
 
-- (void)configMessageData
-{
-    self.messageArr = [NSMutableArray arrayWithArray:[ChatModel MR_findAll]];
-    debugLog(@"%@",self.messageArr);
-}
 
 #pragma -mark 初始化 Message TableView
 - (void)configTableView
@@ -135,6 +167,8 @@
     MessageCell *cell = [MessageCell cellWithTableView:tableView];
     cell.indexPath = indexPath;
     cell.delegate = self;
+    
+    
     [cell set_MessageCellData:(tableView == self.messageTable?self.messageArr[indexPath.row]:self.searchResultDataArray[indexPath.row])];
 
     return cell;
@@ -144,16 +178,16 @@
 {
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     [_searchController dismissViewControllerAnimated:NO completion:nil];
-
+    
     self.chatBlock((tableView == self.messageTable?self.messageArr[indexPath.row]:self.searchResultDataArray[indexPath.row]));
 }
 
-- (void)tapHeadImgSendAction:(ChatModel *)model
+- (void)tapHeadImgSendAction:(MessageModel *)model
 {
     //点击头像 查看个人信息
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [HttpTool sendRequestProfileWithUserID:model.userID success:^(id json) {
+    [HttpTool sendRequestProfileWithUserID:model.toUserID success:^(id json) {
         ResponseChatUserInforModel *res = [[ResponseChatUserInforModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -206,7 +240,7 @@
     // 1. 获取输入的值
     NSString *conditionStr = searchController.searchBar.text;
     // 2. 创建谓词，准备进行判断的工具
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userName CONTAINS [CD] %@ OR message CONTAINS [CD] %@", conditionStr, conditionStr];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"toUserName CONTAINS [CD] %@ OR msg_content CONTAINS [CD] %@", conditionStr, conditionStr];
     
     // 3. 使用工具获取匹配出的结果
     self.searchResultDataArray = [NSMutableArray arrayWithArray:[_messageArr filteredArrayUsingPredicate:predicate]];
@@ -219,6 +253,7 @@
 
 - (void)dealloc
 {
+
     self.messageTable.delegate = nil;
     self.messageTable = nil;
 }

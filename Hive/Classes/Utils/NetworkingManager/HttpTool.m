@@ -10,6 +10,7 @@
 #import "Utils.h"
 
 #define APPEND_Login @"/log/login.do"// 登陆
+#define APPEND_LogOut @"/info/logout.do" // 退出登陆
 #define APPEND_NearBy @"/info/loadCrowd.do" // 附近人
 #define APPEND_NearBy_Follow @"/info/addFriend.do" // 关注
 #define APPEND_NearBy_CancelFollow @"/info/removeFriend.do" // 关注
@@ -23,14 +24,18 @@
 #define APPEND_Register @"/log/register.do" // 注册
 #define APPEND_Register_EmailExist @"/log/isEmailExist.do" // 邮箱验证
 #define APPEND_Register_UpdateProfile @"/info/updateProfile.do" // 修改信息
-#define APPEND_Register_UpdateUserHead @"/info/uploadUserIcon.do" // 修改头像
-
+#define APPEND_Register_UpdateUserHead @"/info/uploadUserIcon.do" // 修改头像 uploadUserImage.do uploadUserIcon.do
+#define APPEND_UpdateLocation @"/info/updateLocation.do" //更新用户位置信息
 #define APPEND_UpdateProfileUserName @"/info/updateProfile.do" // 修改用户名
 #define APPEND_SettingsNotification @"/info/loadPushSetting.do" // 拉取推送设置
+
+#define APPEND_GetDistance @"/info/loadTopics.do"
 
 #define APPEND_ChatRoom @"/info/loadCrowdID.do" // 聊天室 用户列表
 
 #define APPEND_Profile @"/info/loadProfile.do" // 查看用户信息
+
+#define APPEND_PushMessage @"/info/pushMessage.do"
 
 @implementation HttpTool
 #pragma -mark 登陆
@@ -47,6 +52,8 @@
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setObject:userName forKey:@"email"];
     [parameters setObject:password forKey:@"password"];
+    if (!IsEmpty([UserDefaultsUtil getDeviceToken]))
+        [parameters setObject:[UserDefaultsUtil getDeviceToken] forKey:@"deviceToken"]; //deviceToken
     return parameters;
 }
 // 登陆
@@ -63,6 +70,27 @@
         faliure(error);
     }];
 }
+
+#pragma -mark 更新用户位置 
++ (void)sendRequestUpdateUserLocation:(NSString *)longitude
+                             Latitude:(NSString *)latitude
+                              success:(ResponseSuccBlcok)success
+                              faliure:(HttpFailBlcok)faliure
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setObject:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID forKey:@"userId"];
+    [parameters setObject:longitude forKey:@"longitude"];
+    [parameters setObject:latitude forKey:@"latitude"];
+    
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_UpdateLocation];
+
+    [HttpManager postRequestWithBaseUrl:urlString params:parameters success:^(id response) {
+        success(response);
+    } Fail:^(NSError *error) {
+        faliure(error);
+    }];
+}
+
 #pragma -mark 附近人
 /**
  *  封装 登陆请求接口 字段
@@ -115,6 +143,7 @@
     [parameters setObject:friendID forKey:@"friendId"];
     return parameters;
 }
+
 // 关注附近人
 + (void)sendRequestWithFollow:(NSString *)friendID
                       success:(ResponseSuccBlcok)success
@@ -205,18 +234,20 @@
 }
 
 #pragma -mark 注册 验证码
-+ (NSMutableDictionary *)parameterCode:(NSString *)code
++ (NSMutableDictionary *)parameterCode:(NSString *)code PhoneNum:(NSString *)phonenum
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setObject:code forKey:@"code"];
+    [parameters setObject:phonenum forKey:@"phonenum"];
     return parameters;
 }
 + (void)sendRequestRegisterCode:(NSString *)code
+                       PhoneNum:(NSString *)phonenum
                         success:(ResponseSuccBlcok)success
                         faliure:(HttpFailBlcok)faliure
 {
     NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_Register_Code];
-    NSMutableDictionary *dict = [HttpTool parameterCode:code];
+    NSMutableDictionary *dict = [HttpTool parameterCode:code PhoneNum:phonenum];
     [HttpManager postRequestWithBaseUrl:urlString params:dict success:^(id response) {
         success(response);
     } Fail:^(NSError *error) {
@@ -224,26 +255,55 @@
     }];
 }
 #pragma -mark 注册
-+ (NSMutableDictionary *)parameterEmail:(NSString *)email UserName:(NSString *)username Password:(NSString *)password
++ (NSMutableDictionary *)parameterEmail:(NSString *)email UserName:(NSString *)username Password:(NSString *)password PhoneNum:(NSString *)phoneNum
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setObject:email forKey:@"email"];
     [parameters setObject:username forKey:@"userName"];
     [parameters setObject:password forKey:@"password"];
+    [parameters setObject:phoneNum forKey:@"phonenum"];
+    [parameters setObject:[UserDefaultsUtil getDeviceToken] forKey:@"deviceToken"];
+
     return parameters;
 }
+
 + (void)sendRequestRegisterEmail:(NSString *)email
                         UserName:(NSString *)username
                         Passwowd:(NSString *)password
+                        PhoneNum:(NSString *)phoneNum
                          success:(ResponseSuccBlcok)success
                          faliure:(HttpFailBlcok)faliure
 {
     NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_Register];
-    [HttpManager postRequestWithBaseUrl:urlString params:[HttpTool parameterEmail:email UserName:username Password:password] success:^(id response) {
+    [HttpManager postRequestWithBaseUrl:urlString params:[HttpTool parameterEmail:email UserName:username Password:password PhoneNum:phoneNum] success:^(id response) {
         success(response);
     } Fail:^(NSError *error) {
         faliure(error);
     }];
+}
+
+#pragma -mark 注册 第四步 修改数据
++ (NSMutableDictionary *)parameterWithSex:(NSString *)sex Age:(NSString *)age
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setObject:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID forKey:@"userId"];
+    [parameters setObject:sex forKey:@"gender"];
+    [parameters setObject:age forKey:@"age"];
+    return parameters;
+}
+
++ (void)sendRequestRegisterUserInforSex:(NSString *)sex
+                                    Age:(NSString *)age
+                                success:(ResponseSuccBlcok)success
+                                faliure:(HttpFailBlcok)faliure
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_UpdateProfileUserName];
+    [HttpManager postRequestWithBaseUrl:urlString params:[HttpTool parameterWithSex:sex Age:age] success:^(id response) {
+        success(response);
+    } Fail:^(NSError *error) {
+        faliure(error);
+    }];
+
 }
 
 #pragma -mark 邮箱验证
@@ -321,8 +381,6 @@
         faliure(error);
     }];
 }
-#pragma -mark 修改用户头像
-//+ (NSMutableDictionary *)parameterUpdateProfileIcon:(NSString *)
 
 #pragma -mark 隐身  
 + (NSMutableDictionary *)parameterHiding:(NSString *)hiding
@@ -431,6 +489,118 @@
     NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_Profile];
     NSMutableDictionary *dict = [HttpTool parameterUserID:userID];
     [HttpManager postRequestWithBaseUrl:urlString params:dict success:^(id response) {
+        success(response);
+    } Fail:^(NSError *error) {
+        faliure(error);
+    }];
+}
+
+#pragma -mark 获取用户信息
++ (void)sendRequestGetDistanceLongitude:(NSString *)longitude
+                               Latitude:(NSString *)latitude
+                                success:(ResponseSuccBlcok)success
+                                faliure:(HttpFailBlcok)faliure
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_GetDistance];
+    NSMutableDictionary *dict = [HttpTool parameterWithLongitude:longitude Latitude:latitude];
+    [HttpManager postRequestWithBaseUrl:urlString params:dict success:^(id response) {
+        success(response);
+    } Fail:^(NSError *error) {
+        faliure(error);
+    }];
+}
+
+#pragma -mark 发送要推送的消息
++ (NSMutableDictionary *)parameterMessage:(NSString *)message
+                                 ToUserID:(NSString *)friendID
+                                 Receipts:(NSString *)receipts
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    NSString *userID = [UserInfoManager sharedInstance].getCurrentUserInfo.userID;
+    [parameters setObject:userID forKey:@"sourceId"];
+    [parameters setObject:friendID forKey:@"friendId"];
+    [parameters setObject:message forKey:@"message"];
+    [parameters setObject:receipts forKey:@"receipts"];
+
+    return parameters;
+}
+
++ (void)sendRequestPushMessage:(NSString *)message
+                      ToUserID:(NSString *)friendID
+                      Receipts:(NSString *)receipts
+                       success:(ResponseSuccBlcok)success
+                       faliure:(HttpFailBlcok)faliure
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_PushMessage];
+    NSMutableDictionary *dict = [HttpTool parameterMessage:message ToUserID:friendID Receipts:receipts];
+    [HttpManager postRequestWithBaseUrl:urlString params:dict success:^(id response) {
+        success(response);
+    } Fail:^(NSError *error) {
+        faliure(error);
+    }];
+}
+
+#pragma -mark 上传头像
++ (NSMutableDictionary *)parameterImageData:(NSData *)imgData
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    NSString *userID = [UserInfoManager sharedInstance].getCurrentUserInfo.userID;
+    [parameters setObject:userID forKey:@"userId"];
+    [parameters setObject:imgData forKey:@"data"];
+    
+    return parameters;
+}
++ (void)sendRequestUploadHeadImg:(NSData *)imgData
+                         success:(ResponseSuccBlcok)success
+                         faliure:(HttpFailBlcok)faliure
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_Register_UpdateUserHead];
+
+    /*
+    [HttpManager postFormDataRequestWithBaseUrl:urlString params:[HttpTool parameterImageData:imgData] success:^(id response) {
+        success(response);
+    } Fail:^(NSError *error) {
+        faliure(error);
+    }];
+     */
+    
+    [HttpManager postFormDataRequestWithBaseUrl:urlString params:[HttpTool parameterUserID] ImageData:imgData success:^(id response) {
+        success(response);
+    } Fail:^(NSError *error) {
+        faliure(error);
+    }];
+}
+
+#pragma -mark 退出登陆
++ (void)sendRequestLogOutsuccess:(ResponseSuccBlcok)success
+                         faliure:(HttpFailBlcok)faliure
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_LogOut];
+
+    [HttpManager postRequestWithBaseUrl:urlString params:[HttpTool parameterUserID] success:^(id response) {
+        success(response);
+    } Fail:^(NSError *error) {
+        faliure(error);
+    }];
+}
+
+#pragma -mark 更新 Token
++ (NSMutableDictionary *)parameterDeviceToken:(NSString *)token
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    NSString *userID = [UserInfoManager sharedInstance].getCurrentUserInfo.userID;
+    [parameters setObject:userID forKey:@"userId"];
+    [parameters setObject:token forKey:@"deviceToken"];
+    
+    return parameters;
+}
+
++ (void)sendRequestUpdateDeviceToken:(NSString *)token
+                             success:(ResponseSuccBlcok)success
+                             faliure:(HttpFailBlcok)faliure
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_Register_UpdateProfile];
+    [HttpManager postRequestWithBaseUrl:urlString params:[HttpTool parameterDeviceToken:token] success:^(id response) {
         success(response);
     } Fail:^(NSError *error) {
         faliure(error);

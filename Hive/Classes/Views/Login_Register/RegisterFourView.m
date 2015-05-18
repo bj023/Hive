@@ -12,6 +12,9 @@
 #import "CustomActionSheetView.h"
 
 @interface RegisterFourView ()<UITextFieldDelegate>
+{
+    BOOL _isSelectHeadIMG;
+}
 
 @property (strong, nonatomic) UIImageView   *headIMG;
 @property (strong, nonatomic) UILabel       *nameLabel;
@@ -31,6 +34,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        [self hiddenNavBackBtn:YES];
         [self initFourView];
     }
     return self;
@@ -170,6 +174,17 @@
 
 - (void)navNextAction:(UIButton *)sender
 {
+    if (IsEmpty(self.ageText.text)) {
+        [MBProgressHUD showTextHUDAddedTo:self withText:@"Please enter your age" animated:YES];
+        return;
+    }else if (IsEmpty([_sexView getSex])){
+        [MBProgressHUD showTextHUDAddedTo:self withText:@"Please select your sex" animated:YES];
+        return;
+
+    }else if(!_isSelectHeadIMG){
+        [MBProgressHUD showTextHUDAddedTo:self withText:@"Please select your icon" animated:YES];
+        return;
+    }
     [super navNextAction:sender];
     self.block(@"Next");
 }
@@ -177,7 +192,23 @@
 #pragma -mark 设置头像
 - (void)setHeadImgae:(UIImage *)image
 {
+    _isSelectHeadIMG = YES;
     self.headIMG.image = image;
+}
+
+- (NSString *)getSex
+{
+    return [_sexView getSex];
+}
+
+- (NSString *)getAge
+{
+    return self.ageText.text;
+}
+
+- (UIImage *)getImgData
+{
+    return self.headIMG.image;
 }
 
 #pragma -mark 头像点击事件

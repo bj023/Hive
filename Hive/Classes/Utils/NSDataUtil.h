@@ -2,7 +2,7 @@
 //  NSDataUtil.h
 //  Hive
 //
-//  Created by 那宝军 on 15/4/9.
+//  Created by mac on 15/4/9.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -17,4 +17,11 @@
 + (void)setBeFollowWithValue:(NSString *)value;
 + (NSString *)getBeFollowValue;
 + (BOOL)beFollow;
+// 存储聊天室时间段
++ (void)setChatRoomTime:(NSString *)time;
++ (NSString *)getChatRoomTime;
+// 单聊
++ (void)setChatTime:(NSString *)time ToUserID:(NSString *)userID;
++ (NSString *)getChatTimeWithToUserID:(NSString *)userID;
+
 @end

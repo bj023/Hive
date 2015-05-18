@@ -2,7 +2,7 @@
 //  ChatBaseCell.m
 //  Hive
 //
-//  Created by 那宝军 on 15/4/28.
+//  Created by mac on 15/4/28.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -67,13 +67,13 @@
 {
     [super layoutSubviews];
     
-    BOOL isShow = [_message.flag isEqualToString:@"ME"]?YES:NO;
+    BOOL isShow = [_message.msg_flag isEqualToString:@"ME"]?YES:NO;
     
     _headImgaeView.hidden = isShow;
     
     _nameLabel.hidden = isShow;
     
-    CGSize size = [ChatRoomBaseCell sizeMessage:_message.message];
+    CGSize size = [ChatRoomBaseCell sizeMessage:_message.msg_message];
     
     if (!isShow) {
         [self setLeftFrame:size];
@@ -87,8 +87,8 @@
     
     CGFloat width = 80;
     CGFloat x = UIWIDTH/2 - width/2;
-    CGFloat y = CELLPADDING + (IsEmpty(_message.isTime)?0:5);
-    CGFloat height = IsEmpty(_message.isTime)?0:TIME_HEIGHT;
+    CGFloat y = CELLPADDING + (IsEmpty(_message.msg_hasTime)?0:5);
+    CGFloat height = IsEmpty(_message.msg_hasTime)?0:TIME_HEIGHT;
     // 时间周期
     _timeView.frame = CGRectMake(x, y, width, height);
     
@@ -98,7 +98,7 @@
     
     // 姓名
     x = _headImgaeView.frame.origin.x + _headImgaeView.frame.size.width + HEAD_PADDING;
-    _nameLabel.frame = CGRectMake(x, y + (IsEmpty(_message.isTime)?0:5), NAME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
+    _nameLabel.frame = CGRectMake(x, y + (IsEmpty(_message.msg_hasTime)?0:5), NAME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
     
     // 气泡
     width = messageSize.width + kMessage_Left + kMessage_Right;
@@ -112,7 +112,7 @@
     _timeLabel.frame = CGRectMake(x, y, TIME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
     
     // 设置气泡
-    BOOL isAname = [_message.isAname isEqualToString:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID];
+    BOOL isAname = [_message.hasAname isEqualToString:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID];
     //UIImage *image = [UIImage imageNamed:isAname?@"chat_orange":@"chat_gray"];
     _bubbleView.messageLabel.textColor = isAname?[UIColor whiteColor]:[UIColorUtil colorWithHexString:@"#1a1a1a"];
     
@@ -125,8 +125,8 @@
 {
     CGFloat width = 80;
     CGFloat x = UIWIDTH/2 - width/2;
-    CGFloat y = CELLPADDING + (IsEmpty(_message.isTime)?0:5);
-    CGFloat height = IsEmpty(_message.isTime)?0:TIME_HEIGHT;
+    CGFloat y = CELLPADDING + (IsEmpty(_message.msg_hasTime)?0:5);
+    CGFloat height = IsEmpty(_message.msg_hasTime)?0:TIME_HEIGHT;
     // 时间周期
     _timeView.frame = CGRectMake(x, y, width, height);
     
@@ -153,24 +153,24 @@
 {
     _message = message;
     
-    BOOL isShow = [_message.flag isEqualToString:@"ME"]?YES:NO;
+    BOOL isShow = [_message.msg_flag isEqualToString:@"ME"]?YES:NO;
     
     _bubbleView.isMe = isShow;
     
     if (!isShow) {
-        [_headImgaeView setImageURLStr:[NSString stringWithFormat:@"http://115.28.51.196/X_USER_ICON/%@.jpg",_message.userID]];
+        [_headImgaeView setImageURLStr:User_Head(_message.userID)];
         
-        NSString *distance = [NSTimeUtil getDistance:message.longitude latitude:message.latitude];
+        NSString *distance = [NSTimeUtil getDistance:message.msg_longitude latitude:message.msg_latitude];
         
-        if ([message.isStealth isEqualToString:@"1"]){
+        if ([message.msg_hasStealth isEqualToString:@"1"]){
             _nameLabel.text = [NSString stringWithFormat:@"隐身用户 %@",distance];
         }else
             _nameLabel.text = [NSString stringWithFormat:@"%@  %@",_message.userName,distance];
     }
-    
-    self.timeLabel.text = [UtilDate dateFromString:_message.time withFormat:DateFormat_HM];
-    self.bubbleView.message = _message.message;
-    self.timeView.time = _message.isTime;
+        
+    self.timeLabel.text = [UtilDate dateFromString:_message.msg_time withFormat:DateFormat_HM];
+    self.bubbleView.message = _message.msg_message;
+    self.timeView.time = _message.msg_hasTime;
 }
 
 + (CGSize)sizeMessage:(NSString *)message
@@ -183,15 +183,15 @@
 
 + (CGFloat)getCellHeight:(ChatRoomModel *)message
 {
-    CGSize size = [ChatRoomBaseCell sizeMessage:message.message];
+    CGSize size = [ChatRoomBaseCell sizeMessage:message.msg_message];
     
-    BOOL isShow = [message.flag isEqualToString:@"ME"]?YES:NO;
+    BOOL isShow = [message.msg_flag isEqualToString:@"ME"]?YES:NO;
     
     CGFloat height = size.height + kMessage_Top * 2;
     
     height = height + (isShow?0:NAME_LABEL_HEIGHT) + CELLPADDING ;
     
-    height = height + (IsEmpty(message.isTime)?CELLPADDING:(TIME_HEIGHT + 10 + 5)) + CELLPADDING;
+    height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(TIME_HEIGHT + 10 + 5)) + CELLPADDING;
     
     return height;
 }

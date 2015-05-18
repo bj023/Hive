@@ -18,70 +18,10 @@
 #define UIHEIGHT [UIScreen mainScreen].bounds.size.height
 
 @interface AppDelegate ()<UIScrollViewDelegate>
-{
-    UIView *view;
-    NSInteger _pageNumber;
-    NSInteger _currentPage;
-}
+
 @end
 
 @implementation AppDelegate
-
-#pragma mark --开始引导页--
--(void)guideStart
-{
-    //引导页图片列表
-    NSArray *arr=[NSArray arrayWithObjects:@"1.png",@"2.png",@"3-bg.png", nil];
-    _pageNumber = [arr count];
-    
-    //view设置
-    view=[[UIView alloc]initWithFrame:self.window.bounds];
-    [self.window addSubview:view];
-    int height=view.frame.size.height;
-    int width=view.frame.size.width;
-    //添加scrollView
-    UIScrollView *scroll=[[UIScrollView alloc]initWithFrame:view.bounds];
-    scroll.contentSize=CGSizeMake(width*_pageNumber, height);
-    for (int i=0; i<_pageNumber; i++) {
-        UIImageView *img=[[UIImageView alloc]initWithFrame:CGRectMake(width*i, 0, width, height)];
-        [img setImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle]pathForResource:[arr objectAtIndex:i] ofType:nil]]];
-        [scroll addSubview:img];
-        if (i==_pageNumber-1) {
-            UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
-            [btn setBackgroundImage:[UIImage imageNamed:@"3-bt.png"] forState:UIControlStateNormal];
-            btn.frame=CGRectMake(UIWIDTH/2 - 70, UIHEIGHT - 84, 140, 44);
-            [btn addTarget:self action:@selector(startApp) forControlEvents:UIControlEventTouchUpInside];
-            [img addSubview:btn];
-            img.userInteractionEnabled=YES;
-        }
-    }
-    scroll.delegate=self;
-    scroll.pagingEnabled=YES;
-    scroll.showsHorizontalScrollIndicator=NO;
-    [view addSubview:scroll];
-}
-
-#pragma mark --引导页代理--
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    int page = scrollView.contentOffset.x/scrollView.frame.size.width;
-    scrollView.contentOffset=CGPointMake(page*scrollView.frame.size.width, 0);
-    _currentPage=page;
-}
-
--(void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    if (_currentPage==_pageNumber-1 && scrollView.contentOffset.x>scrollView.frame.size.width*(_pageNumber-1)) {
-        [self startApp];
-    }
-}
-
--(void)startApp
-{
-    [view removeFromSuperview];
-    [UserDefaultsUtil setUserDefaultsFirstUse];
-    [self setRootViewController];
-}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
@@ -92,15 +32,7 @@
     [self addSetRootViewControllerNotification];
     
     [self registerRemoteNotification];
-    
-    [[NSTimeUtil sharedInstance] startUpdatelocation];
 
-    /*
-    if ([UserDefaultsUtil iSFirstUse])
-        [self guideStart];
-    else
-        [self setRootViewController];
-     */
     [self setRootViewController];
     
     [self.window makeKeyAndVisible];
@@ -133,24 +65,45 @@
 //ios8需要调用内容
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 {
-    //register to receive notifications
+
+    debugLog(@"notificationSettings->%@",[notificationSettings observationInfo]);
     [application registerForRemoteNotifications];
 }
 
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void(^)())completionHandler
 {
-    //handle the actions
+    
+    debugLog(@"userInfo->%@",userInfo);
+    
     if ([identifier isEqualToString:@"declineAction"]){
     }
     else if ([identifier isEqualToString:@"answerAction"]){
     }
 }
+
 #endif
+
+//处理收到的消息推送
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    debugLog(@"userInfo->%@",userInfo);
+    debugMethod();
+}
 
 #pragma mark - 实现远程推送需要实现的监听接口
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSString* token = [NSString stringWithFormat:@"%@",deviceToken];
-    debugLog(@"apns -> 生成的devToken:%@", token);
+    NSLog(@"apns -> 生成的devToken:%@", token);
+    NSString *devToken = [token substringWithRange:NSMakeRange(1, 71)];
+    [UserDefaultsUtil setDeviceToken:devToken];
+    
+    if ([[UserInfoManager sharedInstance] checkUserIsLogin]) {
+        [HttpTool sendRequestUpdateDeviceToken:devToken success:^(id json) {
+            debugLog(@"更新Token成功");
+        } faliure:^(NSError *error) {
+            debugLog(@"更新Token失败");
+        }];
+    }
 }
 
 #pragma mark - 接收注册推送通知功能时出现的错误，并做相关处理
@@ -178,7 +131,9 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     
-    [[XMPPManager sharedInstance] connect];
+    if ([[UserInfoManager sharedInstance] checkUserIsLogin]) {
+        [[XMPPManager sharedInstance] connect];
+    }
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification
@@ -203,10 +158,13 @@
     }else{
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
         [[UserInfoManager sharedInstance] loadUserInfoFromDisk];
-        if ([XMPPManager sharedInstance].connect) {
-            debugLog(@"连接成功");
+        
+        [[NSTimeUtil sharedInstance] startUpdatelocation];
+        
+        if ([[XMPPManager sharedInstance] connect]) {
+            debugLog(@"XMPP连接成功");
         }else
-            debugLog(@"连接失败");
+            debugLog(@"XMPP连接失败");
         
         // 已经登陆过需要自动登陆
         ViewController *vc = [[ViewController alloc] init];

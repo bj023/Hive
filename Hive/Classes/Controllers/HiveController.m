@@ -16,7 +16,7 @@
 #import "UserInformationController.h"
 #import "DataBaseModel.h"
 
-@interface HiveController ()<MessageToolBarDelegate, UITableViewDataSource, UITableViewDelegate, ChatMessageDelegate, ChatRoomViewCellDelegate>
+@interface HiveController ()<MessageToolBarDelegate, UITableViewDataSource, UITableViewDelegate, ChatPublicMessageDelegate, ChatRoomViewCellDelegate>
 {
     NSString *_isAname;
     
@@ -38,7 +38,7 @@
     [self configTableView];
     [self configMessageArr];
     [self configMessageToolBar];
-    [XMPPManager sharedInstance].delegate = self;;
+    [XMPPManager sharedInstance].publicDelegate = self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -49,20 +49,24 @@
 - (void)configMessageArr
 {
     
-    //NSArray *ret = [DataBaseModel NSManagedObject:[ChatRoomModel class] findStart:1 andCount:1];
-    NSArray *ret = [ChatRoomModel MR_findAll];
-    debugLog(@"获取数据->%ld",ret.count);
-    self.mesgaeArr = [NSMutableArray arrayWithArray:ret];
-    
     for (ChatRoomModel *model in [ChatRoomModel MR_findAll]) {
-        debugLog(@"记录ID->%@",model.id);
+        debugLog(@"%@",model.msg_Interval_time);
     }
-
+    
+    self.mesgaeArr = [NSMutableArray array];
+    
+    NSArray *array = [DataBaseModel getChatWithStartChatRoom:nil andCount:10];
+    NSRange range = NSMakeRange(0, [array count]);
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
+    [self.mesgaeArr insertObjects:array atIndexes:indexSet];
+    
     if (self.mesgaeArr.count == 0) {
         return;
     }
     
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.mesgaeArr.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.mesgaeArr.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    });
 }
 
 
@@ -93,13 +97,13 @@
 
 - (void)beginPullDownRefreshing:(id)sender
 {
-    NSLog(@"刷新数据");
-    
-    NSArray *ret = [DataBaseModel NSManagedObject:[ChatRoomModel class] findStart:self.mesgaeArr.count andCount:1];
-
-    [self.mesgaeArr addObjectsFromArray:ret];
     [_refreshControl endRefreshing];
     
+    NSArray *array = [DataBaseModel getChatWithStartChatRoom:_mesgaeArr.count==0?nil:self.mesgaeArr[0] andCount:10];
+    NSRange range = NSMakeRange(0, [array count]);
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
+    [self.mesgaeArr insertObjects:array atIndexes:indexSet];
+
     [self.tableView reloadData];
 
 }
@@ -108,7 +112,8 @@
 - (void)configMessageToolBar
 {
     if (!self.chatToolBar) {
-        self.chatToolBar = [[MessageToolBar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - [MessageToolBar defaultHeight] - 64, self.view.frame.size.width, [MessageToolBar defaultHeight])];
+        CGRect frame = CGRectMake(0, self.view.frame.size.height - [MessageToolBar defaultHeight] - 64, self.view.frame.size.width, [MessageToolBar defaultHeight]);
+        self.chatToolBar = [[MessageToolBar alloc] initWithFrame:frame isPulicChat:YES];
         self.chatToolBar.delegate = self;
         self.chatToolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
         [self.view addSubview:self.chatToolBar];
@@ -134,7 +139,6 @@
     ChatRoomCell *cell = [ChatRoomCell cellWithTableView:tableView Delegate:self];
     cell.indexPath = indexPath;
     cell.message = self.mesgaeArr[indexPath.row];
-    [cell.activtiy startAnimating];
     return cell;
 }
 
@@ -161,7 +165,7 @@
 - (void)tapBubbleSendActionWithMessage:(ChatRoomModel *)message
 {
     // @某人
-    if (![message.flag isEqualToString:@"ME"]) {
+    if (![message.msg_flag isEqualToString:@"ME"]) {
         NSString *aName = [NSString stringWithFormat:@"@%@ ",message.userName];
         _isAname = message.userID;
         self.chatToolBar.inputTextView.text = aName;
@@ -237,15 +241,17 @@
         ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
         model.id = [NSNumber numberWithInteger:(self.mesgaeArr.count + 1)];
         model.userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
-        model.message = message;
-        model.time = currentTime;
-        model.flag = @"ME";
-        model.isAname = self.chatToolBar.aNameLength>0?_isAname:@"";
-        model.longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
-        model.latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
         model.messageID = messageID;
-        
-        model.isTime = [XMPPManager getTime:currentTime];
+        model.hasAname = self.chatToolBar.aNameLength>0?_isAname:@"";
+
+        model.msg_message = message;
+        model.msg_time = currentTime;
+        model.msg_flag = @"ME";
+        model.msg_longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
+        model.msg_latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
+        model.msg_hasTime = [XMPPManager getChatRoomTime:currentTime];
+        model.msg_isSend = @"NO";
+        model.msg_Interval_time = [NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970]];
         
     } completion:^(BOOL success, NSError *error) {
         [self scrollToRowWithMessageID:messageID];
@@ -257,7 +263,7 @@
 }
 
 #pragma mark- 聊天 回调
-- (void)sendPublicMessageSuccessMessageID:(NSString *)messageID
+- (void)sendPublicMessageSuccessMessageID:(NSString *)messageID Send:(BOOL)isSend
 {
     
     for (int i = 0 ;i< self.mesgaeArr.count ; i++) {
@@ -268,8 +274,8 @@
             [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
                 
                 ChatRoomModel *chatRoom = [ChatRoomModel MR_findFirstByAttribute:@"messageID" withValue:messageID inContext:localContext];
-                chatRoom.isSend = @"YES";
-                
+                chatRoom.msg_isSend = isSend?@"YES":@"NO";
+
             } completion:^(BOOL success, NSError *error) {
                 
                 debugLog(@"修改成功");
@@ -279,7 +285,7 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 ChatRoomCell *cell = (ChatRoomCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                [cell set_sendMessageState:YES];
+                [cell set_sendMessageState:isSend];
             });
             
             return;
@@ -304,6 +310,9 @@
 //
 //    });
     [self.tableView reloadData];
+
+    debugLog(@"%@",self.mesgaeArr);
+    
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.mesgaeArr.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
@@ -328,9 +337,6 @@
 //每个cell都会点击出现Menu菜单
 - (BOOL)tableView:(UITableView *)tableView canPerformAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
 {
-    if(action == @selector(copy:)){
-        return NO;
-    }
     return YES;
 }
 

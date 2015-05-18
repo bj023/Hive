@@ -2,7 +2,7 @@
 //  chatViewCell.m
 //  Hive
 //
-//  Created by 那宝军 on 15/4/28.
+//  Created by mac on 15/4/28.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -40,20 +40,22 @@
         [_activityView setHidden:NO];
         [self.contentView addSubview:_activityView];
         
-        // 重发按钮
-        _retryButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        _retryButton.frame = CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
-        //[_retryButton addTarget:self action:@selector(retryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [_retryButton setBackgroundImage:[UIImage imageNamed:@"messageSendFail.png"] forState:UIControlStateNormal];
-        [_retryButton setBackgroundColor:[UIColor clearColor]];
-        [_activityView addSubview:_retryButton];
-        _retryButton.hidden = YES;
         
         // 菊花
         _activtiy = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         _activtiy.frame = CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
         _activtiy.backgroundColor = [UIColor clearColor];
         [_activityView addSubview:_activtiy];
+        
+        
+        // 重发按钮
+        _retryButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        _retryButton.frame = CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
+        //[_retryButton addTarget:self action:@selector(retryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [_retryButton setBackgroundImage:[UIImage imageNamed:@"messageSendFail.png"] forState:UIControlStateNormal];
+        [_retryButton setBackgroundColor:[UIColor whiteColor]];
+        [_activityView addSubview:_retryButton];
+        _retryButton.hidden = YES;
         
         /*
          
@@ -85,7 +87,7 @@
          */
         [self.headImgaeView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadImgAction:)]];
         [self.bubbleView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickBubbleAction:)]];
-        [self.bubbleView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)]];
+        [self.bubbleView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressChatRoomAction:)]];
     }
     
     return self;
@@ -95,21 +97,26 @@
 {
     [super layoutSubviews];
     
+    BOOL isShow = [self.message.msg_flag isEqualToString:@"ME"]?YES:NO;
+    BOOL isSend = [self.message.msg_isSend boolValue];
+
     _activityView.frame = CGRectMake(0, self.bubbleView.frame.origin.y, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
     
     
-    _activtiy.frame = CGRectMake(self.timeLabel.frame.origin.x - SEND_STATUS_SIZE, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
-
-    BOOL isShow = [self.message.flag isEqualToString:@"ME"]?YES:NO;
-    BOOL isSend = [self.message.isSend boolValue];
+    _activtiy.frame = CGRectMake(self.timeLabel.frame.origin.x - SEND_STATUS_SIZE, 0, SEND_STATUS_SIZE, isShow?SEND_STATUS_SIZE:0);
     
-    [_activtiy startAnimating];
+    _retryButton.frame = CGRectMake(self.timeLabel.frame.origin.x - SEND_STATUS_SIZE, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
+
+    if (!isSend) {
+        [_activtiy startAnimating];
+    }
+    
     if (isShow) {
-        if (isSend) {
-            _activtiy.hidden = YES;
-        }else
-            _activtiy.hidden = NO;
+        _activityView.hidden = isSend;
+        _retryButton.hidden = isSend;
+        _activtiy.hidden = isSend;
     }else{
+        _activityView.hidden = YES;
         _activtiy.hidden = YES;
         _hasRead.hidden = YES;
     }
@@ -118,10 +125,10 @@
 
 - (void)set_sendMessageState:(BOOL)isSend
 {
-    [_activtiy stopAnimating];
-    _activtiy.hidden = YES;
     
     if (isSend) {
+        [_activtiy stopAnimating];
+        _activtiy.hidden = YES;
         _retryButton.hidden = YES;
     }else
     {
@@ -150,15 +157,18 @@
 }
 
 #pragma -mark 长按气泡 弹出菜单
-- (void)longPressAction:(UIGestureRecognizer *)recognizer{
-    
+- (void)longPressChatRoomAction:(UIGestureRecognizer *)recognizer{
     if (recognizer.state == UIGestureRecognizerStateBegan) {
+        
+        debugLog(@"%lf-%lf",recognizer.view.frame.origin.x,recognizer.view.frame.origin.y);
+        
+        
         UIView *view = recognizer.view;
         [self becomeFirstResponder];
-        UIMenuItem *flag = [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(copyMessage:)];
+        UIMenuItem *flag = [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(copyRoomMessage:)];
         UIMenuController *menu = [UIMenuController sharedMenuController];
         [menu setMenuItems:[NSArray arrayWithObjects:flag, nil]];
-        [menu setTargetRect:view.frame inView:recognizer.view];
+        [menu setTargetRect:view.frame inView:self];
         [menu setMenuVisible:YES animated:YES];
     }
 }
@@ -184,7 +194,7 @@
     }
     else if(action == @selector(selectAll:)){
         return NO;
-    }else if (action == @selector(copyMessage:))
+    }else if (action == @selector(copyRoomMessage:))
     {
         return YES;
     }
@@ -194,8 +204,8 @@
         //return [super canPerformAction:action withSender:sender];
     }
 }
-- (void)copyMessage:(id)sender {
+- (void)copyRoomMessage:(id)sender {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    [pasteboard setString:self.message.message];
+    [pasteboard setString:self.message.msg_message];
 }
 @end

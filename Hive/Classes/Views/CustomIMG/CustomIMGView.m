@@ -8,6 +8,7 @@
 
 #import "CustomIMGView.h"
 #import <UIImageView+WebCache.h>
+#import <SDImageCache.h>
 
 @implementation CustomIMGView
 
@@ -26,11 +27,16 @@
 
 - (void)setImageUrl:(NSURL *)url placehoder:(UIImage *)placeholder
 {
+    [[SDImageCache sharedImageCache] clearMemory];
+    [[SDImageCache sharedImageCache] clearDisk];
+    
     [self sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed | SDWebImageLowPriority];
 }
 
 - (void)setImageUrl:(NSURL *)url
 {
+
+
     [self sd_setImageWithURL:url placeholderImage:nil options:SDWebImageRetryFailed | SDWebImageLowPriority];
 }
 

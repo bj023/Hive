@@ -110,6 +110,7 @@ typedef void(^ResponseSuccBlcok)(id json);
  *  @param faliure 失败回调
  */
 + (void)sendRequestRegisterCode:(NSString *)code
+                       PhoneNum:(NSString *)phonenum
                         success:(ResponseSuccBlcok)success
                         faliure:(HttpFailBlcok)faliure;
 /**
@@ -124,9 +125,21 @@ typedef void(^ResponseSuccBlcok)(id json);
 + (void)sendRequestRegisterEmail:(NSString *)email
                         UserName:(NSString *)username
                         Passwowd:(NSString *)password
+                        PhoneNum:(NSString *)phoneNum
                          success:(ResponseSuccBlcok)success
                          faliure:(HttpFailBlcok)faliure;
-
+/**
+ *  注册 第四步
+ *
+ *  @param sex     性别
+ *  @param age     年龄
+ *  @param success 成功回调
+ *  @param faliure 失败回调
+ */
++ (void)sendRequestRegisterUserInforSex:(NSString *)sex
+                                    Age:(NSString *)age
+                                success:(ResponseSuccBlcok)success
+                                faliure:(HttpFailBlcok)faliure;
 /**
  *  封装 邮箱验证
  *
@@ -217,6 +230,19 @@ typedef void(^ResponseSuccBlcok)(id json);
                                  faliure:(HttpFailBlcok)faliure;
 
 /**
+ *  封装 更新用户位置
+ *
+ *  @param longitude 经度
+ *  @param latitude  纬度
+ *  @param success   成功回调
+ *  @param faliure   失败回调
+ */
++ (void)sendRequestUpdateUserLocation:(NSString *)longitude
+                             Latitude:(NSString *)latitude
+                              success:(ResponseSuccBlcok)success
+                              faliure:(HttpFailBlcok)faliure;
+
+/**
  *  封装 点击用户头像 查看信息
  *
  *  @param userID  用户ID
@@ -227,4 +253,44 @@ typedef void(^ResponseSuccBlcok)(id json);
                              success:(ResponseSuccBlcok)success
                              faliure:(HttpFailBlcok)faliure;
 
+/**
+ *  获取 用户距离
+ *
+ *  @param longitude 经度
+ *  @param latitude  纬度
+ *  @param success   成功回调
+ *  @param faliure   失败回调
+ */
++ (void)sendRequestGetDistanceLongitude:(NSString *)longitude
+                               Latitude:(NSString *)latitude
+                             success:(ResponseSuccBlcok)success
+                             faliure:(HttpFailBlcok)faliure;
+
+/**
+ *  发送 推送 消息提示
+ *
+ *  @param message  消息
+ *  @param friendID 接收方
+ *  @param receipts 读操作
+ *  @param success  成功回调
+ *  @param faliure  失败回调
+ */
++ (void)sendRequestPushMessage:(NSString *)message
+                      ToUserID:(NSString *)friendID
+                      Receipts:(NSString *)receipts
+                       success:(ResponseSuccBlcok)success
+                       faliure:(HttpFailBlcok)faliure;
+/**
+ *  上传 头像 图片
+ */
++ (void)sendRequestUploadHeadImg:(NSData *)imgData
+                         success:(ResponseSuccBlcok)success
+                         faliure:(HttpFailBlcok)faliure;
+
++ (void)sendRequestLogOutsuccess:(ResponseSuccBlcok)success
+                         faliure:(HttpFailBlcok)faliure;
+// 更新 token
++ (void)sendRequestUpdateDeviceToken:(NSString *)token
+                             success:(ResponseSuccBlcok)success
+                             faliure:(HttpFailBlcok)faliure;
 @end

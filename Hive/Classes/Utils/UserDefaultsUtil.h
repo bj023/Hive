@@ -23,6 +23,7 @@
  */
 + (BOOL)iSFirstUse;
 
-
++ (void)setDeviceToken:(NSString *)token;
++ (NSString *)getDeviceToken;
 
 @end

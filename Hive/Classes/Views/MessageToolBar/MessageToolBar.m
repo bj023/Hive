@@ -2,7 +2,7 @@
 //  MessageToolBar.m
 //  Hive
 //
-//  Created by 那宝军 on 15/4/6.
+//  Created by mac on 15/4/6.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -33,7 +33,7 @@
 
 @implementation MessageToolBar
 
-- (instancetype)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame isPulicChat:(BOOL)isShow;
 {
     if (frame.size.height < (kVerticalPadding * 2 + kInputTextViewMinHeight)) {
         frame.size.height = kVerticalPadding * 2 + kInputTextViewMinHeight;
@@ -42,7 +42,7 @@
     if (self) {
         // Initialization code
         [self setupConfig];
-        [self setupSubviews];
+        [self setupSubviews:isShow];
     }
     return self;
 }
@@ -66,12 +66,12 @@
    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
 }
 
-- (void)setupSubviews
+- (void)setupSubviews:(BOOL)isShow
 {
     CGFloat allButtonWidth = 0.0;
     CGFloat textViewLeftMargin = 6.0;
     
-    CGFloat faceW = 0;//24
+    CGFloat faceW = isShow?0:24;//24
     CGFloat faceH = faceW;
     CGFloat faceY = CGRectGetHeight(self.bounds)/2 - 24/2;
     
@@ -122,7 +122,7 @@
     if (!self.faceView) {
         self.faceView = [[FaceView alloc] initWithFrame:CGRectMake(0, (kVerticalPadding * 2 + kInputTextViewMinHeight), self.frame.size.width, 216)];
         [(FaceView *)self.faceView setDelegate:self];
-        self.faceView.backgroundColor = [UIColor lightGrayColor];
+        self.faceView.backgroundColor = [UIColor whiteColor];
         self.faceView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     }
     
@@ -251,6 +251,7 @@
     }
     else if (toFrame.origin.y == [[UIScreen mainScreen] bounds].size.height)
     {
+        // 隐藏
         [self willShowBottomHeight:0];
     }
     else{
@@ -352,30 +353,14 @@
 
 #pragma mark - FaceDelegate
 
-- (void)selectedFacialView:(NSString *)str isDelete:(BOOL)isDelete
+- (void)selectedFacialView:(NSString *)str
 {
-    NSString *chatText = self.inputTextView.text;
-    
-    if (!isDelete && str.length > 0) {
-        self.inputTextView.text = [NSString stringWithFormat:@"%@%@",chatText,str];
-    }
-    else {
-        if (chatText.length >= 2)
-        {
-            NSString *subStr = [chatText substringFromIndex:chatText.length-2];
-            if ([(FaceView *)self.faceView stringIsFace:subStr]) {
-                self.inputTextView.text = [chatText substringToIndex:chatText.length-2];
-                
-                return;
-            }
-        }
-        
-        if (chatText.length > 0) {
-            self.inputTextView.text = [chatText substringToIndex:chatText.length-1];
-        }
+    if ([self.delegate respondsToSelector:@selector(didSendFace:)]) {
+        [self.delegate didSendFace:str];
     }
     
-    [self textViewDidChange:self.inputTextView];
+    //NSString *chatText = self.inputTextView.text;
+    //[self textViewDidChange:self.inputTextView];
 }
 
 - (void)sendFace
@@ -407,5 +392,19 @@
 + (CGFloat)defaultHeight
 {
     return kVerticalPadding * 2 + kInputTextViewMinHeight;
+}
+
+#pragma mark - public
+
+/**
+ *  停止编辑
+ */
+- (BOOL)endEditing:(BOOL)force
+{
+    BOOL result = [super endEditing:force];
+    
+    self.faceButton.selected = NO;
+    [self willShowBottomView:nil];
+    return result;
 }
 @end

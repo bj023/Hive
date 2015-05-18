@@ -163,7 +163,7 @@
         if (!error) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             
-            if (self.dataSource.count<10) {
+            if (self.dataSource.count == 0) {
                 self.dataSource = [NSMutableArray arrayWithArray:res.content];
             }else
                 [self.dataSource addObjectsFromArray:res.content];

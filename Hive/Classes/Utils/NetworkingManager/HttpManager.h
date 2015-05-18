@@ -18,7 +18,24 @@ typedef void (^HttpSuccBlcok)(id response);
 
 typedef void (^HttpFailBlcok)(NSError *error);
 
-+(void)getRequestWithBaseUrl:(NSString *)baseUrl params:(NSMutableDictionary *)params  success:(HttpSuccBlcok) succB  Fail:(HttpFailBlcok) failB;
-+(void)postRequestWithBaseUrl:(NSString *)baseUrl params:(NSMutableDictionary *)params success:(HttpSuccBlcok) succB  Fail:(HttpFailBlcok) failB;
-+ (void)postFormDataRequestWithBaseUrl:(NSString *)baseUrl params:(NSMutableDictionary *)params success:(HttpSuccBlcok) succB  Fail:(HttpFailBlcok) failB;
++(void)getRequestWithBaseUrl:(NSString *)baseUrl
+                      params:(NSMutableDictionary *)params
+                     success:(HttpSuccBlcok) succB
+                        Fail:(HttpFailBlcok) failB;
+
++(void)postRequestWithBaseUrl:(NSString *)baseUrl
+                       params:(NSMutableDictionary *)params
+                      success:(HttpSuccBlcok) succB
+                         Fail:(HttpFailBlcok) failB;
+
++ (void)postFormDataRequestWithBaseUrl:(NSString *)baseUrl
+                                params:(NSMutableDictionary *)params
+                               success:(HttpSuccBlcok) succB
+                                  Fail:(HttpFailBlcok) failB;
+
++ (void)postFormDataRequestWithBaseUrl:(NSString *)baseUrl
+                                params:(NSMutableDictionary *)params
+                             ImageData:(NSData *)imgData
+                               success:(HttpSuccBlcok)succB
+                                  Fail:(HttpFailBlcok) failB;
 @end

@@ -2,7 +2,7 @@
 //  UtilDate.m
 //  Hive
 //
-//  Created by 那宝军 on 15/4/19.
+//  Created by mac on 15/4/19.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -55,7 +55,7 @@
 + (NSString *)getWeekWithDate:(NSString *)dateString
 {
     //获取日期
-    NSArray * arrWeek=[NSArray arrayWithObjects:@"周日",@"周一",@"周二",@"周三",@"周四",@"周五",@"周六", nil];
+    NSArray * arrWeek=[NSArray arrayWithObjects:@"Sun",@"Mon",@"Tues",@"Wed",@"Thur",@"Fri",@"Sat", nil];
     
     NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:DateFormat_YMD_HM];

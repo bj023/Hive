@@ -160,8 +160,8 @@
     };
     
     //默认用户名
-    self.userNameText.text = @"jiabaolong@me.com";
-    self.passwordText.text = @"123456";
+    //self.userNameText.text = @"15011138860";
+    //self.passwordText.text = @"123456";
 }
 
 #pragma UITextFieldDelegate

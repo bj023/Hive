@@ -93,6 +93,11 @@
     [self.nextBtn setTitle:title forState:UIControlStateNormal];
 }
 
+- (void)hiddenNavBackBtn:(BOOL)hidden
+{
+    [self.backBtn setHidden:hidden];
+}
+
 - (void)dealloc
 {
     self.nextBtn = nil;

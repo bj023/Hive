@@ -9,6 +9,13 @@
 #import "CustomButtonView.h"
 #import "Utils.h"
 
+#define kButtonSize 150/2
+
+#define kLeft_Right_Padding 95/2
+
+// 按钮线条颜色
+#define kButton_Layout_Line_Color [UIColorUtil colorWithHexString:@"#d2d2d2"]
+
 @interface CustomButtonView ()
 @property (strong, nonatomic)UIButton *followBtn;
 @property (strong, nonatomic)UIButton *blockBtn;
@@ -65,34 +72,34 @@
     [self.followBtn setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
     */
     
-    CGFloat padding = 64/2;
+    //CGFloat padding = UIWIDTH/2 - kButtonSize/2 - kButtonSize - kLeft_Right_Padding;
     
-    CGFloat followH = self.frame.size.height;
+    CGFloat followH = kButtonSize;//self.frame.size.height;
     CGFloat followW = followH;
-    CGFloat followX = self.frame.size.width/2 - followW/2;
+    CGFloat followX = UIWIDTH/2 - kButtonSize/2;//self.frame.size.width/2 - followW/2;
     self.followBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.followBtn.frame = CGRectMake(followX, 0, followW, followH);
     self.followBtn.layer.cornerRadius = followH/2;
     self.followBtn.layer.borderWidth = 1;
     self.followBtn.layer.masksToBounds = YES;
-    self.followBtn.layer.borderColor = [UIColorUtil colorWithHexString:@"#c9c9c9"].CGColor;
+    self.followBtn.layer.borderColor = kButton_Layout_Line_Color.CGColor;
     [self.followBtn setTitle:@"Follow" forState:UIControlStateNormal];
     [self addSubview:self.followBtn];
     
 
     CGFloat talkW = followW;
     CGFloat talkH = followH;
-    CGFloat talkX = followX - padding - talkW;
+    CGFloat talkX = kLeft_Right_Padding;//followX - padding - talkW;
     UIButton *talkBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     talkBtn.frame = CGRectMake(talkX, 0, talkW, talkH);
     talkBtn.layer.cornerRadius = talkH/2;
     talkBtn.layer.borderWidth = 1;
     talkBtn.layer.masksToBounds = YES;
-    talkBtn.layer.borderColor = [UIColorUtil colorWithHexString:@"#c9c9c9"].CGColor;
+    talkBtn.layer.borderColor = kButton_Layout_Line_Color.CGColor;
     [talkBtn setTitle:@"Talk" forState:UIControlStateNormal];
     [self addSubview:talkBtn];
     
-    CGFloat blockX = followX + followW + padding;
+    CGFloat blockX = UIWIDTH - kLeft_Right_Padding - kButtonSize;
     CGFloat blockW = followW;
     CGFloat blockH = followH;
     self.blockBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -100,7 +107,7 @@
     self.blockBtn.layer.cornerRadius = blockH/2;
     self.blockBtn.layer.borderWidth = 1;
     self.blockBtn.layer.masksToBounds = YES;
-    self.blockBtn.layer.borderColor = [UIColorUtil colorWithHexString:@"#c9c9c9"].CGColor;
+    self.blockBtn.layer.borderColor = kButton_Layout_Line_Color.CGColor;
     [self.blockBtn setTitle:@"Block" forState:UIControlStateNormal];
     [self addSubview:self.blockBtn];
     
@@ -138,7 +145,7 @@
 
 - (void)touchDidEnd:(UIButton *)sender
 {
-    sender.layer.borderColor = [UIColorUtil colorWithHexString:@"#c9c9c9"].CGColor;
+    sender.layer.borderColor = kButton_Layout_Line_Color.CGColor;
 }
 
 - (void)touchDown:(UIButton *)sender
@@ -153,24 +160,25 @@
 
 - (void)touchDown_Red:(UIButton *)sender
 {
-    sender.layer.borderColor = [UIColor redColor].CGColor;
+    // 选择Block 按钮颜色
+    sender.layer.borderColor = [UIColorUtil colorWithHexString:@"#ff5b2f"].CGColor;
 }
 
 - (void)touchUpTalkInside:(UIButton *)sender
 {
-    sender.layer.borderColor = [UIColorUtil colorWithHexString:@"#c9c9c9"].CGColor;
+    sender.layer.borderColor = kButton_Layout_Line_Color.CGColor;
     [self clickButtonIndex:0];
 }
 
 - (void)touchUpFollowInside:(UIButton *)sender
 {
-    sender.layer.borderColor = [UIColorUtil colorWithHexString:@"#c9c9c9"].CGColor;
+    sender.layer.borderColor = kButton_Layout_Line_Color.CGColor;
     [self clickButtonIndex:1];
 }
 
 - (void)touchUpBlockInside:(UIButton *)sender
 {
-    sender.layer.borderColor = [UIColorUtil colorWithHexString:@"#c9c9c9"].CGColor;
+    sender.layer.borderColor = kButton_Layout_Line_Color.CGColor;
     [self clickButtonIndex:2];
 }
 

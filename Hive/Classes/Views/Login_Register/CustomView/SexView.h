@@ -11,5 +11,5 @@
  *  自定义 性别选择
  */
 @interface SexView : UIView
-
+- (NSString *)getSex;
 @end

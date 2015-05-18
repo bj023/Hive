@@ -2,7 +2,7 @@
 //  ChatBaseCell.h
 //  Hive
 //
-//  Created by 那宝军 on 15/4/28.
+//  Created by mac on 15/4/28.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -12,7 +12,7 @@
 #import "ChatBubbleView.h"
 
 #define HEAD_SIZE 55 // 头像大小
-#define HEAD_PADDING 11 // 头像到cell的内间距和头像到bubble的间距
+#define HEAD_PADDING 25/2 // 头像到cell的内间距和头像到bubble的间距
 #define CELLPADDING 8 // Cell之间间距
 
 #define NAME_LABEL_WIDTH 180 // nameLabel宽度

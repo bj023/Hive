@@ -1,39 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7549" systemVersion="14D131" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="ChatModel" representedClassName="ChatModel" syncable="YES">
-        <attribute name="distance" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="flag" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="hasRead" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="hasStealth" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="hasTime" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="isSend" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="latitude" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="longitude" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="messageID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="time" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="userID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_distance" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_flag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_hasStealth" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_hasTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_isSend" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_latitude" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_longitude" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_message" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_time" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_userID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="user_ID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="ChatRoomModel" representedClassName="ChatRoomModel" syncable="YES">
-        <attribute name="distance" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="flag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="hasAname" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="isAname" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="isSend" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="isStealth" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="isTime" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="latitude" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="longitude" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="messageID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="time" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_distance" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_flag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_hasStealth" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_hasTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_Interval_time" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="msg_isSend" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_latitude" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_longitude" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_message" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_time" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="MessageModel" representedClassName="MessageModel" syncable="YES">
+        <attribute name="msg_content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_ID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_time" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="toUserID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="toUserName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="unReadCount" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="ChatModel" positionX="-63" positionY="81" width="128" height="255"/>
-        <element name="ChatRoomModel" positionX="-63" positionY="-18" width="128" height="255"/>
+        <element name="ChatModel" positionX="-63" positionY="81" width="128" height="270"/>
+        <element name="ChatRoomModel" positionX="-63" positionY="-18" width="128" height="270"/>
+        <element name="MessageModel" positionX="-54" positionY="144" width="128" height="135"/>
     </elements>
 </model>

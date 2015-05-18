@@ -124,7 +124,7 @@
 
 - (void)set_UserInfoData:(NSString *)sex Age:(NSString *)age Distance:(NSString *)distance
 {
-    self.sexLabel.text = [sex isEqualToString:@"0"]?@"Male":@"FeMale";
+    self.sexLabel.text = [sex isEqualToString:@"0"]?@"Male":@"Female";
     self.ageLabel.text = age;
     self.rangeLabel.text = [NSString stringWithFormat:@"%@ km",@"1.8"];
 }

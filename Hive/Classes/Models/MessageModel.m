@@ -1,13 +1,21 @@
 //
 //  MessageModel.m
-//  Hive
+//  
 //
-//  Created by 那宝军 on 15/4/8.
-//  Copyright (c) 2015年 wee. All rights reserved.
+//  Created by mac on 15/5/16.
+//
 //
 
 #import "MessageModel.h"
 
+
 @implementation MessageModel
+
+@dynamic msg_content;
+@dynamic msg_ID;
+@dynamic msg_time;
+@dynamic toUserID;
+@dynamic toUserName;
+@dynamic unReadCount;
 
 @end

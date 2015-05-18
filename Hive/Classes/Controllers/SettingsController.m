@@ -14,6 +14,10 @@
 #import "CustomIMGView.h"
 #import "CustomActionSheetView.h"
 
+#define kTopHeight 326/2
+#define kHeadSize 178/2
+#define kTopY 216/2
+
 @interface SettingsController ()<UITableViewDataSource, UITableViewDelegate>
 {
     NSArray *_titleArr;
@@ -54,8 +58,8 @@
 #pragma -mark 设置 TableView HeadView
 - (void)setTableHeadView
 {
-    UIView *headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.settingTableView.bounds.size.width, 378/2)];
-    headView.backgroundColor = [UIColor clearColor];
+    UIView *headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.settingTableView.bounds.size.width, kTopHeight)];
+    headView.backgroundColor = [UIColorUtil colorWithHexString:@"#f1efee"];
     self.settingTableView.tableHeaderView = headView;
     
     self.headIMG = [self getProfileIMG];
@@ -63,17 +67,45 @@
     [headView addSubview:self.headIMG];
     
     CurrentUserInfo *user = [[UserInfoManager sharedInstance] getCurrentUserInfo];
-    [self.headIMG setImageURLStr:user.userHead];
+
+    
+    [self.headIMG setImageURLStr:User_Head(user.userID) placeholder:nil];
+
+    
+    //self.headIMG.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:User_Head(user.userID)]]];
+    debugLog(@"用户头像->%@",User_Head(user.userID));
     
     [self.headIMG addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadIMGAction:)]];
 
 }
 
+- (void)setTableFooterView
+{
+    
+    UIView *footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, 60)];
+    footView.backgroundColor = [UIColor whiteColor];
+    self.settingTableView.tableFooterView = footView;
+    
+    UIButton *mlogOutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    mlogOutBtn.frame = CGRectMake(0, 10, UIWIDTH, 40);
+    mlogOutBtn.titleLabel.font = SettingsFont;
+    [mlogOutBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [mlogOutBtn setTitle:@"Log Out" forState:UIControlStateNormal];
+    [footView addSubview:mlogOutBtn];
+    [mlogOutBtn addTarget:self action:@selector(clickLogOutBtn:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)clickLogOutBtn:(id)sender
+{
+    [self sendRequestLogOut];
+}
+
 #pragma -mark 头像
 - (CustomIMGView *)getProfileIMG
 {
-    CGFloat width = 80;
-    CGRect frame = CGRectMake(self.settingTableView.bounds.size.width/2 - width/2, 378/4 - width/2, width, width);
+    CGFloat width = kHeadSize;
+    CGFloat headY = kTopHeight/2 - kHeadSize/2;
+    CGRect frame = CGRectMake(self.settingTableView.bounds.size.width/2 - width/2, headY, width, width);
     CustomIMGView *headIMG = [[CustomIMGView alloc] initWithFrame:frame];
     headIMG.backgroundColor = [UIColor grayColor];
     headIMG.layer.cornerRadius = width/2;
@@ -95,6 +127,7 @@
         self.settingTableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:self.settingTableView];
         [self setTableHeadView];
+        [self setTableFooterView];
     }
 }
 
@@ -170,6 +203,27 @@
     }];
 }
 
+- (void)sendRequestLogOut
+{
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    [HttpTool sendRequestLogOutsuccess:^(id json) {
+        
+        ResponseManagerModel *res = [[ResponseManagerModel alloc] initWithString:json error:nil];
+        
+        if (res.RETURN_CODE == 200) {
+            [[XMPPManager sharedInstance] signOut];
+            [[UserInfoManager sharedInstance] logOut];
+            [self handleSetRootViewController];
+        }else
+            [self showHudWith:ErrorRequestText];
+        
+        
+    } faliure:^(NSError *error) {
+        [self showHudWith:ErrorText];
+    }];
+}
+
 #pragma -mark 头像点击事件
 - (void)clickHeadIMGAction:(id)sender
 {
@@ -186,6 +240,9 @@
         }
     };
 }
+
+
+
 - (void)takePhoto
 {
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]){
@@ -207,6 +264,24 @@
 - (void)set_HeadIMG:(UIImage *)image
 {
     self.headIMG.image = image;
+    NSData *imgData = UIImageJPEGRepresentation(image, 0.1);
+    [HttpTool sendRequestUploadHeadImg:imgData success:^(id json) {
+        [self showHudWith:@"上传成功"];
+    } faliure:^(NSError *error) {
+        [self showHudWith:@"上传失败"];
+    }];
+    
+}
+- (void)showHudWith:(NSString *)text
+{
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [MBProgressHUD showTextHUDAddedTo:self.view withText:text animated:YES];
+}
+
+
+- (void)handleSetRootViewController
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"setRootViewController" object:nil];
 }
 
 - (void)dealloc

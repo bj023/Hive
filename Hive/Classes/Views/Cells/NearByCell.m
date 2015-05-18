@@ -56,7 +56,7 @@
 {
     /* */
     CGFloat headX = 22/2;
-    CGFloat headW = 110/2;
+    CGFloat headW = 90/2;
     CGFloat headH = headW;
     CGFloat headY = [NearByCell getNearByCellHeight]/2 - headW/2;
     if (!self.headIMG) {
@@ -70,7 +70,8 @@
     CGFloat timeW = UIWIDTH/2 - padding;
     CGFloat timeX = UIWIDTH/2;
     CGFloat timeH = 20;
-    CGFloat timeY = 6;
+    //CGFloat timeY = 6;
+    CGFloat timeY = [NearByCell getNearByCellHeight]/2 - timeH/2;
     
     if (!self.timeLabel) {
         self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(timeX, timeY, timeW, timeH)];
@@ -81,7 +82,8 @@
     
     CGFloat nameX = headX + headW + padding;
     CGFloat nameH = 20;
-    CGFloat nameY = [NearByCell getNearByCellHeight]/2 - nameH/2 - 12;
+    //CGFloat nameY = [NearByCell getNearByCellHeight]/2 - nameH/2 - 12;
+    CGFloat nameY = [NearByCell getNearByCellHeight]/2 - nameH/2;
     CGFloat nameW = timeX - nameX;
     if (!self.userNameLabel) {
         self.userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameX, nameY, nameW, nameH)];
@@ -102,6 +104,7 @@
         self.introLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
     }
     
+    /*
     CGFloat sexW = 10;
     CGFloat sexH = sexW;
     CGFloat sexX = UIWIDTH - 11 - sexW;
@@ -111,9 +114,8 @@
         self.sexLabel.layer.cornerRadius = sexH/2;
         self.sexLabel.layer.masksToBounds = YES;
     }
-
-    
-    UIImageView *lineIMG = [[UIImageView alloc] initWithFrame:CGRectMake(headX + headW + padding, [NearByCell getNearByCellHeight] - 1, UIWIDTH - headX - headW - padding, 1)];
+    */
+    UIImageView *lineIMG = [[UIImageView alloc] initWithFrame:CGRectMake(headX + headW + padding, [NearByCell getNearByCellHeight] - kLine_Height, UIWIDTH - headX - headW - padding, kLine_Height)];
     lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];
     [self addSubview:lineIMG];
     
@@ -185,16 +187,14 @@
     if (!IsEmpty(model.distance)) {
         self.timeLabel.text = [NSString stringWithFormat:@"%@ km",model.distance];
     }
-    
+    NSString *headUrl = [NSString stringWithFormat:@"%d",model.userId];
     self.introLabel.text = model.label;
-    [self.headIMG setImageURLStr:model.iconPath];
+    [self.headIMG setImageURLStr:User_Head(headUrl)];
 
-    debugLog(@"%@",model.gender);
-    UIColor *sexColor = [model.gender isEqualToString:@"1"]?[UIColorUtil colorWithHexString:@"#64baff"]:[UIColorUtil colorWithHexString:@"#ff5b2f"];
-
-    self.sexLabel.backgroundColor = sexColor;
+    debugLog(@"model.distance->%@",model.distance);
+    //UIColor *sexColor = [model.gender isEqualToString:@"0"]?[UIColorUtil colorWithHexString:@"#64baff"]:[UIColorUtil colorWithHexString:@"#ff5b2f"];
+    //self.sexLabel.backgroundColor = sexColor;
 }
-
 
 static NSString *DateFormatMDHM = @"MM-dd HH:mm";
 /**
@@ -222,6 +222,6 @@ static NSString *DateFormatMDHM = @"MM-dd HH:mm";
 
 + (CGFloat)getNearByCellHeight
 {
-    return 138/2;
+    return 109/2;
 }
 @end

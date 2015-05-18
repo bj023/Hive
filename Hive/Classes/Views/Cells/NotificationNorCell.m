@@ -68,6 +68,7 @@
             
             if (!self.notificationSwitch) {
                 self.notificationSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(UIWIDTH - 65, [NotificationNorCell getNotificationCellHeight]/2 - 15, 40, 30)];
+                self.notificationSwitch.onTintColor = [UIColorUtil colorWithHexString:@"#64baff"];
                 [self.contentView addSubview:self.notificationSwitch];
                 [self.notificationSwitch addTarget:self action:@selector(switchChangeValue:) forControlEvents:UIControlEventValueChanged];
             }
@@ -75,7 +76,7 @@
             self.lineIMG = [[UIImageView alloc] init];
             self.lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];//[UIColorUtil colorWithHexString:@"#e8e8e8"];
             [self.contentView addSubview:self.lineIMG];
-            self.lineIMG.frame = CGRectMake(16, [NotificationNorCell getNotificationCellHeight] - 1, UIWIDTH - 16, 1);
+            self.lineIMG.frame = CGRectMake(16, [NotificationNorCell getNotificationCellHeight] - kLine_Height, UIWIDTH - 16, kLine_Height);
         }
     }
     return self;

@@ -25,4 +25,9 @@ typedef void (^Block)(NSString *str);
  *  @param image Imgae
  */
 - (void)setHeadImgae:(UIImage *)image;
+
+- (NSString *)getSex;
+- (NSString *)getAge;
+- (UIImage *)getImgData;
+
 @end

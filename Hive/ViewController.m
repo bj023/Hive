@@ -22,12 +22,15 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "ChatViewController.h"
 #import "ChatModel.h"
+#import "MessageModel.h"
+#import "ChatManager.h"
+#import "WelcomeView.h"
+#import <Reachability.h>
 
 #define APIKey @"588013a8aa2e427d04f67917d98d0315"
 
 @interface ViewController ()<MAMapViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UserInformationVCDelegate, BlockListControllerDelegate, FollowControllerDelegate>
 {
-    SLPagingViewController *pageViewController;
     
     SettingsController *_settingsVC;
     MessagesController *_messagesVC;
@@ -38,7 +41,12 @@
     MAMapView *_mapView;
     
     UILabel *_messageLabel; // Message 标题
+    
+    Reachability  *hostReach;
+
 }
+
+@property (strong, nonatomic)SLPagingViewController *pageViewController;
 @property (strong, nonatomic)UINavigationController *nav;
 @end
 
@@ -46,14 +54,92 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    self.navigationController.navigationBarHidden = YES;
     [self configPagingVC];
     //[self initMapView];
     [self clickCellAction];
     [self clickUserHeadAction];
-    //[self performSelector:@selector(removeMapView) withObject:nil afterDelay:3];
+    [self performSelector:@selector(configWelcomeView) withObject:nil afterDelay:0.5];
+    [self checkNetwork];
+    [self addNotification];
+}
+
+- (void)addNotification
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadMessageVC) name:@"reloadChatMessage" object:nil];
+}
+
+
+- (void)reloadMessageVC
+{
+    debugLog(@"收到消息通知");
+    
+    [self setChatSUnReadCount];
+    [_messagesVC reloadChatMessage];
+    
+
+}
+
+#pragma -mark 检测网络
+- (void)checkNetwork
+{
+    // 监测网络情况
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityChanged:)
+                                                 name: kReachabilityChangedNotification
+                                               object: nil];
+    hostReach = [Reachability reachabilityWithHostName:@"www.baidu.com"];
+    [hostReach startNotifier];
     
 }
+
+- (void)reachabilityChanged:(NSNotification *)note
+{
+    Reachability* curReach = [note object];
+    NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
+    NetworkStatus status = [curReach currentReachabilityStatus];
+    
+    NSString *showString;
+    switch (status)
+    {
+        case NotReachable:
+            // 没有网络连接
+            showString = @"已断开网络连接";
+            break;
+        case ReachableViaWWAN:
+            // 使用3G网络
+            showString = @"正在使用3G网络";
+            break;
+        case ReachableViaWiFi:
+        {
+            showString = @"正在使用wifi网络";
+            if ([[UserInfoManager sharedInstance] checkUserIsLogin]) {
+               // [[XMPPManager sharedInstance] connect];
+            }
+        }
+            break;
+    }
+    debugLog(@"%@",showString);
+    
+//    UIAlertView *showAler = [[UIAlertView alloc] initWithTitle:showString
+//                                                       message:nil
+//                                                      delegate:nil
+//                                             cancelButtonTitle:@"Cancel"
+//                                             otherButtonTitles: nil];
+//    [showAler show];
+}
+
+
+#pragma -mark 欢迎界面
+- (void)configWelcomeView
+{
+    /**/
+    if ([UserDefaultsUtil iSFirstUse]){
+        [UserDefaultsUtil setUserDefaultsFirstUse];
+        WelcomeView *mwelCome = [[WelcomeView alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, UIHEIGHT)];
+        [mwelCome showWelCome];
+    }
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -73,14 +159,14 @@
     UIColor *orange = [UIColorUtil colorWithHexString:@"#1e2d3b"];
     UIColor *gray = [UIColorUtil colorWithHexString:@"#ced3d7"];
 //[UIColorUtil colorWithHexString:@"#1b2430"]
-    pageViewController = [[SLPagingViewController alloc] initWithNavBarItems:[self titlesArr]
+    _pageViewController = [[SLPagingViewController alloc] initWithNavBarItems:[self titlesArr]
                                                             navBarBackground:[UIColor whiteColor]
                                                                  controllers:[self twitterVC]
                                                              showPageControl:NO];
     
-    pageViewController.navigationSideItemsStyle = SLNavigationSideItemsStyleOnBounds;
+    _pageViewController.navigationSideItemsStyle = SLNavigationSideItemsStyleOnBounds;
     // Tinder Like
-    pageViewController.pagingViewMoving = ^(NSArray *subviews){
+    _pageViewController.pagingViewMoving = ^(NSArray *subviews){
         //int i = 0;
         for(UIImageView *v in subviews){
             UIColor *c = gray;
@@ -110,20 +196,22 @@
         }
     };
     
-    [pageViewController.navigationBarView addSubview:[_nearByVC getSelectBtuuon]];
-    __weak  HiveController *weakHive = _hiveVC;
+    [_pageViewController.navigationBarView addSubview:[_nearByVC getSelectBtuuon]];
+    __weak HiveController *weakHive = _hiveVC;
     __weak NearByController *weakNearByVC = _nearByVC;
+
     
-    pageViewController.didChangedPage = ^(NSInteger currentPageIndex){
+    _pageViewController.didChangedPage = ^(NSInteger currentPageIndex){
         // Do something
         NSLog(@"index %ld", (long)currentPageIndex);
         if (currentPageIndex == 3) {
+
             [weakNearByVC sendNearByAction];
         }
         [weakHive set_HiddenKeyboard];
     };
 
-    pageViewController.pagingViewMovingRedefine = ^(UIScrollView * scrollView, NSArray *subviews){
+    _pageViewController.pagingViewMovingRedefine = ^(UIScrollView * scrollView, NSArray *subviews){
 
         if (scrollView.contentOffset.x < subviews.count * UIWIDTH && (subviews.count-1) * UIWIDTH) {
             //[weakNearByVC hiddenSelectButton:YES];
@@ -132,20 +220,23 @@
         }
     };
     
-    _nav = [[UINavigationController alloc] initWithRootViewController:pageViewController];
+    _nav = [[UINavigationController alloc] initWithRootViewController:_pageViewController];
     [self.view addSubview:_nav.view];
     [self addChildViewController:_nav];
-    //_navigationController.view.alpha = 0;
 
-    [pageViewController setCurrentIndex:2 animated:YES];
+    [_pageViewController setCurrentIndex:2 animated:YES];
+    [self setChatSUnReadCount];
 }
 
 - (NSArray *)twitterVC
 {
     _settingsVC = [[SettingsController alloc] init];
     _messagesVC = [[MessagesController alloc] init];
-    UINavigationController *mesNav = [[UINavigationController alloc] initWithRootViewController:_messagesVC];
-    _messagesVC.navigationController.navigationBarHidden = YES;
+    
+    //更改
+    //UINavigationController *mesNav = [[UINavigationController alloc] initWithRootViewController:_messagesVC];
+    //_messagesVC.navigationController.navigationBarHidden = YES;
+
     _hiveVC     = [[HiveController alloc] init];
     _nearByVC   = [[NearByController alloc] init];
     _settingsVC.view.frame = self.view.bounds;
@@ -153,13 +244,13 @@
     _hiveVC.view.frame = self.view.bounds;
     _nearByVC.view.frame = self.view.bounds;
 
-    return @[_settingsVC,mesNav,_hiveVC,_nearByVC];
+    return @[_settingsVC,_messagesVC,_hiveVC,_nearByVC];
 }
 
 - (NSArray *)titlesArr
 {    
     UILabel *ticketNameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    [ticketNameLabel setText:@"SETTINGS"];
+    [ticketNameLabel setText:@"SETTING"];
     //[ticketNameLabel setTextColor:[UIColor whiteColor]];
     [ticketNameLabel setFont:TextFont];
     
@@ -168,9 +259,10 @@
     //[_messageLabel setTextColor:[UIColor whiteColor]];
     [_messageLabel setFont:TextFont];
     
+    
     UILabel *ticketNameLabel3 = [[UILabel alloc] initWithFrame:CGRectZero];
     
-    [ticketNameLabel3 setText:@"WEWE"];
+    [ticketNameLabel3 setText:@"POOK"];
     //[ticketNameLabel3 setTextColor:[UIColor whiteColor]];
     [ticketNameLabel3 setFont:TextFont];
     
@@ -188,8 +280,21 @@
     return @[ticketNameLabel,_messageLabel,ticketNameLabel3,ticketNameLabel4];
 }
 
-#pragma -mark 动画
+- (void)setChatSUnReadCount
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([[ChatManager chatMessageUnreadCount] isEqualToString:@"0"]) {
+            _messageLabel.text = @"CHATS";
+            
+        }else
+            _messageLabel.text = [NSString stringWithFormat:@"CHATS(%@)",[ChatManager chatMessageUnreadCount]];
+        [_messagesVC reloadChatMessage];
+    });
+    
+    debugLog(@"显示未读-->%@ --- %@",_messageLabel.text,[ChatManager chatMessageUnreadCount]);
+}
 
+#pragma -mark 动画
 - (void)removeMapView
 {
     self.navigationController.view.alpha = 1;
@@ -242,6 +347,7 @@
     }
 }
 
+
 #pragma -mark 设置页 Block 回调
 - (void)clickCellAction
 {
@@ -250,9 +356,7 @@
         switch (indexpath.row) {
             case 0:
             {
-                ProfileController *profile = [[ProfileController alloc] init];
-                [weakSelf.navigationController pushViewController:profile animated:YES];
-
+                [weakSelf pushProfileViewController];
             }
                 break;
             case 1:
@@ -323,7 +427,7 @@
 
 - (void)pushChatViewController:(NearByModel *)model
 {
-    [pageViewController setCurrentIndex:1 animated:NO];
+    [_pageViewController setCurrentIndex:1 animated:NO];
 
     ChatViewController *chatVC = [[ChatViewController alloc] init];
     chatVC.userID = [NSString stringWithFormat:@"%d",model.userId];
@@ -332,12 +436,12 @@
     [self.navigationController pushViewController:chatVC animated:YES];
 }
 
-- (void)pushChatVC:(ChatModel *)model
+- (void)pushChatVC:(MessageModel *)model
 {
     ChatViewController *chatVC = [[ChatViewController alloc] init];
-    chatVC.userID = model.userID;
-    chatVC.userName = model.userName;
-    chatVC.title = model.userName;
+    chatVC.userID = model.toUserID;
+    chatVC.userName = model.toUserName;
+    chatVC.title = model.toUserName;
     [self.navigationController pushViewController:chatVC animated:YES];
 }
 
@@ -351,7 +455,7 @@
         [weakSelf pushUserInforMation:model];
     };
     // message
-    _messagesVC.chatBlock = ^(ChatModel *model){
+    _messagesVC.chatBlock = ^(MessageModel *model){
         [weakSelf pushChatVC:model];
     };
     
@@ -379,16 +483,30 @@
     userInformationVC.indexPath = indexpath;
     userInformationVC.model = model;
     userInformationVC.pushType = PushNextUpdateVC;
-    [self.navigationController pushViewController:userInformationVC animated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:userInformationVC animated:YES completion:nil];
+    });
 }
 
 - (void)pushUserInforMation:(NearByModel *)model
 {
-    UserInformationController *vc = [[UserInformationController alloc] init];
-    vc.pushType = PushNextVC;
-    vc.delegate = self;
-    vc.model = model;
-    [self.navigationController pushViewController:vc animated:YES];
+    UserInformationController *userInformationVC = [[UserInformationController alloc] init];
+    userInformationVC.pushType = PushNextVC;
+    userInformationVC.delegate = self;
+    userInformationVC.model = model;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:userInformationVC animated:YES completion:nil];
+    });
+}
+
+
+- (void)pushProfileViewController
+{
+    ProfileController *profile = [[ProfileController alloc] init];
+    UINavigationController *profileNav = [[UINavigationController alloc] initWithRootViewController:profile];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:profileNav animated:YES completion:nil];
+    });
 }
 
 
@@ -442,14 +560,12 @@
 
         // 上传图片
         [_settingsVC set_HeadIMG:img];
-        
-        //        _urlStr = [NSString stringWithFormat:@"%@/image/upload",__HOST__];
-        //        [[HttpRequestManager sharedManager]upLoadImgWithUrl:_urlStr andImage:img andObj:self andSelector:@selector(uploadimgSuccess:) andFailedSelector:nil];
-        
     }];
 }
 
-#pragma -mark 页面跳转
-
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 @end

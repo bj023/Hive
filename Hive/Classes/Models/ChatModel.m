@@ -2,7 +2,7 @@
 //  ChatModel.m
 //  
 //
-//  Created by 那宝军 on 15/5/6.
+//  Created by mac on 15/5/12.
 //
 //
 
@@ -11,19 +11,20 @@
 
 @implementation ChatModel
 
-@dynamic distance;
-@dynamic flag;
 @dynamic hasRead;
-@dynamic hasStealth;
-@dynamic hasTime;
 @dynamic id;
-@dynamic latitude;
-@dynamic longitude;
-@dynamic message;
 @dynamic messageID;
-@dynamic time;
-@dynamic userID;
+@dynamic msg_userID;
 @dynamic userName;
-@dynamic isSend;
+@dynamic msg_time;
+@dynamic msg_message;
+@dynamic msg_longitude;
+@dynamic msg_latitude;
+@dynamic msg_isSend;
+@dynamic msg_hasTime;
+@dynamic msg_hasStealth;
+@dynamic msg_flag;
+@dynamic msg_distance;
+@dynamic user_ID;
 
 @end

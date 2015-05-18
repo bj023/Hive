@@ -72,9 +72,34 @@
         [formData appendPartWithHeaders:params body:nil];
     } success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"JSON: %@", responseObject);
+        succB(operation.responseString);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error: %@",error);
+        failB(error);
     }];
+}
+
++ (void)postFormDataRequestWithBaseUrl:(NSString *)baseUrl
+                                params:(NSMutableDictionary *)params
+                             ImageData:(NSData *)imgData
+                               success:(HttpSuccBlcok)succB
+                                  Fail:(HttpFailBlcok) failB
+{
+    NSLog(@"请求数据 %@->%@",baseUrl,params);
+    
+    AFHTTPRequestOperationManager *manager            = [AFHTTPRequestOperationManager manager];
+    manager.securityPolicy.allowInvalidCertificates   = YES;
+    [manager POST:baseUrl parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        //[formData appendPartWithFormData:imgData name:@"data"];
+        [formData appendPartWithFileData:imgData name:@"imagefile" fileName:@"img.jpg" mimeType:@"image/jpeg"];
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"JSON: %@", responseObject);
+        succB(operation.responseString);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"error: %@",error);
+        failB(error);
+    }];
+
 }
 @end
 

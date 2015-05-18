@@ -49,7 +49,7 @@
         self.lineIMG = [[UIImageView alloc] init];
         self.lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];
         [self.contentView addSubview:self.lineIMG];
-        self.lineIMG.frame = CGRectMake(16, [SettingsCell getSettingsCellHeight] - 1, UIWIDTH - 16, 1);
+        self.lineIMG.frame = CGRectMake(16, [SettingsCell getSettingsCellHeight] - kLine_Height, UIWIDTH - 16, kLine_Height);
         
     }
     return self;

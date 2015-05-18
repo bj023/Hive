@@ -14,4 +14,6 @@
 - (void)navNextAction:(UIButton *)sender;
 
 - (void)setNavNextBtnTitle:(NSString *)title;
+
+- (void)hiddenNavBackBtn:(BOOL)hidden;
 @end

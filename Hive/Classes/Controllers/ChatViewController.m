@@ -2,7 +2,7 @@
 //  ChatViewController.m
 //  Hive
 //
-//  Created by 那宝军 on 15/4/26.
+//  Created by mac on 15/4/26.
 //  Copyright (c) 2015年 wee. All rights reserved.
 //
 
@@ -10,12 +10,13 @@
 #import "Utils.h"
 #import "MessageToolBar.h"
 #import "chatViewCell.h"
+#import "ChatManager.h"
 #import "ChatModel.h"
 #import "NSTimeUtil.h"
 #import "ChatMessageDelegate.h"
 #import "UserInformationController.h"
 
-@interface ChatViewController ()<MessageToolBarDelegate, UITableViewDataSource, UITableViewDelegate ,ChatMessageDelegate ,ChatViewCellDelegate>
+@interface ChatViewController ()<MessageToolBarDelegate, UITableViewDataSource, UITableViewDelegate ,ChatPrivateMessageDelegate ,ChatViewCellDelegate>
 {
     
 }
@@ -35,7 +36,7 @@
     [self configMessageArr];
     [self configTableView];
     [self configMessageToolBar];
-    [XMPPManager sharedInstance].delegate = self;;
+    [XMPPManager sharedInstance].privatedelegate = self;;
 
     debugLog(@"聊天用户ID->%@",self.userID);
 }
@@ -50,6 +51,9 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    
+    [ChatManager clearUnReadCountWith:self.userID];
+
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -66,21 +70,22 @@
 
 - (void)configMessageArr
 {
-    self.mesgaeArr = [NSMutableArray arrayWithArray:[ChatModel MR_findAll]];
-    
-    
-    for (ChatModel *model in [ChatModel MR_findAll]) {
+    self.mesgaeArr = [NSMutableArray arrayWithArray:[ChatModel MR_findByAttribute:@"msg_userID" withValue:self.userID]];
+    for (ChatModel *model in self.mesgaeArr) {
         debugLog(@"记录ID->%@-%@",model.id,model.hasRead);
         debugLog(@"记录read->%@",model.hasRead);
-        debugLog(@"记录flag->%@",model.flag);
+        debugLog(@"记录flag->%@",model.msg_flag);
     }
 
     if (self.mesgaeArr.count == 0) {
         return;
     }
+    
     debugLog(@"%ld",self.mesgaeArr.count);
     
-    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.mesgaeArr.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.mesgaeArr.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+    });
 
 }
 
@@ -94,6 +99,10 @@
     UIBarButtonItem *bacgItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
     self.navigationItem.leftBarButtonItem = bacgItem;
     [backBtn addTarget:self action:@selector(backNav) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, UIWIDTH, 1)];
+    lineView.backgroundColor = [UIColorUtil colorWithHexString:@"e5e5ea"];
+    [self.navigationController.navigationBar addSubview:lineView];
 }
 
 - (void)backNav
@@ -122,7 +131,8 @@
 - (void)configMessageToolBar
 {
     if (!self.chatToolBar) {
-        self.chatToolBar = [[MessageToolBar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - [MessageToolBar defaultHeight], self.view.frame.size.width, [MessageToolBar defaultHeight])];
+        CGRect frame = CGRectMake(0, self.view.frame.size.height - [MessageToolBar defaultHeight], self.view.frame.size.width, [MessageToolBar defaultHeight]);
+        self.chatToolBar = [[MessageToolBar alloc] initWithFrame:frame isPulicChat:NO];
         self.chatToolBar.delegate = self;
         self.chatToolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
         [self.view addSubview:self.chatToolBar];
@@ -155,7 +165,7 @@
     //点击头像 查看个人信息
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    [HttpTool sendRequestProfileWithUserID:message.userID success:^(id json) {
+    [HttpTool sendRequestProfileWithUserID:message.msg_userID success:^(id json) {
         ResponseChatUserInforModel *res = [[ResponseChatUserInforModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -177,11 +187,13 @@
 
 - (void)pushUserInforVC:(NearByModel *)model
 {
-    UserInformationController *vc = [[UserInformationController alloc] init];
-    vc.pushType = PushNextNoneVC;
-    vc.model = model;
-    self.navigationController.navigationBarHidden = YES;
-    [self.navigationController pushViewController:vc animated:YES];
+    UserInformationController *userInformationVC = [[UserInformationController alloc] init];
+    userInformationVC.pushType = PushNextNoneVC;
+    userInformationVC.model = model;
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:userInformationVC animated:YES completion:nil];
+    });
 }
 
 #pragma mark - MessageToolBarDelegate
@@ -214,7 +226,7 @@
 
 - (void)didSendFace:(NSString *)faceLocalPath
 {
-    debugMethod();
+    
 }
 
 - (void)scrollViewToBottom:(BOOL)animated
@@ -228,6 +240,9 @@
 
 - (void)scrollToRowWithMessageID:(NSString *)messageID
 {
+    
+    debugLog(@"收到信息->%@",messageID);
+    
     ChatModel *model = [ChatModel MR_findFirstByAttribute:@"messageID" withValue:messageID];
     
     [self.mesgaeArr addObject:model];
@@ -247,55 +262,51 @@
 
 - (void)saveDateMessage:(NSString *)message Time:(NSString *)currentTime MessgaeID:(NSString *)messageID
 {
+    
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         
         ChatModel *model = [ChatModel MR_createInContext:localContext];
         model.id = [NSNumber numberWithInteger:(self.mesgaeArr.count + 1)];
-        model.userID = self.userID;
+        model.user_ID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+        model.msg_userID = self.userID;
         model.userName = self.userName;
-        model.message = message;
-        model.time = currentTime;
-        model.flag = @"ME";
-        model.longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
-        model.latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
+        model.msg_message = message;
+        model.msg_time = currentTime;
+        model.msg_flag = @"ME";
+        model.msg_longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
+        model.msg_latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
         model.messageID = messageID;
-        model.hasTime = [self getTime:currentTime];
+        model.msg_hasTime = [XMPPManager getChatTime:currentTime ToUserID:self.userID];
         model.hasRead = @"NO";
-        
+    
     } completion:^(BOOL success, NSError *error) {
         
         [self scrollToRowWithMessageID:messageID];
         
         [[XMPPManager sharedInstance] sendNewMessage:message MessageID:messageID UserID:self.userID Time:currentTime];
-
+        
+        [self sendMessage:message ToUserID:self.userID MessageID:messageID];
+        
+        [ChatManager insertChatMessageWith:self.userID
+                                  UserName:self.userName
+                                 MessageID:messageID
+                            MessageContent:message
+                               MessageTime:currentTime isShow:YES];
     }];
 }
 
-- (NSString *)getTime:(NSString *)currentTime
+#pragma -mark 发送需要推送的消息
+- (void)sendMessage:(NSString *)message ToUserID:(NSString *)userID MessageID:(NSString *)messageID
 {
-    NSArray *array = [ChatModel MR_findAll];
-    if (array.count == 0) {
-        return currentTime;
-    }
-    
-    ChatModel *model = [array lastObject];
-    
-    NSString *h_current = [UtilDate dateFromString:currentTime withFormat:DateFormat_HH];
-    NSString *h_time = [UtilDate dateFromString:model.time withFormat:DateFormat_HH];
-    
-    NSString *m_current = [UtilDate dateFromString:currentTime withFormat:DateFormat_mm];
-    NSString *m_time = [UtilDate dateFromString:model.time withFormat:DateFormat_mm];
-    
-    debugLog(@"chat->%@-%@  %@-%@",h_current,h_time,m_current,m_time);
-    
-    if ([h_current intValue]>[h_time intValue] || ([m_current intValue] - [m_time intValue] > 5)) {
-        return currentTime;
-    }
-    return @"";
+    [HttpTool sendRequestPushMessage:message ToUserID:userID Receipts:messageID success:^(id json) {
+        debugLog(@"消息推送至服务器成功");
+    } faliure:^(NSError *error) {
+        debugLog(@"消息推送至服务器失败");
+    }];
 }
 
 #pragma mark- 聊天 回调
-- (void)sendPrivateMessageSuccessMessage:(NSString *)messageID
+- (void)sendPrivateMessageSuccessMessage:(NSString *)messageID Send:(BOOL)isSend
 {
     
     for (int i = 0 ;i< self.mesgaeArr.count ; i++) {
@@ -304,14 +315,10 @@
 
         if ([model.messageID isEqualToString:messageID]) {
 
-            //ChatModel *chatModel = [ChatModel MR_findFirstByAttribute:@"messageID" withValue:messageID];
-            //model.isSend = @"YES";
-            //[[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
-            //NSPredicate *predicate = [NSPredicate predicateWithFormat:@"firstname ==[c] %@ AND lastname ==[c] %@", firstname, lastname];
             [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
                 
                 ChatModel *chatModel = [ChatModel MR_findFirstByAttribute:@"messageID" withValue:messageID inContext:localContext];
-                chatModel.isSend = @"YES";
+                chatModel.msg_isSend = isSend?@"YES":@"NO";
                 
             } completion:^(BOOL success, NSError *error) {
                 
@@ -322,7 +329,7 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 chatViewCell *cell = (chatViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                [cell set_sendMessageState:YES];
+                [cell set_sendMessageState:isSend];
             });
             
             return;
@@ -333,6 +340,8 @@
 - (void)receiveChatMessageWithMessageID:(NSString *)messageID
 {
     debugMethod();
+    [ChatManager clearUnReadCountWith:self.userID];
+
     [self scrollToRowWithMessageID:messageID];
 }
 
