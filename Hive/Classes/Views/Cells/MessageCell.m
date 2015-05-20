@@ -123,7 +123,7 @@
     
     
     UIImageView *lineIMG = [[UIImageView alloc] initWithFrame:CGRectMake(headX + headW + padding, [MessageCell getMessageCellHeight] - kLine_Height, UIWIDTH - headX - headW - padding, kLine_Height)];
-    lineIMG.backgroundColor = [UIColorUtil colorWithHexString:@"#e6e7ea"];
+    lineIMG.backgroundColor = kLine_Color;
     [self addSubview:lineIMG];
     
     [self addSubview:self.headIMG];
@@ -142,6 +142,9 @@
 
 - (void)set_MessageCellData:(MessageModel *)model
 {
+    if (!model) {
+        return;
+    }
     self.chatModel = model;
     self.userNameLabel.text = model.toUserName;
 

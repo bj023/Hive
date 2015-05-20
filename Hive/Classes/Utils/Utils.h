@@ -84,5 +84,5 @@
 
 // 所有界面线条高度
 #define kLine_Height 0.5 
-
+#define kLine_Color [UIColorUtil colorWithHexString:@"#e5e5e5"]
 #endif

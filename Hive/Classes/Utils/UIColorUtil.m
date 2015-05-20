@@ -69,11 +69,6 @@
     return [self colorWithHexString:@"#cdcdd1"];
 }
 
-+ (UIColor *)colorWithCodeefeff4
-{
-    return [self colorWithHexString:@"#EFEFF4"];
-}
-
 + (UIColor *)colorWithCodea0a0a0
 {
     return [self colorWithHexString:@"#A0A0A0"];

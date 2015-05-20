@@ -20,7 +20,7 @@
 
 #define kTopViewHeight 50/2
 
-@interface NearByController ()<UITableViewDataSource, UITableViewDelegate>
+@interface NearByController ()<UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
     UIRefreshControl *_refreshControl;
 }
@@ -62,6 +62,14 @@
 
 - (void)clickSelectAction
 {
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                       delegate:self
+                                              cancelButtonTitle:@"cancel"
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:@"ALL",@"Male",@"Female", nil];
+    [sheet showInView:self.view];
+    
+    /*
     self.sheet = [[CustomActionSheetView alloc] initWithFrame:self.view.bounds withTitles:@[@"ALL",@"Male",@"Female",@"Cancel"]];
     [self.sheet showWithBackgroundColor:[UIColor whiteColor]];
     
@@ -75,6 +83,44 @@
             [weakSelf sendNearByActionWithRequestType:RequestCommonType];
         }
     };
+     */
+}
+
+- (void)willPresentActionSheet:(UIActionSheet *)actionSheet
+{
+    debugLog(@"%@",actionSheet.subviews);
+
+    for (UIView *view in actionSheet.subviews) {
+        if ([view isEqual:[UIButton class]]) {
+            UIButton *button = (UIButton *) view;
+            
+            button.titleLabel.font = [UIFont fontWithName:GothamRoundedBook size:16];
+            //改变颜色
+            [button setTitleColor:[UIColorUtil colorWithHexString:@"#64baff"] forState:UIControlStateNormal];
+            //btn的选择状态,否则选择后不变背景
+        }
+    }
+    
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 0:{
+            self.selectType = (int)index;
+            [self sendNearByActionWithRequestType:RequestCommonType];
+        }
+            break;
+        case 1:
+        case 2:
+        {
+            self.selectType = (int)index;
+            [self sendNearByActionWithRequestType:RequestCommonType];
+        }
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)moveSelectButtonWithPadding:(CGFloat)padding
@@ -227,8 +273,11 @@
                     break;
                 case RequestRefreshType:
                 {
-                    NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1,[res.content count])];
-                    [self.dataSource insertObjects:res.content atIndexes:indexes];
+                    
+                    //NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1,[res.content count])];
+                    //[self.dataSource insertObjects:res.content atIndexes:indexes];
+                    self.dataSource = [NSMutableArray arrayWithArray:res.content];
+
                 }
                     break;
                 case RequestLoadMoreType:

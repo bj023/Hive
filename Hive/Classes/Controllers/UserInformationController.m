@@ -16,7 +16,7 @@
 #define TopGrayBackGroundHeight 321/2
 #define kHeadSize 178/2
 
-@interface UserInformationController ()<CustomButtonViewDelegate, UIAlertViewDelegate>
+@interface UserInformationController ()<CustomButtonViewDelegate, UIActionSheetDelegate>
 {
     CGFloat _topGrayBackGroundHeight;
 }
@@ -265,17 +265,26 @@
 
 - (void)showBlockAlert
 {
+    
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Block"
+                                                             delegate:self
+                                                    cancelButtonTitle:@"cancel"
+                                               destructiveButtonTitle:@"block"
+                                                    otherButtonTitles:nil];
+    [actionSheet showInView:self.view];
+    /*
     UIAlertView *blockAlert = [[UIAlertView alloc] initWithTitle:@"Block?"
                                                          message:nil
                                                         delegate:self
                                                cancelButtonTitle:@"No"
                                                otherButtonTitles:@"Yes", nil];
     [blockAlert show];
+     */
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 1) {
+    if (buttonIndex == 0) {
         [self sendBlockRequest];
     }
 }

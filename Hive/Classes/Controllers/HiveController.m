@@ -281,7 +281,7 @@
 
             } completion:^(BOOL success, NSError *error) {
                 
-                debugLog(@"已发送->修改成功");
+                debugLog(@"大厅已发送->修改成功");
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     //ChatRoomCell *cell = (ChatRoomCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];

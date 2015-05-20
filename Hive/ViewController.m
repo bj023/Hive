@@ -200,11 +200,11 @@
     [_pageViewController.navigationBarView addSubview:[_nearByVC getSelectBtuuon]];
     __weak HiveController *weakHive = _hiveVC;
     __weak NearByController *weakNearByVC = _nearByVC;
-
     
     _pageViewController.didChangedPage = ^(NSInteger currentPageIndex){
         // Do something
         NSLog(@"index %ld", (long)currentPageIndex);
+        
         if (currentPageIndex == 3) {
 
             [weakNearByVC sendNearByAction];
@@ -239,13 +239,13 @@
     _messagesVC = [[MessagesController alloc] init];
     
     //更改
-    //UINavigationController *mesNav = [[UINavigationController alloc] initWithRootViewController:_messagesVC];
-    //_messagesVC.navigationController.navigationBarHidden = YES;
+    UINavigationController *mesNav = [[UINavigationController alloc] initWithRootViewController:_messagesVC];
+    _messagesVC.navigationController.navigationBarHidden = YES;
 
     _hiveVC     = [[HiveController alloc] init];
     _nearByVC   = [[NearByController alloc] init];
 
-    return @[_settingsVC,_messagesVC,_hiveVC,_nearByVC];
+    return @[_settingsVC,mesNav,_hiveVC,_nearByVC];
 }
 
 - (NSArray *)titlesArr

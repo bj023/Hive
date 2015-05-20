@@ -74,7 +74,7 @@
             }
             
             self.lineIMG = [[UIImageView alloc] init];
-            self.lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];//[UIColorUtil colorWithHexString:@"#e8e8e8"];
+            self.lineIMG.backgroundColor = kLine_Color;
             [self.contentView addSubview:self.lineIMG];
             self.lineIMG.frame = CGRectMake(16, [NotificationNorCell getNotificationCellHeight] - kLine_Height, UIWIDTH - 16, kLine_Height);
         }

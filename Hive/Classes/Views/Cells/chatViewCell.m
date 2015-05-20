@@ -46,15 +46,24 @@
         //[_retryButton addTarget:self action:@selector(retryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [_retryButton setBackgroundImage:[UIImage imageNamed:@"messageSendFail.png"] forState:UIControlStateNormal];
         [_retryButton setBackgroundColor:[UIColor clearColor]];
-        [_activityView addSubview:_retryButton];
+        [self.contentView addSubview:_retryButton];
         _retryButton.hidden = YES;
         
         // 菊花
+        /*
         _activtiy = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         _activtiy.frame = CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
         _activtiy.backgroundColor = [UIColor clearColor];
         _activtiy.hidden = YES;
         [_activityView addSubview:_activtiy];
+        */
+        _activtiyImg = [[UIImageView alloc] init];
+        _activtiyImg.animationImages = @[[UIImage imageNamed:@"load1"],
+                                         [UIImage imageNamed:@"load2"],
+                                         [UIImage imageNamed:@"load3"]];
+        _activtiyImg.animationDuration = 0.8;
+        [self.contentView addSubview:_activtiyImg];
+        [_activtiyImg startAnimating];
         
         //已读
         _hasRead = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE)];
@@ -113,19 +122,17 @@
     BOOL isShow = [self.message.msg_flag isEqualToString:@"ME"]?YES:NO;
     BOOL isSend = [self.message.msg_isSend boolValue];
     BOOL isRead = [self.message.hasRead boolValue];
-
-    
     _activityView.frame = CGRectMake(0, self.bubbleView.frame.origin.y, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
-    
+
     _hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x, 3, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE - 5);
-    _activtiy.frame = CGRectMake(self.timeLabel.frame.origin.x - SEND_STATUS_SIZE, 0, SEND_STATUS_SIZE, isShow?SEND_STATUS_SIZE:0);
+
+    /*
+    
     _retryButton.frame = CGRectMake(self.timeLabel.frame.origin.x - SEND_STATUS_SIZE, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
 
-    [_activtiy startAnimating];
     if (isShow) {
         _activityView.hidden = isSend;
         _retryButton.hidden = isSend;
-        _activtiy.hidden = isSend;
         
         if (isRead) {
             _hasRead.hidden = NO;
@@ -139,32 +146,75 @@
         
     }else{
         _activityView.hidden = YES;
-        _activtiy.hidden = YES;
         _hasRead.hidden = YES;
         _retryButton.hidden = YES;
     }
+    */
     
-}
-
-- (void)set_sendMessageState:(BOOL)isSend
-{
-    [_activtiy stopAnimating];
-    _activtiy.hidden = YES;
-    
-    if (isSend) {
+    if (isShow) {
+        
+        if (!isSend) {
+            _retryButton.hidden = NO;
+            [self updateBubbleFrame];
+        }else{
+            _retryButton.hidden = YES;
+        }
+        
+        if (isRead) {
+            _hasRead.hidden = NO;
+            _activityView.hidden = NO;
+            
+        }else{
+            _hasRead.hidden = YES;
+            _activityView.hidden = YES;
+        }
+        
+    }else{
+        _activityView.hidden = YES;
         _retryButton.hidden = YES;
-    }else
-    {
-        _retryButton.hidden = NO;
     }
 }
 
-- (void)set_hasReadMessageState:(BOOL)isSend
+- (void)updateBubbleFrame
 {
-    _activityView.hidden = NO;
+    CGFloat padding = 10;
+    CGFloat retryW = 30;
+    CGFloat retryH = retryW;
+    CGFloat retryX = UIWIDTH - retryW - padding;
+    CGFloat retryY = self.bubbleView.frame.origin.y + 2;
+    _retryButton.frame = CGRectMake(retryX, retryY, retryW, retryH);
+    CGRect bubbleF = self.bubbleView.frame;
+    bubbleF.origin.x -= (retryW + padding + 5);
+    self.bubbleView.frame = bubbleF;
+    
+    CGRect timeF = self.timeLabel.frame;
+    timeF.origin.x -= (retryW + padding + 5);
+    self.timeLabel.frame = timeF;
+    
+    _activityView.frame = CGRectMake(0, self.bubbleView.frame.origin.y, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
 
-    _hasRead.hidden = !isSend;
+    _activtiyImg.frame = CGRectMake(self.timeLabel.frame.origin.x + 7, self.timeLabel.frame.origin.y - 5, SEND_STATUS_SIZE, 4);
+    
+    _hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x, 3, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE - 5);
+    
 }
+
+//- (void)set_sendMessageState:(BOOL)isSend
+//{    
+//    if (isSend) {
+//        _retryButton.hidden = YES;
+//    }else
+//    {
+//        _retryButton.hidden = NO;
+//    }
+//}
+
+//- (void)set_hasReadMessageState:(BOOL)isSend
+//{
+//    _activityView.hidden = NO;
+//
+//    _hasRead.hidden = !isSend;
+//}
 
 - (void)setMessage:(ChatModel *)message
 {

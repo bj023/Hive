@@ -63,11 +63,11 @@
         
         UIImageView *lineIMG = [[UIImageView alloc] init];
         lineIMG.frame = CGRectMake(0, 0,  UIWIDTH - 0, 1);
-        lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];
+        lineIMG.backgroundColor = kLine_Color;
         [self.contentView addSubview:lineIMG];
         
         self.lineIMG = [[UIImageView alloc] init];
-        self.lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];
+        self.lineIMG.backgroundColor = kLine_Color;
         [self.contentView addSubview:self.lineIMG];
         self.lineIMG.frame = CGRectMake(16, [ProfileCell getProfileCellHeight] - kLine_Height, UIWIDTH - 16, kLine_Height);
         

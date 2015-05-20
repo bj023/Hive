@@ -34,12 +34,8 @@
  *  @return 返回指定颜色
  */
 + (UIColor *)colorWithCoded9d9d9;
-/**
- *  设置 profile 表格背景颜色
- *
- *  @return 返回 指定颜色值
- */
-+ (UIColor *)colorWithCodeefeff4;
+
+
 /**
  *  注册 输入框值
  *

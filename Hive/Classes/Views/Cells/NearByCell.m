@@ -116,7 +116,7 @@
     }
     */
     UIImageView *lineIMG = [[UIImageView alloc] initWithFrame:CGRectMake(headX + headW + padding, [NearByCell getNearByCellHeight] - kLine_Height, UIWIDTH - headX - headW - padding, kLine_Height)];
-    lineIMG.backgroundColor = [UIColorUtil colorWithCodeefeff4];
+    lineIMG.backgroundColor = kLine_Color;
     [self addSubview:lineIMG];
     
     [self addSubview:self.sexLabel];

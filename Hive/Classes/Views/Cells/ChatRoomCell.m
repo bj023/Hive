@@ -44,13 +44,13 @@
         */
         
         _activtiyImg = [[UIImageView alloc] init];
-
         _activtiyImg.animationImages = @[[UIImage imageNamed:@"load1"],
                                          [UIImage imageNamed:@"load2"],
                                          [UIImage imageNamed:@"load3"]];
         _activtiyImg.animationDuration = 0.8;
         [self.contentView addSubview:_activtiyImg];
         [_activtiyImg startAnimating];
+        
         // 重发按钮
         _retryButton = [UIButton buttonWithType:UIButtonTypeSystem];
         //_retryButton.frame = CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);

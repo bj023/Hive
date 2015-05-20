@@ -322,14 +322,13 @@
                 
             } completion:^(BOOL success, NSError *error) {
                 
-                debugLog(@"修改成功");
+                debugLog(@"私聊已发送->修改成功");
                 
             }];
             
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                chatViewCell *cell = (chatViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                [cell set_sendMessageState:isSend];
+                [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
             });
             
             return;
@@ -366,8 +365,7 @@
 
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                chatViewCell *cell = (chatViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-                [cell set_hasReadMessageState:YES];
+                [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
             });
             
             return;

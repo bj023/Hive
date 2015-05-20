@@ -31,7 +31,7 @@
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.lineIMG = [[UIImageView alloc] init];
-        self.lineIMG.backgroundColor = [UIColorUtil colorWithHexString:@"#cdcdd1"];
+        self.lineIMG.backgroundColor = kLine_Color;
         [self.contentView addSubview:self.lineIMG];
         //self.lineIMG.frame = CGRectMake(16, [UserInforCell getUserInforCellHeight] - 1, UIWIDTH - 16, 1);
     }

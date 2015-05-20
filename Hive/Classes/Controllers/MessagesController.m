@@ -30,9 +30,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    
     [self configTableView];
-    //[self configSearBtn];
+    [self configSearBtn];
     
 }
 
@@ -44,7 +43,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //self.navigationController.navigationBarHidden = YES;
+    self.navigationController.navigationBarHidden = YES;
 }
 
 - (void)reloadChatMessage
@@ -66,14 +65,6 @@
 
 - (void)configSearBtn
 {
-    /**/
-    UISearchController * _mySearchController = [[UISearchController alloc]initWithSearchResultsController:nil];
-    _mySearchController.searchResultsUpdater = self;
-    _mySearchController.dimsBackgroundDuringPresentation = YES;
-    [_mySearchController.searchBar sizeToFit];
-    self.messageTable.tableHeaderView = _mySearchController.searchBar;
-     
-    /*
     if (!_topView) {
         _topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, 44)];
         _topView.backgroundColor = [UIColorUtil colorWithHexString:@"#eeeeee"];
@@ -89,7 +80,7 @@
         [searBtn addTarget:self action:@selector(searchBarButtonItemAction:) forControlEvents:UIControlEventTouchUpInside];
         [_topView addSubview:searBtn];
     }
-     */
+     
 }
 
 #pragma mark 搜索按钮事件（点击搜索按钮，推出搜索控制器）
@@ -108,10 +99,10 @@
     _searchController.searchBar.placeholder = @"输入要查找的内容";
     _searchController.searchBar.prompt = @"Search";
     _searchController.searchBar.delegate = self;
-    _searchController.searchBar.backgroundColor = [UIColor redColor];
-    _searchController.searchBar.tintColor = [UIColor blueColor];
-    //_searchController.searchBar.barTintColor = [UIColor lightGrayColor];
-    _searchController.dimsBackgroundDuringPresentation = NO;
+//    _searchController.searchBar.backgroundColor = [UIColor lightGrayColor];
+//    _searchController.searchBar.tintColor = [UIColor lightGrayColor];
+//    _searchController.searchBar.barTintColor = [UIColor lightGrayColor];
+//    _searchController.dimsBackgroundDuringPresentation = NO;
 
     // 因为搜索是控制器，所以要使用模态推出（必须是模态，不可是push）
     //self.messageTable.tableHeaderView = _searchController.searchBar;
@@ -131,6 +122,7 @@
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     //_topView.frame = CGRectMake(0, 0, UIWIDTH, 0);
     [_topView removeFromSuperview];
+    _topView = nil;
 }
 
 
@@ -170,7 +162,7 @@
     
     
     [cell set_MessageCellData:(tableView == self.messageTable?self.messageArr[indexPath.row]:self.searchResultDataArray[indexPath.row])];
-
+    
     return cell;
 }
 
@@ -179,6 +171,13 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     [_searchController dismissViewControllerAnimated:NO completion:nil];
     
+    MessageModel *model = self.messageArr[indexPath.row];
+    
+    
+    debugLog(@"%@",self.messageArr);
+    debugLog(@"点击messageCell->%@",model);
+    debugLog(@"点击messageCell->%@",model.toUserName);
+
     self.chatBlock((tableView == self.messageTable?self.messageArr[indexPath.row]:self.searchResultDataArray[indexPath.row]));
 }
 

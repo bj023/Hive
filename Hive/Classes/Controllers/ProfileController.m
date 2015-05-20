@@ -72,7 +72,6 @@
 
 - (void)configViewBackGround
 {
-    //[self.view setBackgroundColor:[UIColorUtil colorWithCodeefeff4]];
     [self.view setBackgroundColor:[UIColor whiteColor]];
 }
 

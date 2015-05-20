@@ -18,7 +18,7 @@
 #define kHeadSize 178/2
 #define kTopY 216/2
 
-@interface SettingsController ()<UITableViewDataSource, UITableViewDelegate>
+@interface SettingsController ()<UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
     NSArray *_titleArr;
 }
@@ -227,6 +227,14 @@
 #pragma -mark 头像点击事件
 - (void)clickHeadIMGAction:(id)sender
 {
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                       delegate:self
+                                              cancelButtonTitle:@"cancel"
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:@"take photo",@"choose from photos", nil];
+    
+    [sheet showInView:self.view];
+    /*
     self.sheet = [[CustomActionSheetView alloc] initWithFrame:self.view.bounds withTitles:@[@"Take photo",@"Choose photo"]];
     [self.sheet showWithBackgroundColor:[UIColor whiteColor]];
     
@@ -239,9 +247,28 @@
             [weakSelf choosePhoto];
         }
     };
+     */
 }
 
-
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    switch (buttonIndex) {
+        case 0:
+        {
+            [self takePhoto];
+        }
+            break;
+        case 1:
+        {
+            [self choosePhoto];
+        }
+            break;
+        default:
+            break;
+    }
+    
+}
 
 - (void)takePhoto
 {

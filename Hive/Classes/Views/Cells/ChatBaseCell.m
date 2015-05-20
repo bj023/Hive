@@ -121,16 +121,16 @@
 {
     CGFloat width = 80;
     CGFloat x = UIWIDTH/2 - width/2;
-    CGFloat y = CELLPADDING;
-    CGFloat height = IsEmpty(_message.msg_hasTime)?0:NAME_LABEL_HEIGHT;
+    CGFloat y = CELLPADDING + (IsEmpty(_message.msg_hasTime)?0:5);
+    CGFloat height = IsEmpty(_message.msg_hasTime)?0:TIME_HEIGHT;
     // 时间周期
     _timeView.frame = CGRectMake(x, y, width, height);
     
     // 气泡
     width = messageSize.width + kMessage_Left + kMessage_Right;
     height = messageSize.height + kMessage_Top  + kMessage_Buttom;
-    x = UIWIDTH - width - HEAD_PADDING;
-    y = _timeView.frame.origin.y + _timeView.frame.size.height + 1;
+    x = UIWIDTH - width - HEAD_PADDING + 6;
+    y = _timeView.frame.origin.y + _timeView.frame.size.height + 5;
     _bubbleView.frame = CGRectMake(x, y, width, height);
     
     // 发表时间
@@ -165,7 +165,6 @@
             _nameLabel.text = [NSString stringWithFormat:@"隐身用户 %@",distance];
         }else
             _nameLabel.text = [NSString stringWithFormat:@"%@  %@",_message.userName,distance];
-        
     }
     
     

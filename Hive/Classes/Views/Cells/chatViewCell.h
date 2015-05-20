@@ -16,15 +16,13 @@
 @interface chatViewCell : ChatBaseCell
 @property (nonatomic, weak) id<ChatViewCellDelegate>delegate;
 @property (nonatomic, strong) NSIndexPath *indexPath;
-@property (nonatomic, strong) UIActivityIndicatorView *activtiy;
+@property (nonatomic, strong) UIImageView *activtiyImg;
 @property (nonatomic, strong) UIView *activityView;
 @property (nonatomic, strong) UIButton *retryButton;
 @property (nonatomic, strong) UILabel *hasRead;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView Delegate:(id<ChatViewCellDelegate>)delegate;
 
-- (void)set_sendMessageState:(BOOL)isSend;
-- (void)set_hasReadMessageState:(BOOL)isSend;
 
 @end
 
