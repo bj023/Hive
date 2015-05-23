@@ -412,7 +412,7 @@
     user.xmppPassWord = xmpp_password;
     user.isStealth = [NSString stringWithFormat:@"%d",loginModel.hide];
     UserInfoManager *manager = [UserInfoManager sharedInstance];
-    [manager saveUserInfoToDisk:user];
+    [manager saveUserInfoToDisk:user];    
 }
 
 - (void)handleSetRootViewController

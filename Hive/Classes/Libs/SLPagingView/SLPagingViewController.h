@@ -9,6 +9,7 @@
 #import "ShareResources.h"
 #import "UIScrollView+UpdateContentSize.h"
 
+
 typedef NS_ENUM(NSInteger, SLNavigationSideItemsStyle) {
     SLNavigationSideItemsStyleOnBounds = 44,//40
     SLNavigationSideItemsStyleClose = 70,

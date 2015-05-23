@@ -15,17 +15,17 @@
 #import "NearByController.h"
 #import <MAMapKit/MAMapKit.h>
 #import "Utils.h"
-#import "ProfileController.h"
+#import "ProfileViewController.h"
 #import "BlockListController.h"
 #import "FollowController.h"
 #import "UserInformationController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
-#import "ChatViewController.h"
 #import "ChatModel.h"
 #import "MessageModel.h"
 #import "ChatManager.h"
 #import "WelcomeView.h"
-#import <Reachability.h>
+#import "ChatController.h"
+#import "ChatViewListController.h"
 
 #define APIKey @"588013a8aa2e427d04f67917d98d0315"
 
@@ -34,15 +34,14 @@
     
     SettingsController *_settingsVC;
     MessagesController *_messagesVC;
+    ChatViewListController *_chatListVC;
     HiveController *_hiveVC;
     NearByController *_nearByVC;
-    //MessageTableViewController *_messagesVC;
     
     MAMapView *_mapView;
     
     UILabel *_messageLabel; // Message 标题
     
-    Reachability  *hostReach;
 
 }
 
@@ -59,7 +58,6 @@
     [self clickCellAction];
     [self clickUserHeadAction];
     [self performSelector:@selector(configWelcomeView) withObject:nil afterDelay:0.5];
-    [self checkNetwork];
     [self addNotification];
     
 }
@@ -75,59 +73,10 @@
     debugLog(@"收到消息通知");
     
     [self setChatsUnReadCount];
-    [_messagesVC reloadChatMessage];
-    
-
+    [_chatListVC refreshDataSource];
 }
 
-#pragma -mark 检测网络
-- (void)checkNetwork
-{
-    // 监测网络情况
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(reachabilityChanged:)
-                                                 name: kReachabilityChangedNotification
-                                               object: nil];
-    hostReach = [Reachability reachabilityWithHostName:@"www.baidu.com"];
-    [hostReach startNotifier];
-    
-}
 
-- (void)reachabilityChanged:(NSNotification *)note
-{
-    Reachability* curReach = [note object];
-    NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
-    NetworkStatus status = [curReach currentReachabilityStatus];
-    
-    NSString *showString;
-    switch (status)
-    {
-        case NotReachable:
-            // 没有网络连接
-            showString = @"已断开网络连接";
-            break;
-        case ReachableViaWWAN:
-            // 使用3G网络
-            showString = @"正在使用3G网络";
-            break;
-        case ReachableViaWiFi:
-        {
-            showString = @"正在使用wifi网络";
-            if ([[UserInfoManager sharedInstance] checkUserIsLogin]) {
-                [[XMPPManager sharedInstance] connect];
-            }
-        }
-            break;
-    }
-    debugLog(@"%@",showString);
-    
-//    UIAlertView *showAler = [[UIAlertView alloc] initWithTitle:showString
-//                                                       message:nil
-//                                                      delegate:nil
-//                                             cancelButtonTitle:@"Cancel"
-//                                             otherButtonTitles: nil];
-//    [showAler show];
-}
 
 
 #pragma -mark 欢迎界面
@@ -140,7 +89,6 @@
         [mwelCome showWelCome];
     }
 }
-
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -227,57 +175,41 @@
 
     [_pageViewController setCurrentIndex:2 animated:NO];
     [self setChatsUnReadCount];
-    
-    debugLog(@"viewcontroller->%@",_pageViewController.viewControllers);
-
 }
 
 - (NSArray *)twitterVC
 {
     _settingsVC = [[SettingsController alloc] init];
     
-    _messagesVC = [[MessagesController alloc] init];
-    
+    _chatListVC = [[ChatViewListController alloc] init];
+    //_messagesVC = [[MessagesController alloc] init];
     //更改
-    UINavigationController *mesNav = [[UINavigationController alloc] initWithRootViewController:_messagesVC];
-    _messagesVC.navigationController.navigationBarHidden = YES;
+    //UINavigationController *mesNav = [[UINavigationController alloc] initWithRootViewController:_messagesVC];
+    //_messagesVC.navigationController.navigationBarHidden = YES;
 
     _hiveVC     = [[HiveController alloc] init];
     _nearByVC   = [[NearByController alloc] init];
 
-    return @[_settingsVC,mesNav,_hiveVC,_nearByVC];
+    return @[_settingsVC,_chatListVC,_hiveVC,_nearByVC];
 }
 
 - (NSArray *)titlesArr
 {    
     UILabel *ticketNameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [ticketNameLabel setText:@"SETTING"];
-    //[ticketNameLabel setTextColor:[UIColor whiteColor]];
     [ticketNameLabel setFont:TextFont];
     
     _messageLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [_messageLabel setText:@"CHATS"];
-    //[_messageLabel setTextColor:[UIColor whiteColor]];
     [_messageLabel setFont:TextFont];
     
-    
     UILabel *ticketNameLabel3 = [[UILabel alloc] initWithFrame:CGRectZero];
-    
     [ticketNameLabel3 setText:@"POOK"];
-    //[ticketNameLabel3 setTextColor:[UIColor whiteColor]];
     [ticketNameLabel3 setFont:TextFont];
     
     UILabel *ticketNameLabel4 = [[UILabel alloc] initWithFrame:CGRectZero];
-    
     [ticketNameLabel4 setText:@"NEARBY"];
-    //[ticketNameLabel4 setTextColor:[UIColor whiteColor]];
     [ticketNameLabel4 setFont:TextFont];
-    
-//    ticketNameLabel.backgroundColor = [UIColor redColor];
-//    ticketNameLabel3.backgroundColor = [UIColor blackColor];
-//    ticketNameLabel4.backgroundColor = [UIColor blueColor];
-//    _messageLabel.backgroundColor = [UIColor greenColor];
-    
     return @[ticketNameLabel,_messageLabel,ticketNameLabel3,ticketNameLabel4];
 }
 
@@ -430,7 +362,7 @@
 {
     [_pageViewController setCurrentIndex:1 animated:NO];
 
-    ChatViewController *chatVC = [[ChatViewController alloc] init];
+    ChatController *chatVC = [[ChatController alloc] init];
     chatVC.userID = [NSString stringWithFormat:@"%d",model.userId];
     chatVC.userName = model.userName;
     chatVC.title = model.userName;
@@ -439,13 +371,12 @@
 
 - (void)pushChatVC:(MessageModel *)model
 {
-    ChatViewController *chatVC = [[ChatViewController alloc] init];
+    ChatController *chatVC = [[ChatController alloc] init];
     chatVC.userID = model.toUserID;
     chatVC.userName = model.toUserName;
     chatVC.title = model.toUserName;
     [self.navigationController pushViewController:chatVC animated:YES];
 }
-
 
 #pragma -mark 点击用户头像 Block 回调
 - (void)clickUserHeadAction
@@ -456,11 +387,11 @@
         [weakSelf pushUserInforMation:model];
     };
     // message
-    _messagesVC.chatBlock = ^(MessageModel *model){
+    _chatListVC.chatBlock = ^(MessageModel *model){
         [weakSelf pushChatVC:model];
     };
     
-    _messagesVC.messageBlock = ^(NearByModel *model){
+    _chatListVC.messageBlock = ^(NearByModel *model){
         [weakSelf pushUserInforMation:model];
     };
     
@@ -508,10 +439,9 @@
 
 - (void)pushProfileViewController
 {
-    ProfileController *profile = [[ProfileController alloc] init];
-    UINavigationController *profileNav = [[UINavigationController alloc] initWithRootViewController:profile];
+    ProfileViewController *profile = [[ProfileViewController alloc] init];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self presentViewController:profileNav animated:YES completion:nil];
+        [self presentViewController:profile animated:YES completion:nil];
     });
 }
 

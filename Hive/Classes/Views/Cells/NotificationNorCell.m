@@ -110,8 +110,12 @@
     
     
     if (self.indexPath.row == 4) {
-        self.notificationSwitch.on = NO;
-        self.intrLabel.text = @"Off";
+        
+        BOOL hiding = [NSDataUtil valueHiding];
+        
+        self.notificationSwitch.on = hiding;
+        self.intrLabel.text = hiding?@"on":@"Off";
+        
     }else if(self.indexPath.row == 1){
         self.notificationSwitch.on = YES;
         self.intrLabel.text = @"Show name and message";

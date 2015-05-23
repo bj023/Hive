@@ -35,8 +35,6 @@
 
 - (void)setImageUrl:(NSURL *)url
 {
-
-
     [self sd_setImageWithURL:url placeholderImage:nil options:SDWebImageRetryFailed | SDWebImageLowPriority];
 }
 

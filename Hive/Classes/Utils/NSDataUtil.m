@@ -7,22 +7,33 @@
 //
 
 #import "NSDataUtil.h"
+#import "Utils.h"
 
 @implementation NSDataUtil
 #define kHiding @"Hiding"
 + (void)setHidingWithValue:(NSString *)value
 {
-    [[NSUserDefaults standardUserDefaults] setObject:value forKey:kHiding];
+    //[[NSUserDefaults standardUserDefaults] setObject:value forKey:kHiding];
+    
+    CurrentUserInfo *infor = [[UserInfoManager sharedInstance] getCurrentUserInfo];
+    debugLog(@"----%@",value);
+    infor.isStealth = value;
+ 
+    [[UserInfoManager sharedInstance] saveUserInfoToDisk:infor];
 }
 
 + (NSString *)getHidingValue
 {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:kHiding];
+    //return [[NSUserDefaults standardUserDefaults] objectForKey:kHiding];
+    NSString *value = [[UserInfoManager sharedInstance] getCurrentUserInfo].isStealth;
+    return value;
 }
 
+// 1 隐身 0 不隐身
 + (BOOL)valueHiding
 {
-    NSString *value = [[NSUserDefaults standardUserDefaults] objectForKey:kHiding];
+    //NSString *value = [[NSUserDefaults standardUserDefaults] objectForKey:kHiding];
+    NSString *value = [[UserInfoManager sharedInstance] getCurrentUserInfo].isStealth;
     if ([value isEqualToString:@"1"]) {
         return YES;
     }else
@@ -67,5 +78,16 @@
 {
     return [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@_%@",ChatTime,userID]];
 }
+#define ChatRoomDataID @"ChatRoomDataID"
++ (NSNumber *)setChatRoomDataID
+{
+    NSNumber *number = [NSNumber numberWithLong:([NSDataUtil getChatRoomDataID]+1)];
+    [[NSUserDefaults standardUserDefaults] setObject:number forKey:ChatRoomDataID];
+    return [[NSUserDefaults standardUserDefaults] objectForKey:ChatRoomDataID];
+}
 
++ (long)getChatRoomDataID
+{
+    return [[[NSUserDefaults standardUserDefaults] objectForKey:ChatRoomDataID] longValue];
+}
 @end

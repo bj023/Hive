@@ -16,6 +16,7 @@
 #import "UserInformationController.h"
 #import "DataBaseModel.h"
 
+#define kChatCount 20
 
 @interface HiveController ()<MessageToolBarDelegate, UITableViewDataSource, UITableViewDelegate, ChatPublicMessageDelegate, ChatRoomViewCellDelegate>
 {
@@ -49,14 +50,11 @@
 
 - (void)configMessageArr
 {
-    
-    for (ChatRoomModel *model in [ChatRoomModel MR_findAll]) {
-        debugLog(@"%@",model.msg_Interval_time);
-    }
-    
+
     self.mesgaeArr = [NSMutableArray array];
     
-    NSArray *array = [DataBaseModel getChatWithStartChatRoom:nil andCount:100];
+    //NSArray *array = [DataBaseModel getChatWithStartChatRoom:nil andCount:100];
+    NSArray *array = [DataBaseModel getChatRoomWithStart:self.mesgaeArr.count andCount:kChatCount];
     NSRange range = NSMakeRange(0, [array count]);
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
     [self.mesgaeArr insertObjects:array atIndexes:indexSet];
@@ -101,13 +99,13 @@
 {
     [_refreshControl endRefreshing];
     
-    NSArray *array = [DataBaseModel getChatWithStartChatRoom:_mesgaeArr.count==0?nil:self.mesgaeArr[0] andCount:10];
+    //NSArray *array = [DataBaseModel getChatWithStartChatRoom:_mesgaeArr.count==0?nil:self.mesgaeArr[0] andCount:10];
+    NSArray *array = [DataBaseModel getChatRoomWithStart:self.mesgaeArr.count andCount:kChatCount];
     NSRange range = NSMakeRange(0, [array count]);
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
     [self.mesgaeArr insertObjects:array atIndexes:indexSet];
 
     [self.tableView reloadData];
-
 }
 
 #pragma -mark MessageToolBar
@@ -236,12 +234,16 @@
     
 }
 
+
+
+
+// 发送消息
 - (void)saveDateMessage:(NSString *)message Time:(NSString *)currentTime MessgaeID:(NSString *)messageID
 {
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         
         ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
-        model.id = [NSNumber numberWithInteger:(self.mesgaeArr.count + 1)];
+        model.id = [NSDataUtil setChatRoomDataID];
         model.userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
         model.messageID = messageID;
         model.hasAname = self.chatToolBar.aNameLength>0?_isAname:@"";
@@ -305,17 +307,8 @@
 - (void)scrollToRowWithMessageID:(NSString *)messageID
 {
     ChatRoomModel *model = [ChatRoomModel MR_findFirstByAttribute:@"messageID" withValue:messageID];
-    
     [self.mesgaeArr addObject:model];
-    
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.mesgaeArr.count-2 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-//
-//    });
     [self.tableView reloadData];
-
-    debugLog(@"%@",self.mesgaeArr);
-    
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.mesgaeArr.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 

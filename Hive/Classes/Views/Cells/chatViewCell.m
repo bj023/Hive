@@ -118,55 +118,48 @@
 {
     [super layoutSubviews];
     
-    
     BOOL isShow = [self.message.msg_flag isEqualToString:@"ME"]?YES:NO;
-    BOOL isSend = [self.message.msg_isSend boolValue];
-    BOOL isRead = [self.message.hasRead boolValue];
     _activityView.frame = CGRectMake(0, self.bubbleView.frame.origin.y, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
 
-    _hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x, 3, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE - 5);
-
-    /*
+    _hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x, self.timeLabel.frame.origin.y-SEND_STATUS_SIZE-5, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE - 5);
     
-    _retryButton.frame = CGRectMake(self.timeLabel.frame.origin.x - SEND_STATUS_SIZE, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
-
-    if (isShow) {
-        _activityView.hidden = isSend;
-        _retryButton.hidden = isSend;
-        
-        if (isRead) {
-            _hasRead.hidden = NO;
-            _activityView.hidden = NO;
-
-        }else{
-            _hasRead.hidden = YES;
-            _activityView.hidden = YES;
-        }
-        
-        
-    }else{
-        _activityView.hidden = YES;
-        _hasRead.hidden = YES;
-        _retryButton.hidden = YES;
-    }
-    */
+    debugLog(@"%@-%@-%@-%@",self.indexPath,self.message.msg_flag,self.message.msg_type,self.message.msg_message);
     
     if (isShow) {
-        
-        if (!isSend) {
-            _retryButton.hidden = NO;
-            [self updateBubbleFrame];
-        }else{
-            _retryButton.hidden = YES;
-        }
-        
-        if (isRead) {
-            _hasRead.hidden = NO;
-            _activityView.hidden = NO;
-            
-        }else{
-            _hasRead.hidden = YES;
-            _activityView.hidden = YES;
+        _activityView.hidden = NO;
+
+        switch ([self.message.msg_send_type intValue]) {
+            case SendCHatMessageNomal:
+            {
+                _activtiyImg.hidden = NO;
+                _hasRead.hidden = YES;
+                _retryButton.hidden = YES;
+            }
+                break;
+            case SendChatMessageSuccessState:
+            {
+                _activtiyImg.hidden = YES;
+                _hasRead.hidden = YES;
+                _retryButton.hidden = YES;
+            }
+                break;
+            case SendChatMessageReadState:
+            {
+                _activtiyImg.hidden = YES;
+                _hasRead.hidden = NO;
+                _retryButton.hidden = YES;
+            }
+                break;
+            case SendChatMessageFailState:
+            {
+                _activtiyImg.hidden = YES;
+                _hasRead.hidden = YES;
+                _retryButton.hidden = NO;
+                [self updateBubbleFrame];
+            }
+                break;
+            default:
+                break;
         }
         
     }else{
@@ -196,25 +189,7 @@
     _activtiyImg.frame = CGRectMake(self.timeLabel.frame.origin.x + 7, self.timeLabel.frame.origin.y - 5, SEND_STATUS_SIZE, 4);
     
     _hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x, 3, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE - 5);
-    
 }
-
-//- (void)set_sendMessageState:(BOOL)isSend
-//{    
-//    if (isSend) {
-//        _retryButton.hidden = YES;
-//    }else
-//    {
-//        _retryButton.hidden = NO;
-//    }
-//}
-
-//- (void)set_hasReadMessageState:(BOOL)isSend
-//{
-//    _activityView.hidden = NO;
-//
-//    _hasRead.hidden = !isSend;
-//}
 
 - (void)setMessage:(ChatModel *)message
 {
@@ -230,16 +205,16 @@
 
 #pragma -mark 长按气泡 弹出菜单
 - (void)longPressAction:(UIGestureRecognizer *)recognizer{
+    debugMethod();
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        
-        debugLog(@"%lf-%lf",recognizer.view.frame.origin.x,recognizer.view.frame.origin.y);
-
         
         UIView *view = recognizer.view;
         [self becomeFirstResponder];
-        UIMenuItem *flag = [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(copyMessage:)];
+        UIMenuItem *copyMessage = [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(copyMessage:)];
+        UIMenuItem *deleteMessage = [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(deleteMessage:)];
+
         UIMenuController *menu = [UIMenuController sharedMenuController];
-        [menu setMenuItems:[NSArray arrayWithObjects:flag, nil]];
+        [menu setMenuItems:[NSArray arrayWithObjects:copyMessage, deleteMessage, nil]];
         [menu setTargetRect:view.frame inView:self];
         [menu setMenuVisible:YES animated:YES];
     }
@@ -254,20 +229,18 @@
 
     if (action == @selector(cut:)){
         return NO;
-    }
-    else if(action == @selector(copy:)){
+    }else if(action == @selector(copy:)){
         return NO;
-    }
-    else if(action == @selector(paste:)){
+    }else if(action == @selector(paste:)){
         return NO;
-    }
-    else if(action == @selector(select:)){
+    }else if(action == @selector(select:)){
         return NO;
-    }
-    else if(action == @selector(selectAll:)){
+    }else if(action == @selector(selectAll:)){
         return NO;
     }else if (action == @selector(copyMessage:))
     {
+        return YES;
+    }else if (action == @selector(deleteMessage:)){
         return YES;
     }
     else
@@ -279,5 +252,12 @@
 - (void)copyMessage:(id)sender {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     [pasteboard setString:self.message.msg_message];
+}
+
+- (void)deleteMessage:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(deleteMessage:IndexPath:)]) {
+        [self.delegate deleteMessage:self.message IndexPath:self.indexPath];
+    }
 }
 @end

@@ -13,6 +13,9 @@
 
 #define MESSAGE_FONT_SIZE [UIFont systemFontOfSize:16] // 字体
 
+#define kChatImageWidth 60
+#define kChatImageHeight 80
+
 @interface ChatBaseCell ()
 {
     ChatTimeView *_timeView;
@@ -105,16 +108,26 @@
     y = _nameLabel.frame.origin.y + _nameLabel.frame.size.height + 2;
     _bubbleView.frame = CGRectMake(x, y, width, height);
     
+    
+    
+    if ([_message.msg_type intValue] == SendChatMessageChatType) {
+        UIImage *image = [UIImage imageNamed:@"WeChat_gray"];
+        image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
+        _bubbleView.image = image;
+    }else {
+        UIImage *bubIMG = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg",_message.msg_message]];
+
+        _bubbleView.image = bubIMG;
+        _bubbleView.frame = CGRectMake(x, y, bubIMG.size.width * (kChatImageHeight/bubIMG.size.height), kChatImageHeight);
+    }
+    
     // 发表时间
     x = _bubbleView.frame.origin.x + _bubbleView.frame.size.width + HEAD_PADDING - 6;
     y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT - 6;
     _timeLabel.frame = CGRectMake(x, y, TIME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
     
- 
     //UIImage *image = [UIImage imageNamed:@"chat_gray"];
-    UIImage *image = [UIImage imageNamed:@"WeChat_gray"];
-    image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
-    _bubbleView.image = image;
+    
 }
 
 - (void)setRightFrame:(CGSize)messageSize
@@ -133,15 +146,29 @@
     y = _timeView.frame.origin.y + _timeView.frame.size.height + 5;
     _bubbleView.frame = CGRectMake(x, y, width, height);
     
+    
+    if ([_message.msg_type intValue] == SendChatMessageChatType) {
+        // 设置气泡
+        UIImage *image = [UIImage imageNamed:@"WeChat"];//myChat
+        image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
+        _bubbleView.image = image;
+    }else
+    {
+        UIImage *bubIMG = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg",_message.msg_message]];
+        _bubbleView.image = bubIMG;
+        CGFloat imgWidth = bubIMG.size.width *  (kChatImageHeight/bubIMG.size.height);
+        x = UIWIDTH - imgWidth - 10;
+        
+        _bubbleView.frame = CGRectMake(x - 10, y, imgWidth, kChatImageHeight);
+        //_bubbleView.contentMode = UIViewContentModeScaleAspectFill;
+    }
+    
     // 发表时间
     x = _bubbleView.frame.origin.x - TIME_LABEL_WIDTH - HEAD_PADDING + 4;
     y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT;
     _timeLabel.frame = CGRectMake(x, y, TIME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
     
-    // 设置气泡
-    UIImage *image = [UIImage imageNamed:@"WeChat"];//myChat
-    image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
-    _bubbleView.image = image;
+   
     //_bubbleView.backgroundColor = [UIColor lightGrayColor];
     //_bubbleView.layer.cornerRadius = 30;
     //_bubbleView.clipsToBounds = YES;
@@ -170,7 +197,12 @@
     
     
     self.timeLabel.text = [UtilDate dateFromString:_message.msg_time withFormat:DateFormat_HM];
-    self.bubbleView.message = _message.msg_message;
+    
+    if ([_message.msg_type intValue] == SendChatMessageChatType) {
+        self.bubbleView.message = _message.msg_message;
+    }else
+        self.bubbleView.message = @"";
+
     self.timeView.time = _message.msg_hasTime;
 }
 
@@ -184,19 +216,31 @@
 
 + (CGFloat)getCellHeight:(ChatModel *)message
 {
-    
-    
-    CGSize size = [ChatBaseCell sizeMessage:message.msg_message];
-    
     BOOL isShow = [message.msg_flag isEqualToString:@"ME"]?YES:NO;
 
-    CGFloat height = size.height + kMessage_Top * 2;
     
-    height = height + (isShow?0:NAME_LABEL_HEIGHT) + CELLPADDING ;
+    if ([message.msg_type intValue] == SendChatMessageChatType)
+    {
+        CGSize size = [ChatBaseCell sizeMessage:message.msg_message];
+        
+        CGFloat height = size.height + kMessage_Top * 2;
+        
+        height = height + (isShow?0:NAME_LABEL_HEIGHT) + CELLPADDING ;
+        
+        height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING)) + CELLPADDING;
+
+        return height;
+    }else{
+        
+        CGFloat height = kChatImageHeight;
+        
+        height = height + (isShow?0:NAME_LABEL_HEIGHT) + CELLPADDING ;
+        
+        height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING)) + CELLPADDING;
+        
+        return height;
+    }
     
-    height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING)) + CELLPADDING;
-    
-    return height;
 }
 
 

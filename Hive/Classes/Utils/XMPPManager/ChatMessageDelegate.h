@@ -17,9 +17,13 @@
 
 
 @protocol ChatPrivateMessageDelegate <NSObject>
-
+@optional
 - (void)sendPrivateMessageSuccessMessage:(NSString *)messageID Send:(BOOL)isSend;
 - (void)receiveChatMessageWithMessageID:(NSString *)messageID;
 - (void)receiptsChatMessageWithMessageID:(NSString *)messageID;
+
+@optional
+- (void)didReceiveMessageId:(NSString *)msg_ID;
+- (void)didReceiveHasReadResponse:(NSString *)msg_ID;
 
 @end

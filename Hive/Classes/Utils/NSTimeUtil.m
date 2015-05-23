@@ -137,8 +137,8 @@ static CGFloat const chageImageTime = 60.0;
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     CLLocation * currLocation = [locations lastObject];
-    _coordinateLatitude = [NSString stringWithFormat:@"%.3f",currLocation.coordinate.latitude];
-    _coordinateLongitude = [NSString stringWithFormat:@"%.3f",currLocation.coordinate.longitude];
+    _coordinateLatitude = [NSString stringWithFormat:@"%lf",currLocation.coordinate.latitude];
+    _coordinateLongitude = [NSString stringWithFormat:@"%lf",currLocation.coordinate.longitude];
     [self sendRequestChatRoom];
     [manager stopUpdatingLocation];
 }
@@ -189,6 +189,7 @@ static CGFloat const chageImageTime = 60.0;
 #pragma -mark 获取距离
 + (NSString *)getDistance:(NSString *)longitude latitude:(NSString *)latitude
 {
+    /*
     NSString *distance;
     double lng1 = [[[NSTimeUtil sharedInstance] getCoordinateLongitude] doubleValue];
     double lat1 = [[[NSTimeUtil sharedInstance] getCoordinateLatitude] doubleValue];
@@ -206,7 +207,40 @@ static CGFloat const chageImageTime = 60.0;
     
     distance = [NSString stringWithFormat:@"%.2fkm",s];
     return distance;
+     */
+    /*
+    CLLocation *orig = [[CLLocation alloc] initWithLatitude:[[[NSTimeUtil sharedInstance] getCoordinateLatitude] doubleValue]
+                                                longitude:[[[NSTimeUtil sharedInstance] getCoordinateLongitude] doubleValue]];
+    CLLocation* dist = [[CLLocation alloc] initWithLatitude:[latitude doubleValue]
+                                                longitude:[longitude doubleValue]];
+    
+    CLLocationDistance kilometers = [orig distanceFromLocation:dist]/1000;
+    return [NSString stringWithFormat:@"%.2fkm",kilometers];
+     */
+    
+    double lng1 = [[[NSTimeUtil sharedInstance] getCoordinateLongitude] doubleValue];
+    double lat1 = [[[NSTimeUtil sharedInstance] getCoordinateLatitude] doubleValue];
+    double lng2 = [longitude doubleValue];
+    double lat2 = [latitude doubleValue];
+    
+    double distance = [NSTimeUtil distanceBetweenOrderBy:lat1 lat2:lat2 lng1:lng1 lng2:lng2];
+    return [NSString stringWithFormat:@"%0.2lf km",distance/1000];
+    
 }
+
++ (double)distanceBetweenOrderBy:(double)lat1 lat2:(double)lat2 lng1:(double)lng1 lng2:(double)lng2
+{
+    double dd = M_PI/180;
+    double x1=lat1*dd,x2=lat2*dd;
+    double y1=lng1*dd,y2=lng2*dd;
+    double R = 6371004;
+    double distance = (2*R*asin(sqrt(2-2*cos(x1)*cos(x2)*cos(y1-y2) - 2*sin(x1)*sin(x2))/2));
+    //km  返回
+//     return  distance*1000;
+    //返回 m
+    return   distance;
+}
+
 
 
 - (void)ok

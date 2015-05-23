@@ -75,13 +75,13 @@
 {
     UIButton *toolBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     toolBtn.frame =CGRectMake(0, UIHEIGHT - 50, UIWIDTH, 50);
-    [toolBtn setTitle:@"Close" forState:UIControlStateNormal];
+    [toolBtn setTitle:@"CLOSE" forState:UIControlStateNormal];
     [toolBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.5] size:toolBtn.frame.size] forState:UIControlStateNormal];
     //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.6] size:toolBtn.frame.size] forState:UIControlStateHighlighted];
     //关闭颜色
     toolBtn.backgroundColor = [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1];
-    toolBtn.titleLabel.font = [UIFont systemFontOfSize:18];
+    toolBtn.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:18];
     [self.view addSubview:toolBtn];
     [toolBtn addTarget:self action:@selector(clickCloseBtn:) forControlEvents:UIControlEventTouchUpInside];
 }

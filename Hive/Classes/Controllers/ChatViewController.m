@@ -53,7 +53,7 @@
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
     [ChatManager clearUnReadCountWith:self.userID];
-
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -61,6 +61,7 @@
     [super viewDidDisappear:animated];
     self.navigationController.navigationBarHidden = YES;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    [ChatManager clearUnReadCountWith:self.userID];
 }
 
 - (void)setBackGround
@@ -86,7 +87,6 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.mesgaeArr.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
     });
-
 }
 
 - (void)configNavBar
@@ -257,7 +257,6 @@
     NSString *messageID = [NSString stringWithFormat:@"%@_%@",self.userID,timeSp];
     
     [self saveDateMessage:textMessage Time:currentTime MessgaeID:messageID];
-    
 }
 
 - (void)saveDateMessage:(NSString *)message Time:(NSString *)currentTime MessgaeID:(NSString *)messageID
@@ -283,7 +282,7 @@
         
         [self scrollToRowWithMessageID:messageID];
         
-        [[XMPPManager sharedInstance] sendNewMessage:message MessageID:messageID UserID:self.userID Time:currentTime];
+//        [[XMPPManager sharedInstance] sendNewMessage:message MessageID:messageID UserID:self.userID Time:currentTime];
         
         [self sendMessage:message ToUserID:self.userID MessageID:messageID];
         
@@ -323,14 +322,10 @@
             } completion:^(BOOL success, NSError *error) {
                 
                 debugLog(@"私聊已发送->修改成功");
-                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                });
             }];
-            
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            });
-            
             return;
         }
     }
@@ -339,8 +334,6 @@
 - (void)receiveChatMessageWithMessageID:(NSString *)messageID
 {
     debugMethod();
-    [ChatManager clearUnReadCountWith:self.userID];
-
     [self scrollToRowWithMessageID:messageID];
 }
 

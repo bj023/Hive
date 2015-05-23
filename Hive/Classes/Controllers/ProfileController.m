@@ -9,7 +9,6 @@
 #import "ProfileController.h"
 #import "Utils.h"
 #import "UserInforCell.h"
-#import "LogOutCell.h"
 
 @interface ProfileController ()<UITableViewDataSource, UITableViewDelegate>
 

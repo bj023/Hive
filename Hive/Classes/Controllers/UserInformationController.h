@@ -20,7 +20,7 @@ typedef enum{
 
 @class NearByModel;
 @protocol UserInformationVCDelegate;
-@interface UserInformationController : UIViewController
+@interface UserInformationController : MainViewController
 
 @property (weak, nonatomic) id<UserInformationVCDelegate>delegate;
 @property (strong, nonatomic) NearByModel *model;

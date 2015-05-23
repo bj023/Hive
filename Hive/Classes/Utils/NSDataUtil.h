@@ -23,5 +23,6 @@
 // 单聊
 + (void)setChatTime:(NSString *)time ToUserID:(NSString *)userID;
 + (NSString *)getChatTimeWithToUserID:(NSString *)userID;
-
+// 记录聊天室数据库ID
++ (NSNumber *)setChatRoomDataID;
 @end

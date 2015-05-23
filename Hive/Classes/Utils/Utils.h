@@ -22,6 +22,8 @@
 #import "UserInfoManager.h"
 #import "HttpTool.h"
 #include "XMPPManager.h"
+#import "ChatSendMessage.h"
+#import "ChatManager.h"
 #import "MBProgressHUD+Helper.h"
 #import <CoreData+MagicalRecord.h>
 

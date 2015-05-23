@@ -23,13 +23,12 @@
 
 + (instancetype)cellWithTableView:(UITableView *)tableView Delegate:(id<ChatViewCellDelegate>)delegate;
 
-
 @end
 
 @protocol ChatViewCellDelegate <NSObject>
 
 - (void)tapHeadImgSendActionWithMessage:(ChatModel *)message;
 
-//- (void)tapBubbleSendActionWithMessage:(ChatModel *)message;
+- (void)deleteMessage:(ChatModel *)message IndexPath:(NSIndexPath *)indexpath;
 
 @end

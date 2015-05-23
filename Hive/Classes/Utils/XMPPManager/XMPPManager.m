@@ -160,6 +160,11 @@ static XMPPManager *sharedManager;
     [self disconnect];
 }
 
+- (XMPPStream *)getXMPPStream
+{
+    return xmppStream;
+}
+
 #pragma -mark 发送消息
 - (void)sendNewMessage:(NSString *)message
                   Time:(NSString *)time
@@ -230,11 +235,11 @@ static XMPPManager *sharedManager;
     }
 }
 
-- (NSString *)getUserId:(NSString *)email
+- (NSString *)getUserId:(NSString *)userID
 {
     NSRange range;
-    range = [email rangeOfString:@"@"];
-    return [email stringByPaddingToLength:range.location withString:nil startingAtIndex:0];
+    range = [userID rangeOfString:@"@"];
+    return [userID stringByPaddingToLength:range.location withString:nil startingAtIndex:0];
 }
 
 + (NSString *)getChatRoomTime:(NSString *)currentTime
@@ -279,64 +284,6 @@ static XMPPManager *sharedManager;
         return currentTime;
     }
     return @"";
-}
-
-#pragma -mark 私聊 发送消息
-- (void)sendNewMessage:(NSString *)message
-            MessageID:(NSString *)messageID
-                UserID:(NSString *)userID
-                  Time:(NSString *)time
-{
-    NSXMLElement *body;
-    NSXMLElement *mes;
-    //生成<body>文档
-    body = [NSXMLElement elementWithName:@"body"];
-    //生成XML消息文档
-    mes = [NSXMLElement elementWithName:@"message"];
-    //消息类型
-    [mes addAttributeWithName:@"type" stringValue:@"chat"];
-    [mes addAttributeWithName:@"flag" stringValue:@"pravite"];
-    
-    [mes addAttributeWithName:@"time" stringValue:time];
-    [mes addAttributeWithName:@"messageID" stringValue:messageID];
-    
-    NSString *longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
-    NSString *latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
-    
-    [mes addAttributeWithName:@"longitude" stringValue:longitude];
-    [mes addAttributeWithName:@"latitude" stringValue:latitude];
-    [mes addAttributeWithName:@"receipts" stringValue:@"NO"];
-
-    //用户名
-    [mes addAttributeWithName:@"name" stringValue:[[UserInfoManager sharedInstance] getCurrentUserInfo].userName];
-    //隐身
-    [mes addAttributeWithName:@"isStealth" stringValue:[[UserInfoManager sharedInstance] getCurrentUserInfo].isStealth];
-    
-    [body setStringValue:[message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-    
-    //由谁发送
-    [mes addAttributeWithName:@"from" stringValue:[NSString stringWithFormat:@"%@@%@",[[UserInfoManager sharedInstance] getCurrentUserInfo].userID,LITTLEBIRD]];
-    //发送给谁
-    [mes addAttributeWithName:@"to" stringValue:[NSString stringWithFormat:@"%@@%@/%@",userID,LITTLEBIRD,userID]];
-    //组合
-    [mes addChild:body];
-    
-    //发送消息
-    XMPPElementReceipt *receipt = [[XMPPElementReceipt alloc] init];
-    [xmppStream sendElement:mes andGetReceipt:&receipt];
-    BOOL messageState =[receipt wait:-1];
-
-    
-    if ([self.privatedelegate respondsToSelector:@selector(sendPrivateMessageSuccessMessage:Send:)]) {
-        [self.privatedelegate sendPrivateMessageSuccessMessage:messageID Send:messageState];
-    }
-    
-    if (messageState)
-        NSLog(@"chat->消息已发送");
-    else
-        NSLog(@"chat->消息发送失败");
-    
-    //debugLog(@"%@",mes);
 }
 
 // 私聊 回复
@@ -386,8 +333,6 @@ static XMPPManager *sharedManager;
         NSLog(@"回复->消息发送失败");
 }
 
-
-
 #pragma -mark 保存收到的消息
 // 聊天室
 - (void)receiveChatRoomMessage:(XMPPMessage *)message
@@ -405,11 +350,6 @@ static XMPPManager *sharedManager;
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         
-        NSInteger start = [ChatRoomModel MR_findAllInContext:localContext].count;
-
-        
-        start = start + 1;
-        
         ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
         model.userID = [self getUserId:from];
         model.msg_message = [[message elementForName:@"body"]  stringValue];
@@ -422,7 +362,7 @@ static XMPPManager *sharedManager;
         model.userName = name;
         model.msg_hasStealth = [[message attributeForName:@"isStealth"] stringValue];
         model.msg_hasTime = isTime;
-        model.id = @(start++);
+        model.id = [NSDataUtil setChatRoomDataID];
         model.msg_Interval_time = [NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970]];
 
         debugLog(@"/n/n/nchatRoom->%@/n/n/n",model.id);
@@ -446,37 +386,21 @@ static XMPPManager *sharedManager;
     NSString *name = [[message attributeForName:@"name"] stringValue];
     NSString *longitude = [[message attributeForName:@"longitude"] stringValue];
     NSString *latitude = [[message attributeForName:@"latitude"] stringValue];
-    NSString *receipts = [[message attributeForName:@"receipts"] stringValue];//已读操作
     NSString *hasStealth = [[message attributeForName:@"isStealth"] stringValue];
     NSString *isTime = [XMPPManager getChatTime:time ToUserID:[self getUserId:from]];
     NSString *msg_content = [[message elementForName:@"body"]  stringValue];
+    NSString *type =[[message attributeForName:@"messageType"] stringValue];
+
+    
     
     [ChatManager insertChatMessageWith:[self getUserId:from]
                               UserName:name
                              MessageID:msgId
                         MessageContent:msg_content
                            MessageTime:time isShow:NO];
-    /*
-    dispatch_queue_t myCustomQueue2 = dispatch_queue_create("example.MyCustomQueue2", NULL);
-    dispatch_async(myCustomQueue2, ^{
-        for (int abc=0;abc<100;abc++)
-        {
-            printf("3. myCustomQueue2 Do some work here.\n");
-        }
-    });
-    dispatch_async(myCustomQueue2, ^{
-        for (int abc=0;abc<100;abc++)
-        {
-            printf("4. myCustomQueue2 Do some work here.\n");
-        }
-    });
-    */
-     
-    /**/
+
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         
-        //NSInteger idStart = [ChatModel MR_findAllInContext:localContext].count;
-
         ChatModel *model = [ChatModel MR_createInContext:localContext];
         model.msg_userID = [self getUserId:from];
         model.userName = name;
@@ -488,22 +412,20 @@ static XMPPManager *sharedManager;
         model.msg_latitude = latitude;
         model.messageID = msgId;
         model.msg_hasStealth = hasStealth;
-        model.hasRead = @"NO";
         model.msg_hasTime = isTime;
+        model.msg_type = @([type intValue]);
+        
+        debugLog(@"收到的消息->%@-%@",type,model.msg_type);
+        
         NSInteger count = [ChatModel MR_countOfEntitiesWithContext:localContext];
         model.id = @(count+1);
 
-        debugLog(@"/n/n/nchat->%@/n/n/n",model.id);
-
     } completion:^(BOOL success, NSError *error) {
-     
-        debugLog(@"receipts->%@",receipts);
         // 已读操作
-        [self receiptsMessage:msgId ToUserID:[self getUserId:from]];
-        
+        //[self receiptsMessage:msgId ToUserID:[self getUserId:from]];
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.privatedelegate respondsToSelector:@selector(receiveChatMessageWithMessageID:)]) {
-                [self.privatedelegate receiveChatMessageWithMessageID:msgId];
+            if ([self.privatedelegate respondsToSelector:@selector(didReceiveMessageId:)]) {
+                [self.privatedelegate didReceiveMessageId:msgId];
             }
         });
     }];
@@ -513,13 +435,8 @@ static XMPPManager *sharedManager;
 - (void)receiptsChatMessage:(XMPPMessage *)message
 {
     NSString *msgId = [[message attributeForName:@"messageID"] stringValue];
-    NSString *receipts = [[message attributeForName:@"receipts"] stringValue];//已读操作
-
-    debugLog(@"已读操作->%@",receipts);
-
-    if ([self.privatedelegate respondsToSelector:@selector(receiptsChatMessageWithMessageID:)]) {
-        [self.privatedelegate receiptsChatMessageWithMessageID:msgId];
+    if ([self.privatedelegate respondsToSelector:@selector(didReceiveHasReadResponse:)]) {
+        [self.privatedelegate didReceiveHasReadResponse:msgId];
     }
-    
 }
 @end

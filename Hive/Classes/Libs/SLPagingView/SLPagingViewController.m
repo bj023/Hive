@@ -9,6 +9,9 @@
 #import "SLPagingViewController.h"
 #import "UIColorUtil.h"
 
+#define kTitleWidthPadding 20
+
+
 @interface SLPagingViewController () <UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -360,7 +363,7 @@
     CGFloat distance = (SCREEN_SIZE.width/2) - self.navigationSideItemsStyle;
     CGSize vSize = ([v isKindOfClass:[UILabel class]])? [self getLabelSize:(UILabel*)v] : v.frame.size;
     CGFloat originX = (SCREEN_SIZE.width/2 - vSize.width/2) + self.navItemsViews.count*distance;
-    v.frame = (CGRect){originX, 16, vSize.width, vSize.height};
+    v.frame = (CGRect){originX, 16, vSize.width + kTitleWidthPadding, vSize.height};
     v.tag = tag;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(tapOnHeader:)];
@@ -505,7 +508,7 @@
         
         CGSize vSize     = ([v isKindOfClass:[UILabel class]])? [self getLabelSize:(UILabel*)v] : v.frame.size;
         CGFloat originX  = ((SCREEN_SIZE.width/2 - vSize.width/2) + i*distance) - xOffset/(SCREEN_SIZE.width/distance);
-        v.frame          = (CGRect){originX, 16, vSize.width, vSize.height};
+        v.frame          = (CGRect){originX, 16, vSize.width + kTitleWidthPadding, vSize.height};
         i++;
     }];
 }

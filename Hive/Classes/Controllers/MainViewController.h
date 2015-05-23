@@ -8,9 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void(^MainViewControllerBlock)(NSString *userID);
-
 @interface MainViewController : UIViewController
 
-@property (copy, nonatomic) MainViewControllerBlock mainViewBlock;
 @end

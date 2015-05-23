@@ -73,7 +73,6 @@
 {
     if ([ChatManager chatMessage:toUserID]) {
         debugLog(@"已经存在");
-        
         [ChatManager updateChatMessage:msg_Content MessageID:msgID MessageTime:msg_time ToUserID:toUserID isShow:isShow];
     }else{
         debugLog(@"未存在");

@@ -11,6 +11,8 @@
 @class ChatRoomModel;
 @interface DataBaseModel : NSObject
 
++ (NSArray *)getChatRoomWithStart:(NSInteger)start andCount:(NSInteger)count;
+
 + (NSArray *)getChatWithStartChatRoom:(ChatRoomModel *)model andCount:(NSInteger)count;
 
 

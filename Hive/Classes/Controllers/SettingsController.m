@@ -181,9 +181,9 @@
 {
     NSString *string = [NSDataUtil valueHiding]?@"0":@"1";
     [HttpTool sendRequestHiding:string success:^(id json) {
-        ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:nil];
+        ResponseManagerModel *res = [[ResponseManagerModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
-            [NSDataUtil setHidingWithValue:[NSDataUtil valueHiding]?@"1":@"0"];
+            [NSDataUtil setHidingWithValue:string];
         }
     } faliure:^(NSError *error) {
         
@@ -194,9 +194,9 @@
 {
     NSString *string = [NSDataUtil beFollow]?@"0":@"1";
     [HttpTool sendRequestBeFollow:string success:^(id json) {
-        ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:nil];
+        ResponseManagerModel *res = [[ResponseManagerModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
-            [NSDataUtil setBeFollowWithValue:[NSDataUtil beFollow]?@"1":@"0"];
+            [NSDataUtil setBeFollowWithValue:string];
         }
     } faliure:^(NSError *error) {
         

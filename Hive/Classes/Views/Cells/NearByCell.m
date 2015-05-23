@@ -188,10 +188,9 @@
         self.timeLabel.text = [NSString stringWithFormat:@"%@ km",model.distance];
     }
     NSString *headUrl = [NSString stringWithFormat:@"%d",model.userId];
-    self.introLabel.text = model.label;
+    //self.introLabel.text = model.label;
     [self.headIMG setImageURLStr:User_Head(headUrl)];
 
-    debugLog(@"model.distance->%@",model.distance);
     //UIColor *sexColor = [model.gender isEqualToString:@"0"]?[UIColorUtil colorWithHexString:@"#64baff"]:[UIColorUtil colorWithHexString:@"#ff5b2f"];
     //self.sexLabel.backgroundColor = sexColor;
 }
@@ -200,7 +199,7 @@
 {
     self.userNameLabel.text = [[UserInfoManager sharedInstance] getCurrentUserInfo].userName;
     NSString *urlString = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
-    [self.headIMG setImageURLStr:User_Head(urlString)];
+    [self.headIMG setImageURLStr:User_Head(urlString) placeholder:nil];
 }
 
 static NSString *DateFormatMDHM = @"MM-dd HH:mm";

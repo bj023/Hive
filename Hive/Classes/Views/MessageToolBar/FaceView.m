@@ -96,11 +96,11 @@
 {
     
     NSString *faceString;
-    
-    if (sender.tag<10) {
-        faceString = [NSString stringWithFormat:@"00%ld",sender.tag];
+    NSInteger index = sender.tag - 1;
+    if (index<10) {
+        faceString = [NSString stringWithFormat:@"00%ld",index];
     }else{
-        faceString = [NSString stringWithFormat:@"0%ld",sender.tag];
+        faceString = [NSString stringWithFormat:@"0%ld",index];
     }
     
     if ([self.delegate respondsToSelector:@selector(selectedFacialView:)]) {

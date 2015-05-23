@@ -39,16 +39,21 @@
 
 - (void)signOut;
 
+- (XMPPStream *)getXMPPStream;
+
+- (NSString *)getUserId:(NSString *)userID;
+
+
 - (void)sendNewMessage:(NSString *)message
                   Time:(NSString *)time
                Message:(NSString *)messageID
                isAname:(NSString *)aName;
-
+/*
 - (void)sendNewMessage:(NSString *)message
              MessageID:(NSString *)messageID
                 UserID:(NSString *)userID
                   Time:(NSString *)time;
-
+*/
 
 + (NSString *)getChatRoomTime:(NSString *)currentTime;
 + (NSString *)getChatTime:(NSString *)currentTime ToUserID:(NSString *)userID;

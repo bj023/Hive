@@ -56,12 +56,11 @@
         debugLog(@"/n/n/n/n/n加载聊天记录->%ld/n/n/n/n/n/n/n/n",self.messageArr.count);
         
         dispatch_async(dispatch_get_main_queue(), ^{
-
             [self.messageTable reloadData];
-            
         });
     });
 }
+
 
 - (void)configSearBtn
 {
