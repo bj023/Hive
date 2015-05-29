@@ -78,6 +78,17 @@
 {
     return [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@_%@",ChatTime,userID]];
 }
++ (void)removeChatMessage
+{
+    NSUserDefaults *userDefatluts = [NSUserDefaults standardUserDefaults];
+    NSDictionary *dictionary = [userDefatluts dictionaryRepresentation];
+    for(NSString* key in [dictionary allKeys]){
+        if ([key hasPrefix:ChatTime]) {
+            [userDefatluts removeObjectForKey:key];
+            [userDefatluts synchronize];
+        }
+    }
+}
 #define ChatRoomDataID @"ChatRoomDataID"
 + (NSNumber *)setChatRoomDataID
 {

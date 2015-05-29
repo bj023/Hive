@@ -10,6 +10,8 @@
 #import "Utils.h"
 #import "LoginToolView.h"
 
+
+
 @interface LoginView ()<UITextFieldDelegate>
 @property (strong, nonatomic) UITextField *userNameText;
 @property (strong, nonatomic) UITextField *passwordText;
@@ -31,7 +33,7 @@
         [self initTopView];
         [self initView];
         [self addKeyboardNotification];
-        [self setNavNextBtnTitle:@"Sign in"];
+        [self setNavNextBtnTitle:@"SIGN IN"];
     }
     return self;
 }
@@ -54,27 +56,10 @@
     [self addSubview:self.titleLabel];
 }
 
-//- (void)initLoginBtn
-//{
-//
-//    CGFloat loginBtnX = UIWIDTH - 90;
-//    CGFloat loginBtnY = 0;
-//    CGFloat loginBtnW = 80;
-//    CGFloat loginBtnH = 44;
-//    self.loginBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    self.loginBtn.frame = CGRectMake(loginBtnX, loginBtnY, loginBtnW, loginBtnH);
-//    [self.loginBtn setTitle:@"Loin in" forState:UIControlStateNormal];
-//    [self.loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    self.loginBtn.titleLabel.font = [UIFont fontWithName:Font_Medium size:20];
-//    [self addSubview:self.loginBtn];
-//    
-//    [self.loginBtn addTarget:self action:@selector(clickLoginBtn:) forControlEvents:UIControlEventTouchUpInside];
-//}
-
 - (void)initView
 {    
     CGFloat userNameX = 20;
-    CGFloat userNameY = UIHEIGHT/2 - 100 + 14;
+    CGFloat userNameY = UIHEIGHT/2 - 150 + 14;
     CGFloat userNameW = UIWIDTH - 40;
     CGFloat userNameH = 30;
     self.userNameText = [[UITextField alloc] initWithFrame:CGRectMake(userNameX,userNameY, userNameW , userNameH)];
@@ -95,17 +80,17 @@
     self.line2IMG     = [[UIImageView alloc] initWithFrame:CGRectMake(lineIMG_X, lineIMG_Y, lineIMG_W, 1)];
     
     
-    [self.line1IMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
-    [self.line2IMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
+    [self.line1IMG setBackgroundColor:kRegisterLineColor];
+    [self.line2IMG setBackgroundColor:kRegisterLineColor];
 
     
-    [self.userNameText setTextColor:[UIColor whiteColor]];
-    [self.passwordText setTextColor:[UIColor whiteColor]];
+    [self.userNameText setTextColor:kRegisterTextTintColor];
+    [self.passwordText setTextColor:kRegisterTextTintColor];
     
-    [self.userNameText setTintColor:[UIColor whiteColor]];
-    [self.passwordText setTintColor:[UIColor whiteColor]];
+    [self.userNameText setTintColor:kRegisterTextTintColor];
+    [self.passwordText setTintColor:kRegisterTextTintColor];
     
-    UIColor *color = [UIColorUtil colorWithCodea0a0a0];
+    UIColor *color = kRegisterLineColor;
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:TextFont, NSFontAttributeName,
                                 color, NSForegroundColorAttributeName, nil];
     
@@ -124,11 +109,11 @@
     
     [self.userNameText setDelegate:self];
     [self.userNameText setReturnKeyType:UIReturnKeyNext];
-    [self.userNameText setKeyboardAppearance:UIKeyboardAppearanceDark];
+    //[self.userNameText setKeyboardAppearance:UIKeyboardAppearanceDark];
     [self.userNameText setKeyboardType:UIKeyboardTypeEmailAddress];
     
     [self.passwordText setDelegate:self];
-    [self.passwordText setKeyboardAppearance:UIKeyboardAppearanceDark];
+    //[self.passwordText setKeyboardAppearance:UIKeyboardAppearanceDark];
     [self.passwordText setReturnKeyType:UIReturnKeyNext];
     [self.passwordText setSecureTextEntry:YES];
     
@@ -146,6 +131,7 @@
     
     [self.forgetBtn addTarget:self action:@selector(clickForgetBtn:) forControlEvents:UIControlEventTouchUpInside];
     
+    /*
     self.toolView = [[LoginToolView alloc] initWithFrame:CGRectMake(0, UIHEIGHT - 44, UIWIDTH, 44)];
     [self addSubview:self.toolView];
     
@@ -158,7 +144,7 @@
             weakSelf.block(@"Terms");
         }
     };
-    
+    */
     //默认用户名
     //self.userNameText.text = @"15011138860";
     //self.passwordText.text = @"123456";
@@ -168,26 +154,28 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    [self.line1IMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
+    [self.line1IMG setBackgroundColor:kRegisterLineColor];
     CGRect rect      = self.line1IMG.frame;
     rect.size.height = 1;
     [self.line1IMG setFrame:rect];
-    [self.line2IMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
+    [self.line2IMG setBackgroundColor:kRegisterLineColor];
     CGRect rect2      = self.line2IMG.frame;
     rect2.size.height = 1;
     [self.line2IMG setFrame:rect2];
     
+    /*
     if(textField == self.passwordText){
-        [self.line2IMG setBackgroundColor:[UIColor whiteColor]];
+        //[self.line2IMG setBackgroundColor:[UIColor whiteColor]];
         CGRect rect4      = self.line2IMG.frame;
         rect4.size.height = 1;
         [self.line2IMG setFrame:rect4];
     }else if(textField == self.userNameText){
-        [self.line1IMG setBackgroundColor:[UIColor whiteColor]];
+        //[self.line1IMG setBackgroundColor:[UIColor whiteColor]];
         CGRect rect4      = self.line1IMG.frame;
         rect4.size.height = 1;
         [self.line1IMG setFrame:rect4];
     }
+     */
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -197,7 +185,7 @@
         //[self.passwordText becomeFirstResponder];
     }else if (textField == self.passwordText) {
         //[self login];//登陆
-        [self.line2IMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
+        [self.line2IMG setBackgroundColor:kRegisterLineColor];
         [self.passwordText resignFirstResponder];
     }
     return YES;
@@ -205,8 +193,8 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    [self.line1IMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
-    [self.line2IMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
+    [self.line1IMG setBackgroundColor:kRegisterLineColor];
+    [self.line2IMG setBackgroundColor:kRegisterLineColor];
 }
 
 #pragma -mark 弹出键盘
@@ -255,15 +243,17 @@
 //    CGFloat height = size.height;
     //int screenHeight = size.height;
 
-    
+    /*
     [UIView animateWithDuration:0.5f delay:0.0f options:1 animations:^{
          
          [self.toolView setFrame:CGRectMake(0, UIHEIGHT - 44, UIWIDTH , 44)];
      }completion:nil];
+     */
 }
 
 - (void)keyboardWill_Show:(NSNotification*)notification
 {
+    /*
     NSDictionary *userInfo = [notification userInfo];
     NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardRect = [aValue CGRectValue];
@@ -273,7 +263,7 @@
          
          [self.toolView setFrame:CGRectMake(0, UIHEIGHT - height - 44, UIWIDTH, 44)];
      } completion:nil];
-    
+    */
 }
 
 - (void)dealloc

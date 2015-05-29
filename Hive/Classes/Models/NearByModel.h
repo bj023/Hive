@@ -21,6 +21,12 @@
 @property (strong, nonatomic) NSString *label; // 介绍
 @property (strong, nonatomic) NSString *userName;// 用户名
 
+@property (assign, nonatomic) int hide;
+
+
+@property (strong, nonatomic) NSString *longitude;
+@property (strong, nonatomic) NSString *latitude;
+
 @property (assign, nonatomic) int hours;
 @property (assign, nonatomic) int minutes;
 @property (assign, nonatomic) int month;

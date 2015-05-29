@@ -44,7 +44,7 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     if (iOS8)
         [[UINavigationBar appearance] setTranslucent:NO];
-    //[[UINavigationBar appearance] setBarTintColor:[UIColorUtil colorWithHexString:@"#1b2430"]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColorUtil colorWithHexString:@"#fafafa"]];
     //[[UINavigationBar appearance] setTintColor:[UIColorUtil colorWithHexString:@"#f8f8f8"]];
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:NavTitleFont, NSFontAttributeName,
                                 [UIColor blackColor], NSForegroundColorAttributeName, nil];

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7549" systemVersion="14D131" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14D136" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="ChatModel" representedClassName="ChatModel" syncable="YES">
         <attribute name="hasRead" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -37,6 +37,7 @@
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="MessageModel" representedClassName="MessageModel" syncable="YES">
+        <attribute name="cur_userID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="msg_content" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="msg_ID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="msg_time" optional="YES" attributeType="String" syncable="YES"/>
@@ -47,6 +48,6 @@
     <elements>
         <element name="ChatModel" positionX="-63" positionY="81" width="128" height="300"/>
         <element name="ChatRoomModel" positionX="-63" positionY="-18" width="128" height="270"/>
-        <element name="MessageModel" positionX="-54" positionY="144" width="128" height="135"/>
+        <element name="MessageModel" positionX="-54" positionY="144" width="128" height="150"/>
     </elements>
 </model>

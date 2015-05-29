@@ -54,7 +54,7 @@
     leftX = leftW + 10;
     self.leftLabel = [self createLabelWithFrame:CGRectMake(leftX, leftY, leftView.frame.size.width - leftX, leftH)];
     self.leftLabel.text = @"Male";
-    self.leftLabel.font = TextFont;
+    self.leftLabel.font = [UIFont fontWithName:Font_Medium size:36/2];
     [leftView addSubview:self.leftLabel];
     
     
@@ -69,7 +69,7 @@
     rightX = rightW + 10;
     self.rightLabel = [self createLabelWithFrame:CGRectMake(rightX, rightY, rightView.frame.size.width - rightX, rightH)];
     self.rightLabel.text = @"Female";
-    self.rightLabel.font = TextFont;
+    self.rightLabel.font = [UIFont fontWithName:Font_Medium size:36/2];
     [rightView addSubview:self.rightLabel];
     
     
@@ -83,12 +83,12 @@
     CGFloat selectH = leftH - 2;
     
     self.leftSelectIMG = [self createImageWithFrame:CGRectMake(selectX, selectY, selectW, selectH)];
-    self.leftSelectIMG.backgroundColor = [UIColorUtil colorWithHexString:@"f89f1d"];
+    self.leftSelectIMG.backgroundColor = kRegisterTextTintColor;//[UIColorUtil colorWithHexString:@"f89f1d"];
     [self.leftIMG addSubview:self.leftSelectIMG];
 
     
     self.rightSelectIMG = [self createImageWithFrame:CGRectMake(selectX, selectY, selectW, selectH)];
-    self.rightSelectIMG.backgroundColor = [UIColorUtil colorWithHexString:@"f89f1d"];
+    self.rightSelectIMG.backgroundColor = kRegisterTextTintColor;//[UIColorUtil colorWithHexString:@"f89f1d"];
     [self.rightIMG addSubview:self.rightSelectIMG];
     
     self.leftSelectIMG.hidden = YES;
@@ -99,7 +99,7 @@
 {
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:frame];
     imageView.backgroundColor = [UIColor clearColor];
-    imageView.layer.borderColor = [UIColorUtil colorWithCodea0a0a0].CGColor;
+    imageView.layer.borderColor = kRegisterLineColor.CGColor;
     imageView.layer.borderWidth = 1;
     imageView.layer.cornerRadius = frame.size.width/2;
     return imageView;
@@ -108,7 +108,7 @@
 - (UILabel *)createLabelWithFrame:(CGRect)frame
 {
     UILabel *label = [[UILabel alloc] initWithFrame:frame];
-    label.textColor = [UIColorUtil colorWithCodea0a0a0];
+    label.textColor = kRegisterLineColor;
     label.backgroundColor = [UIColor clearColor];
     label.font = [UIFont systemFontOfSize:18];
     return label;
@@ -120,11 +120,11 @@
     self.leftSelectIMG.hidden = NO;
     self.rightSelectIMG.hidden = YES;
     
-    self.leftIMG.layer.borderColor = [UIColor whiteColor].CGColor;
-    self.leftLabel.textColor = [UIColor whiteColor];
+    self.leftIMG.layer.borderColor = kRegisterTextTintColor.CGColor;
+    self.leftLabel.textColor = kRegisterTextTintColor;
     
-    self.rightIMG.layer.borderColor = [UIColor lightTextColor].CGColor;
-    self.rightLabel.textColor = [UIColorUtil colorWithCodea0a0a0];
+    self.rightIMG.layer.borderColor = kRegisterLineColor.CGColor;
+    self.rightLabel.textColor = kRegisterLineColor;
 }
 
 - (void)clickRightAction:(id)sender
@@ -133,11 +133,11 @@
     self.leftSelectIMG.hidden = YES;
     self.rightSelectIMG.hidden = NO;
     
-    self.leftIMG.layer.borderColor = [UIColor lightTextColor].CGColor;
-    self.leftLabel.textColor = [UIColorUtil colorWithCodea0a0a0];
+    self.leftIMG.layer.borderColor = kRegisterLineColor.CGColor;
+    self.leftLabel.textColor = kRegisterLineColor;
     
-    self.rightIMG.layer.borderColor = [UIColor whiteColor].CGColor;
-    self.rightLabel.textColor = [UIColor whiteColor];
+    self.rightIMG.layer.borderColor = kRegisterTextTintColor.CGColor;
+    self.rightLabel.textColor = kRegisterTextTintColor;
 }
 
 - (NSString *)getSex

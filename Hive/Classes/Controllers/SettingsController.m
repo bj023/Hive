@@ -35,6 +35,12 @@
     [self configTableView];
 }
 
+- (void)reloadSetting_ProfileData
+{
+    [self.settingTableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -46,12 +52,13 @@
                   @"Notification Previews",
                   @"In-App Sound",
                   @"In-App Vibrate",
-                  @"Hiding",
+                  @"Hide",
                   @"Be Followed",
                   @"My Following",
                   @"Block List",
                   @"Privacy Police",
-                  @"Terms of Service"];
+                  @"Terms of Service",
+                  @"Clear All Chats"];
 
 }
 
@@ -107,9 +114,11 @@
     CGFloat headY = kTopHeight/2 - kHeadSize/2;
     CGRect frame = CGRectMake(self.settingTableView.bounds.size.width/2 - width/2, headY, width, width);
     CustomIMGView *headIMG = [[CustomIMGView alloc] initWithFrame:frame];
-    headIMG.backgroundColor = [UIColor grayColor];
+    headIMG.backgroundColor = [UIColor clearColor];
     headIMG.layer.cornerRadius = width/2;
     headIMG.clipsToBounds = YES;
+    headIMG.layer.borderWidth = kHeadIMG_Line_Height;
+    headIMG.layer.borderColor = kHeadIMG_Layer_Color.CGColor;
     return headIMG;
 }
 
@@ -138,7 +147,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    return _titleArr.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -159,9 +168,7 @@
                 [weakSelf sendRequestHiding];
             }else if(indexPath.row == 5)
                 [weakSelf sendRequestBeFollow];
-            
          };
-        
         
         return cell;
     }else {

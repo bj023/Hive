@@ -16,6 +16,7 @@
 {
     UITextField *_nameField;
     UITextField *_introField;
+    UIButton *_toolBtn;
 }
 @end
 
@@ -39,16 +40,19 @@
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     _nameField.text = [[UserInfoManager sharedInstance] getCurrentUserInfo].userName;
     _introField.text = [[UserInfoManager sharedInstance] getCurrentUserInfo].userIntro;
+    //[self addKeyboardNotification];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    //[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)configCloseBtn
 {
+    /*
     UIColor *color = [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1];
     FRDLivelyButton *button = [[FRDLivelyButton alloc] initWithFrame:CGRectMake(UIWIDTH - 36 - 10,10,36,28)];
     [button setOptions:@{ kFRDLivelyButtonLineWidth: @(2.0f),
@@ -58,6 +62,19 @@
     [button setStyle:kFRDLivelyButtonStyleClose animated:YES];
     [button addTarget:self action:@selector(closeButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
+     */
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame =CGRectMake(UIWIDTH - 80, 20, 60, 40);
+    [button setTitle:@"SAVE" forState:UIControlStateNormal];
+    [button setTitleColor:ProfileColor forState:UIControlStateNormal];
+
+    //关闭颜色
+    //toolBtn.backgroundColor = ProfileColor;
+    button.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:18];
+    [self.view addSubview:button];
+    [button addTarget:self action:@selector(clickSaveBtn:) forControlEvents:UIControlEventTouchUpInside];
+     
 }
 // 关闭
 - (void)closeButtonAction:(id)sender
@@ -67,17 +84,17 @@
 
 - (void)configToolBarView
 {
-    UIButton *toolBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    toolBtn.frame =CGRectMake(0, UIHEIGHT - 50, UIWIDTH, 50);
-    [toolBtn setTitle:@"SAVE" forState:UIControlStateNormal];
-    [toolBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _toolBtn= [UIButton buttonWithType:UIButtonTypeCustom];
+    _toolBtn.frame =CGRectMake(0, UIHEIGHT - 50, UIWIDTH, 50);
+    [_toolBtn setTitle:@"DONE" forState:UIControlStateNormal];
+    [_toolBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.5] size:toolBtn.frame.size] forState:UIControlStateNormal];
     //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.6] size:toolBtn.frame.size] forState:UIControlStateHighlighted];
     //关闭颜色
-    toolBtn.backgroundColor = ProfileColor;
-    toolBtn.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:18];
-    [self.view addSubview:toolBtn];
-    [toolBtn addTarget:self action:@selector(clickSaveBtn:) forControlEvents:UIControlEventTouchUpInside];
+    _toolBtn.backgroundColor = ProfileColor;
+    _toolBtn.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:18];
+    [self.view addSubview:_toolBtn];
+    [_toolBtn addTarget:self action:@selector(closeButtonAction:) forControlEvents:UIControlEventTouchUpInside];
 }
 // 保存
 - (void)clickSaveBtn:(id)sender
@@ -155,8 +172,9 @@
         ResponseManagerModel *res = [[ResponseManagerModel alloc] initWithString:json error:nil];
         
         if (res.RETURN_CODE == 200) {
-            [self showHudWith:@"修改成功"];
+            [self showHudWith:@"save"];
             CurrentUserInfo *userInfor = [[UserInfoManager sharedInstance] getCurrentUserInfo];
+            userInfor.userName = _nameField.text;
             userInfor.userIntro = _introField.text;
             [[UserInfoManager sharedInstance] saveUserInfoToDisk:userInfor];
         }else
@@ -166,9 +184,61 @@
     }];
 }
 
+
+
 - (void)showHudWith:(NSString *)text
 {
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
     [MBProgressHUD showTextHUDAddedTo:self.view withText:text animated:YES];
 }
+
+
+#pragma -mark 键盘
+- (void)addKeyboardNotification
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWill_Show:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWill_Show:)
+                                                 name:UIKeyboardWillChangeFrameNotification
+                                               object:nil];
+}
+
+-(void)keyboardHide:(NSNotification*)aNotification
+{
+    //得到屏幕的宽和高
+    //    CGRect rect=[[UIScreen mainScreen] bounds];
+    //    CGSize size = rect.size;
+    //    CGFloat height = size.height;
+    //int screenHeight = size.height;
+    
+    /**/
+     [UIView animateWithDuration:0.5f delay:0.0f options:1 animations:^{
+     
+         _toolBtn.frame =CGRectMake(0, UIHEIGHT - 50, UIWIDTH, 50);
+     }completion:nil];
+     
+}
+
+- (void)keyboardWill_Show:(NSNotification*)notification
+{
+    /* */
+     NSDictionary *userInfo = [notification userInfo];
+     NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+     CGRect keyboardRect = [aValue CGRectValue];
+     CGFloat height = keyboardRect.size.height;
+     
+     [UIView animateWithDuration:0.5f delay:0.0f options:1 animations:^{
+     
+     [_toolBtn setFrame:CGRectMake(0, UIHEIGHT - height - 50, UIWIDTH, 50)];
+     } completion:nil];
+    
+}
+
 @end

@@ -8,6 +8,11 @@
 
 #import "MainViewController.h"
 
-@interface LoginController : MainViewController
+typedef enum{
+    SelectSignInType = 1,
+    SelectSignUpType = 2,
+} SelectVCType;
 
+@interface LoginController : MainViewController
+@property (nonatomic ,assign) SelectVCType selectType;
 @end

@@ -9,6 +9,7 @@
 #import "NearByCell.h"
 #import "CustomIMGView.h"
 #import "Utils.h"
+#import "NSTimeUtil.h"
 
 @interface NearByCell ()
 @property (strong, nonatomic) CustomIMGView *headIMG;
@@ -63,7 +64,9 @@
         self.headIMG = [[CustomIMGView alloc] initWithFrame:CGRectMake(headX, headY, headW, headH)];
         self.headIMG.layer.cornerRadius = headH/2;
         self.headIMG.clipsToBounds = YES;
-        self.headIMG.backgroundColor = [UIColorUtil colorWithCoded9d9d9];
+        self.headIMG.backgroundColor = [UIColor clearColor];//[UIColorUtil colorWithCoded9d9d9];
+        self.headIMG.layer.borderWidth = kHeadIMG_Line_Height;
+        self.headIMG.layer.borderColor = kHeadIMG_Layer_Color.CGColor;
     }
     
     CGFloat padding = 11;
@@ -75,9 +78,9 @@
     
     if (!self.timeLabel) {
         self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(timeX, timeY, timeW, timeH)];
-        self.timeLabel.font = [UIFont fontWithName:GothamRoundedBook size:12];
+        self.timeLabel.font = [UIFont fontWithName:Font_Helvetica size:15];
         self.timeLabel.textAlignment = NSTextAlignmentRight;
-        self.timeLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
+        self.timeLabel.textColor = [UIColorUtil colorWithHexString:@"#b3b3b3"];
     }
     
     CGFloat nameX = headX + headW + padding;
@@ -184,9 +187,14 @@
     
     */
     
+    /**/
     if (!IsEmpty(model.distance)) {
         self.timeLabel.text = [NSString stringWithFormat:@"%@ km",model.distance];
     }
+     
+//    NSString *distance = [NSTimeUtil getDistance:model.longitude latitude:model.latitude];
+//    self.timeLabel.text = distance;
+    
     NSString *headUrl = [NSString stringWithFormat:@"%d",model.userId];
     //self.introLabel.text = model.label;
     [self.headIMG setImageURLStr:User_Head(headUrl)];

@@ -33,6 +33,99 @@
 
 - (void)initSecondView
 {
+    
+    CGFloat x = 0 ;
+    CGFloat y = 182/2;
+    CGFloat w = UIWIDTH;
+    CGFloat h = 20;
+    UILabel *alertLab = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
+    alertLab.text = @"Enter the verification code";
+    alertLab.textAlignment = NSTextAlignmentCenter;
+    alertLab.font = [UIFont fontWithName:GothamRoundedBold size:34/2];
+    [self addSubview:alertLab];
+    
+    y = y+h;
+    UILabel *alertLab1 = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
+    alertLab1.text = @"we texted you";
+    alertLab1.textAlignment = NSTextAlignmentCenter;
+    alertLab1.font = [UIFont fontWithName:GothamRoundedBold size:34/2];
+    [self addSubview:alertLab1];
+    
+    x = 117/2;
+    y = 375/2;
+    w = UIWIDTH - x - 121/2;
+    h = 30;
+    self.validationText                     = [[UITextField alloc] initWithFrame:CGRectMake(x, y, w, h)];
+    //self.validationText.keyboardAppearance = UIKeyboardAppearanceDark;
+    self.validationText.keyboardType        = UIKeyboardTypeNumberPad;
+    self.validationText.returnKeyType       = UIReturnKeyNext;
+    self.validationText.delegate            = self;
+    self.validationText.textColor           = kRegisterTextTintColor;
+    self.validationText.tintColor           = kRegisterTextTintColor;
+    self.validationText.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:self.validationText];
+    
+    UIImageView *lineIMG = [[UIImageView alloc] initWithFrame:CGRectMake(x, y+h, w, 1)];
+    lineIMG.backgroundColor = kRegisterLineColor;
+    [self addSubview:lineIMG];
+    
+    
+    y = y + h + 30/2;
+    w = UIWIDTH - 2*x;
+    h = 50;
+    self.introLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
+    self.introLabel.font = HintFont;
+    self.introLabel.numberOfLines = 0;
+    self.introLabel.textColor = kRegisterLineColor;
+    self.introLabel.text = EnterCodeString;
+    [self addSubview:self.introLabel];
+    
+}
+
+#pragma -mark UITextField 代理
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (range.location < 4) {
+        return YES;
+    }else
+        return NO;
+    return YES;
+}
+
+#pragma -mark 弹出键盘
+- (void)become_FirstResponder
+{
+    [self.validationText becomeFirstResponder];
+}
+
+#pragma -mark 导航按钮事件
+- (void)navBackAction:(UIButton *)sender
+{
+    [super navBackAction:sender];
+    self.block(@"Back");
+}
+
+- (void)navNextAction:(UIButton *)sender
+{
+    if (IsEmpty(self.validationText.text))
+    {
+        [MBProgressHUD showTextHUDAddedTo:self withText:@"Please enter your phone code" animated:YES];
+        return;
+    }
+    
+    [super navNextAction:sender];
+    self.block(@"Next");
+}
+
+- (NSString *)hponeCode
+{
+    return _validationText.text;
+}
+
+/*
+- (void)initSecondView
+{
  
     CGFloat textX = 30;
     CGFloat textY = 130;
@@ -40,7 +133,7 @@
     CGFloat textH = 30;
     
     self.validationText = [[UITextField alloc] initWithFrame:CGRectMake(textX, textY, textW, textH)];
-    self.validationText.keyboardAppearance = UIKeyboardAppearanceDark;
+    //self.validationText.keyboardAppearance = UIKeyboardAppearanceDark;
     self.validationText.keyboardType = UIKeyboardTypeNumberPad;
     self.validationText.returnKeyType = UIReturnKeyNext;
     self.validationText.hidden = YES;
@@ -55,7 +148,7 @@
         [self addSubview:label];
         
         UIImageView *lineIMG = [[UIImageView alloc] initWithFrame:CGRectMake((textX + textW) * i + textX, textY + textH, textW, 1)];
-        lineIMG.backgroundColor = [UIColorUtil colorWithCodea0a0a0];
+        lineIMG.backgroundColor = kRegisterLineColor;
         [self addSubview:lineIMG];
         
         switch (i) {
@@ -83,7 +176,7 @@
     CGFloat introH = 30;
     self.introLabel = [[UILabel alloc] initWithFrame:CGRectMake(introX, introY, introW, introH)];
     self.introLabel.font = HintFont;
-    self.introLabel.textColor = [UIColorUtil colorWithCodea0a0a0];
+    self.introLabel.textColor = kRegisterLineColor;
     self.introLabel.text = EnterCodeString;
     [self addSubview:self.introLabel];
     
@@ -147,7 +240,7 @@
 {
     return [NSString stringWithFormat:@"%@%@%@%@",self.validationText1.text,self.validationText2.text,self.validationText3.text,self.validationText4.text];
 }
-
+*/
 - (void)dealloc
 {
     self.validationText = nil;

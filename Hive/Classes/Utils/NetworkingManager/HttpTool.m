@@ -262,7 +262,9 @@
     [parameters setObject:username forKey:@"userName"];
     [parameters setObject:password forKey:@"password"];
     [parameters setObject:phoneNum forKey:@"phonenum"];
-    [parameters setObject:[UserDefaultsUtil getDeviceToken] forKey:@"deviceToken"];
+    if (!IsEmpty([UserDefaultsUtil getDeviceToken])) {
+        [parameters setObject:[UserDefaultsUtil getDeviceToken] forKey:@"deviceToken"];
+    }
 
     return parameters;
 }

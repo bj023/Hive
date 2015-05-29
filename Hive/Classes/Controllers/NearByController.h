@@ -26,6 +26,9 @@ typedef void(^NearByControllerBlock)(NearByModel * model, NSIndexPath *indexpath
 @interface NearByController : MainViewController
 
 @property (copy, nonatomic) NearByControllerBlock nearByBlock;
+
+- (void)reloadProfileData;
+
 - (void)sendNearByAction;
 
 - (UIButton *)getSelectBtuuon;

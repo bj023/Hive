@@ -10,7 +10,7 @@
 #import "SLPagingViewController.h"
 #import "UIColorUtil.h"
 #import "SettingsController.h"
-#import "MessagesController.h"
+//#import "MessagesController.h"
 #import "HiveController.h"
 #import "NearByController.h"
 #import <MAMapKit/MAMapKit.h>
@@ -33,7 +33,7 @@
 {
     
     SettingsController *_settingsVC;
-    MessagesController *_messagesVC;
+//    MessagesController *_messagesVC;
     ChatViewListController *_chatListVC;
     HiveController *_hiveVC;
     NearByController *_nearByVC;
@@ -60,6 +60,19 @@
     [self performSelector:@selector(configWelcomeView) withObject:nil afterDelay:0.5];
     [self addNotification];
     
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = YES;
+    [_nearByVC reloadProfileData];
+    [_settingsVC reloadSetting_ProfileData];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 - (void)addNotification
@@ -90,18 +103,6 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = YES;
-    debugMethod();
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 #pragma -mark TWitter 导航效果
 - (void)configPagingVC
 {
@@ -109,7 +110,7 @@
     UIColor *gray = [UIColorUtil colorWithHexString:@"#ced3d7"];
 //[UIColorUtil colorWithHexString:@"#1b2430"]
     _pageViewController = [[SLPagingViewController alloc] initWithNavBarItems:[self titlesArr]
-                                                            navBarBackground:[UIColor whiteColor]
+                                                            navBarBackground:[UIColorUtil colorWithHexString:@"#fafafa"]
                                                                  controllers:[self twitterVC]
                                                              showPageControl:NO];
     
@@ -158,6 +159,8 @@
             [weakNearByVC sendNearByAction];
         }
         [weakHive set_HiddenKeyboard];
+        
+        
     };
 
     _pageViewController.pagingViewMovingRedefine = ^(UIScrollView * scrollView, NSArray *subviews){
@@ -221,7 +224,8 @@
             
         }else
             _messageLabel.text = [NSString stringWithFormat:@"CHATS(%@)",[ChatManager chatMessageUnreadCount]];
-        [_messagesVC reloadChatMessage];
+        //[_messagesVC reloadChatMessage];
+        [_chatListVC refreshDataSource];
     });
     
     debugLog(@"显示未读-->%@ --- %@",_messageLabel.text,[ChatManager chatMessageUnreadCount]);
@@ -285,37 +289,21 @@
 - (void)clickCellAction
 {
     __weak ViewController *weakSelf = self;
+
     _settingsVC.clickCellAtIndex = ^(NSIndexPath *indexpath){
         switch (indexpath.row) {
             case 0:
-            {
                 [weakSelf pushProfileViewController];
-            }
                 break;
             case 1:
-            {
-                
-            }
                 break;
             case 2:
-            {
-                
-            }
                 break;
             case 3:
-            {
-                
-            }
                 break;
             case 4:
-            {
-                
-            }
                 break;
             case 5:
-            {
-                
-            }
                 break;
             case 6:
             {
@@ -340,6 +328,19 @@
             case 9:
             {
                 
+            }
+                break;
+            case 10:
+            {
+                // 清楚所有私聊记录
+                [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+                    [MessageModel MR_truncateAllInContext:localContext];
+                    [ChatModel MR_truncateAllInContext:localContext];
+                } completion:^(BOOL success, NSError *error) {
+                    [NSDataUtil removeChatMessage];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadChatMessage" object:nil];
+                    debugLog(@"------->清除所有私聊记录");
+                }];
             }
                 break;
             default:

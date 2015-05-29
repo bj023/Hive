@@ -115,6 +115,9 @@
 #pragma -mark 初始化 用户头像
 - (void)configHeadView
 {
+    BOOL hide =  _model.hide == 1;
+
+    
     CGFloat headW = kHeadSize; // 改变 头像大小 只需改变 headW
     CGFloat HeadH = headW;
     CGFloat headX = UIWIDTH/2 - HeadH/2;
@@ -158,13 +161,11 @@
     CGFloat userInfoY = nameY + nameH + 5;// 偏移量
     if (!self.userinfor) {
         self.userinfor = [[UserInformationView alloc] initWithFrame:CGRectMake(userInfoX, userInfoY, userInfoW, userInfoH)];
-        [self.userinfor set_UserInfoData:self.model.gender
-                                     Age:[NSString stringWithFormat:@"%d",self.model.age]
-                                Distance:self.model.distance];
+       
         [self.view addSubview:self.userinfor];
     }
     
-    NSString *introString = self.model.label;
+
     UIFont *introFont = [UIFont systemFontOfSize:16];
     CGFloat introW = 600/2;
     CGFloat introX = UIWIDTH/2 - introW/2;
@@ -172,7 +173,6 @@
     CGSize introSize;
     if (!self.introText) {
         
-        introSize = [self sizeWithString:introString font:introFont maxSize:CGSizeMake(introW, MAXFLOAT)];
 
         /*
         self.introLabel = [[UILabel alloc] initWithFrame:CGRectMake(introX, introY, introW, 80)];
@@ -192,23 +192,13 @@
          */
         
         self.introText = [[UITextView alloc] init];
-        self.introText.frame = CGRectMake(introX, introY, introW, introSize.height + 30);
         self.introText.textColor = [UIColorUtil colorWithHexString:@"#aeaeae"];
         self.introText.userInteractionEnabled = NO;
         self.introText.font = introFont;
         [self.view addSubview:self.introText];
         self.introLabel.backgroundColor = [UIColor redColor];
         
-        //    textview 改变字体的行间距
-        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-        paragraphStyle.lineSpacing = 4;// 字体的行间距
-        paragraphStyle.alignment = NSTextAlignmentCenter;
-        NSDictionary *attributes = @{
-                                     NSFontAttributeName : introFont,
-                                     NSParagraphStyleAttributeName : paragraphStyle,
-                                     NSForegroundColorAttributeName : [UIColorUtil colorWithHexString:@"#aeaeae"]
-                                     };
-        self.introText.attributedText = [[NSAttributedString alloc] initWithString:introString attributes:attributes];
+        
     }
     
     CGFloat buttonX = 0;
@@ -226,12 +216,39 @@
     
     self.scrollerView.contentSize = CGSizeMake(self.view.frame.size.width, buttonH + buttonY);
     
+    
     NSString *urlString = [NSString stringWithFormat:@"%d",self.model.userId];
     urlString = User_Head(urlString);
     [self.headIMG setImageURLStr:urlString];
-    self.nameLabel.text = self.model.userName;
-    self.introLabel.text = introString;
-    //self.introLabel.text = @"There's stuff there about what food's good for what brain functionuff there about what food's";
+    
+    NSString *introString;
+    if (hide) {
+        [self.userinfor set_UserInfoData:@"Unknow"
+                                     Age:@"Unknow"
+                                Distance:@"Unknow"];
+        self.nameLabel.text = @"Hide User";
+        introString = @"Why so serious.";
+    }else{
+        [self.userinfor set_UserInfoData:[self.model.gender isEqualToString:@"0"]?@"Male":@"Female"
+                                     Age:[NSString stringWithFormat:@"%d",self.model.age]
+                                Distance:self.model.distance];
+        self.nameLabel.text = self.model.userName;
+        introString = self.model.label;
+    }
+    introSize = [self sizeWithString:introString font:introFont maxSize:CGSizeMake(introW, MAXFLOAT)];
+    self.introText.frame = CGRectMake(introX, introY, introW, introSize.height + 30);
+
+    //    textview 改变字体的行间距
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 4;// 字体的行间距
+    paragraphStyle.alignment = NSTextAlignmentCenter;
+    NSDictionary *attributes = @{
+                                 NSFontAttributeName : introFont,
+                                 NSParagraphStyleAttributeName : paragraphStyle,
+                                 NSForegroundColorAttributeName : [UIColorUtil colorWithHexString:@"#aeaeae"]
+                                 };
+    self.introText.attributedText = [[NSAttributedString alloc] initWithString:introString attributes:attributes];
+    
 }
 
 - (CGSize)sizeWithString:(NSString *)str font:(UIFont *)font maxSize:(CGSize)maxSize

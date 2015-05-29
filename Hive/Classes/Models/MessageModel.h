@@ -2,7 +2,7 @@
 //  MessageModel.h
 //  
 //
-//  Created by mac on 15/5/16.
+//  Created by 那宝军 on 15/5/28.
 //
 //
 
@@ -18,5 +18,6 @@
 @property (nonatomic, retain) NSString * toUserID;
 @property (nonatomic, retain) NSString * toUserName;
 @property (nonatomic, retain) NSString * unReadCount;
+@property (nonatomic, retain) NSString * cur_userID;
 
 @end

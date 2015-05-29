@@ -33,6 +33,7 @@
     [self configTableView];
     [self configSearBtn];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadChatMessage) name:@"reloadChatMessage" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -48,11 +49,13 @@
 
 - (void)reloadChatMessage
 {
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.messageArr removeAllObjects];
         NSString *userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
         debugLog(@"聊天用户->%@",userID);
-        self.messageArr = [NSMutableArray arrayWithArray:[MessageModel MR_findAllSortedBy:@"msg_time" ascending:NO]];
+        //self.messageArr = [NSMutableArray arrayWithArray:[MessageModel MR_findAllSortedBy:@"msg_time" ascending:NO]];
+        self.messageArr = [NSMutableArray arrayWithArray:[MessageModel MR_findByAttribute:@"cur_userID" withValue:userID andOrderBy:@"msg_time" ascending:NO]];
         debugLog(@"/n/n/n/n/n加载聊天记录->%ld/n/n/n/n/n/n/n/n",self.messageArr.count);
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -251,7 +254,7 @@
 
 - (void)dealloc
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     self.messageTable.delegate = nil;
     self.messageTable = nil;
 }

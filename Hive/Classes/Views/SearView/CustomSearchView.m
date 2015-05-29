@@ -13,6 +13,9 @@
 #define kSearchViewHeight 44
 
 @interface CustomSearchView ()<UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, MessageCellDelegate>
+{
+    NSString *_resultStr;
+}
 @property (nonatomic, strong) UIView *searchView;
 @property (nonatomic, strong) UITableView *resultTable;
 @property (nonatomic, strong) NSMutableArray *resultArray;
@@ -82,22 +85,39 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.resultArray.count;
+    return self.resultArray.count==0?1:self.resultArray.count;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    MessageCell *cell = [MessageCell cellWithTableView:tableView];
-    cell.indexPath = indexPath;
-    cell.delegate = self;
-    [cell set_MessageCellData:(_resultArray[indexPath.row])];
-    return cell;
+    if (self.resultArray.count == 0) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"EmptyCell"];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"EmptyCell"];
+        }
+        
+        if (!IsEmpty(_resultStr)) {
+            NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:_resultStr];
+            [str addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:NSMakeRange(4, [_resultStr length] - 4 - 4)];
+            cell.textLabel.attributedText = str;
+        }
+        
+        return cell;
+    }else{
+        MessageCell *cell = [MessageCell cellWithTableView:tableView];
+        cell.indexPath = indexPath;
+        cell.delegate = self;
+        [cell set_MessageCellData:(_resultArray[indexPath.row])];
+        return cell;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.delegate respondsToSelector:@selector(clickSerchChatSearView:ChatMessageModel:)]) {
-        [self.delegate clickSerchChatSearView:self ChatMessageModel:_resultArray[indexPath.row]];
+    if (self.resultArray.count>0) {
+        if ([self.delegate respondsToSelector:@selector(clickSerchChatSearView:ChatMessageModel:)]) {
+            [self.delegate clickSerchChatSearView:self ChatMessageModel:_resultArray[indexPath.row]];
+        }
     }
 }
 
@@ -137,11 +157,31 @@
     }];
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    
+    // 1. 获取输入的值
+    NSString *conditionStr = [NSString stringWithFormat:@"%@",textField.text];
+    // 2. 创建谓词，准备进行判断的工具
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"toUserName CONTAINS [CD] %@ OR msg_content CONTAINS [CD] %@", conditionStr, conditionStr];
+    // 3. 使用工具获取匹配出的结果
+    self.resultArray = [NSMutableArray arrayWithArray:[_dataSourceArray filteredArrayUsingPredicate:predicate]];
+   
+    if (self.resultArray.count == 0) {
+        _resultStr = [NSString stringWithFormat:@"没有找到“%@”相关结果",textField.text];
+    }
+    
+    [self.resultTable reloadData];
+    
+    
+    return YES;
+}
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     //debugLog(@"%@",string);
     debugLog(@"%ld",range.location);
-
+    
     // 1. 获取输入的值
     NSString *conditionStr = [NSString stringWithFormat:@"%@%@",textField.text,string];
     // 2. 创建谓词，准备进行判断的工具

@@ -2,7 +2,7 @@
 //  MessageModel.m
 //  
 //
-//  Created by mac on 15/5/16.
+//  Created by 那宝军 on 15/5/28.
 //
 //
 
@@ -17,5 +17,6 @@
 @dynamic toUserID;
 @dynamic toUserName;
 @dynamic unReadCount;
+@dynamic cur_userID;
 
 @end

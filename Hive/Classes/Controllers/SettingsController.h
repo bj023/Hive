@@ -15,5 +15,7 @@ typedef void(^SelectPhoto)(NSString *str);
 @property (nonatomic, copy) ClickCellAtIndex clickCellAtIndex;
 @property (nonatomic, copy) SelectPhoto selectBlock;
 
+- (void)reloadSetting_ProfileData;
+
 - (void)set_HeadIMG:(UIImage *)image;
 @end

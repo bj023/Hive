@@ -67,7 +67,9 @@
         self.headIMG = [[CustomIMGView alloc] initWithFrame:CGRectMake(headX, headY, headW, headH)];
         self.headIMG.layer.cornerRadius = headH/2;
         self.headIMG.clipsToBounds = YES;
-        self.headIMG.backgroundColor = [UIColorUtil colorWithCoded9d9d9];
+        self.headIMG.backgroundColor = [UIColor clearColor];
+        self.headIMG.layer.borderWidth = kHeadIMG_Line_Height;
+        self.headIMG.layer.borderColor = kHeadIMG_Layer_Color.CGColor;
     }
     
     CGFloat padding = 11;

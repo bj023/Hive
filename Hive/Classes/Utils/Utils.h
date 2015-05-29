@@ -37,8 +37,8 @@
 // ------------------------------------注册提示------------------------------------
 // 忘记密码
 #define ForgetString @"Forget the password?"
-#define ValidationCodeStrin @"Please enter your phone number and get the Validation Code"
-#define EnterCodeString @"Enter the validation code"
+#define ValidationCodeStrin @"By sign in,you agree to the Terms of Use and Privacy Policy"
+#define EnterCodeString @"This might take a minute.Didn't get it? Tap to Resend"
 
 #define NotificationIntro @"Enable or disable WeChat Notifications via \"Settings\"->\"Notification\" on your iPhone."
 
@@ -87,4 +87,11 @@
 // 所有界面线条高度
 #define kLine_Height 0.5 
 #define kLine_Color [UIColorUtil colorWithHexString:@"#e5e5e5"]
+
+#define kRegisterLineColor [UIColorUtil colorWithHexString:@"#d7d7d5"]
+#define kRegisterTextTintColor [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1]
+
+// 所有头像 外边框
+#define kHeadIMG_Line_Height 0.5
+#define kHeadIMG_Layer_Color [UIColorUtil colorWithHexString:@"#f1efee"]
 #endif

@@ -57,10 +57,17 @@
     
     if (!self.toolbarView) {
         self.toolbarView = [[UIView alloc] init];
-        self.toolbarView.backgroundColor = [UIColorUtil colorWithHexString:@"f5f5f5"];
+        //self.toolbarView.backgroundColor = [UIColorUtil colorWithHexString:@"f5f5f5"];
+        self.toolbarView.backgroundColor = [UIColor clearColor];
         self.toolbarView.layer.borderColor = [UIColorUtil colorWithHexString:@"c8c8c8"].CGColor;
         self.toolbarView.frame = CGRectMake(0, 0, self.frame.size.width, kVerticalPadding * 2 + kInputTextViewMinHeight);
         [self addSubview:self.toolbarView];
+        
+        
+        UIImageView *lineIMG = [[UIImageView alloc] init];
+        lineIMG.frame = CGRectMake(0, 0, UIWIDTH, 1);
+        lineIMG.backgroundColor = kRegisterLineColor;
+        [self.toolbarView addSubview:lineIMG];
     }
     
    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
@@ -91,8 +98,8 @@
         self.sendButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.bounds) - kHorizontalPadding - sendW, kVerticalPadding, sendW, kInputTextViewMinHeight)];
         self.sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
         [self.sendButton setTitle:@"Send" forState:UIControlStateNormal];
-        [self.sendButton setTitleColor:[UIColorUtil colorWithHexString:@"#666666"] forState:UIControlStateNormal];
-        self.sendButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:16];
+        [self.sendButton setTitleColor:kRegisterTextTintColor forState:UIControlStateNormal];
+        self.sendButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:34/2];
         [self.sendButton addTarget:self action:@selector(sendButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         //self.sendButton.enabled = NO;
         self.sendButton.tag = 2;
@@ -110,12 +117,12 @@
         self.inputTextView.scrollEnabled = YES;
         self.inputTextView.returnKeyType = UIReturnKeySend;
         self.inputTextView.enablesReturnKeyAutomatically = YES; // UITextView内部判断send按钮是否可以用
-        self.inputTextView.placeHolder = @"Enter the new message";
+        self.inputTextView.placeHolder = @"Write here ...";
         self.inputTextView.delegate = self;
         self.inputTextView.backgroundColor = [UIColor whiteColor];
-        self.inputTextView.layer.borderColor = [UIColor colorWithWhite:0.8f alpha:1.0f].CGColor;
-        self.inputTextView.layer.borderWidth = 0.65f;
-        self.inputTextView.layer.cornerRadius = 6.0f;
+        //self.inputTextView.layer.borderColor = [UIColor colorWithWhite:0.8f alpha:1.0f].CGColor;
+        //self.inputTextView.layer.borderWidth = 0.65f;
+        //self.inputTextView.layer.cornerRadius = 6.0f;
     }
     _previousTextViewContentHeight = [self getTextViewContentH:_inputTextView];
     
@@ -125,6 +132,7 @@
         self.faceView.backgroundColor = [UIColor whiteColor];
         self.faceView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     }
+    
     
     [self.toolbarView addSubview:self.faceButton];
     [self.toolbarView addSubview:self.inputTextView];

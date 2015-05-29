@@ -47,12 +47,14 @@
     _headImgaeView.layer.cornerRadius = HEAD_SIZE/2;
     _headImgaeView.layer.masksToBounds = YES;
     _headImgaeView.userInteractionEnabled = YES;
-    _headImgaeView.backgroundColor = [UIColor grayColor];
+    _headImgaeView.backgroundColor = [UIColor clearColor];
+    _headImgaeView.layer.borderWidth = kHeadIMG_Line_Height;
+    _headImgaeView.layer.borderColor = kHeadIMG_Layer_Color.CGColor;
     [self.contentView addSubview:_headImgaeView];
     
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _nameLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
-    _nameLabel.font = [UIFont fontWithName:GothamRoundedBook size:12];
+    _nameLabel.textColor = [UIColorUtil colorWithHexString:@"#b2b2b2"];
+    _nameLabel.font = [UIFont fontWithName:Font_Helvetica size:23/2];
     [self.contentView addSubview:_nameLabel];
     
     _bubbleView = [[ChatBubbleView alloc] initWithFrame:CGRectZero];
@@ -60,8 +62,8 @@
     [self.contentView addSubview:_bubbleView];
     
     _timeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _timeLabel.font = [UIFont systemFontOfSize:12];
-    _timeLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
+    _timeLabel.font = [UIFont fontWithName:Font_Helvetica size:23/2];
+    _timeLabel.textColor = [UIColorUtil colorWithHexString:@"#b2b2b2"];
     _timeLabel.textAlignment = NSTextAlignmentCenter;
     [self.contentView addSubview:_timeLabel];
 }
@@ -193,8 +195,6 @@
         }else
             _nameLabel.text = [NSString stringWithFormat:@"%@  %@",_message.userName,distance];
     }
-    
-    
     
     self.timeLabel.text = [UtilDate dateFromString:_message.msg_time withFormat:DateFormat_HM];
     

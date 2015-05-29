@@ -77,10 +77,10 @@
     self.password1Text.font = TextFont;
 
     
-    self.userNameText.tintColor  = [UIColor whiteColor];
-    self.emailText.tintColor     = [UIColor whiteColor];
-    self.passwordText.tintColor  = [UIColor whiteColor];
-    self.password1Text.tintColor = [UIColor whiteColor];
+    self.userNameText.tintColor  = kRegisterTextTintColor;
+    self.emailText.tintColor     = kRegisterTextTintColor;
+    self.passwordText.tintColor  = kRegisterTextTintColor;
+    self.password1Text.tintColor = kRegisterTextTintColor;
 
     self.passwordText.secureTextEntry  = YES;
     self.password1Text.secureTextEntry = YES;
@@ -95,21 +95,21 @@
     self.passwordText.returnKeyType  = UIReturnKeyNext;
     self.password1Text.returnKeyType = UIReturnKeyNext;
     
-    self.userNameText.keyboardAppearance  = UIKeyboardAppearanceDark;
-    self.emailText.keyboardAppearance     = UIKeyboardAppearanceDark;
-    self.passwordText.keyboardAppearance  = UIKeyboardAppearanceDark;
-    self.password1Text.keyboardAppearance = UIKeyboardAppearanceDark;
+    //self.userNameText.keyboardAppearance  = UIKeyboardAppearanceDark;
+    //self.emailText.keyboardAppearance     = UIKeyboardAppearanceDark;
+    //self.passwordText.keyboardAppearance  = UIKeyboardAppearanceDark;
+    //self.password1Text.keyboardAppearance = UIKeyboardAppearanceDark;
 
 
-    [self.userNameIMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
-    [self.emailIMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
-    [self.passwordIMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
-    [self.password1IMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
+    [self.userNameIMG setBackgroundColor:kRegisterLineColor];
+    [self.emailIMG setBackgroundColor:kRegisterLineColor];
+    [self.passwordIMG setBackgroundColor:kRegisterLineColor];
+    [self.password1IMG setBackgroundColor:kRegisterLineColor];
     
-    self.userNameText.textColor  = [UIColor whiteColor];
-    self.emailText.textColor     = [UIColor whiteColor];
-    self.passwordText.textColor  = [UIColor whiteColor];
-    self.password1Text.textColor = [UIColor whiteColor];
+    self.userNameText.textColor  = kRegisterTextTintColor;
+    self.emailText.textColor     = kRegisterTextTintColor;
+    self.passwordText.textColor  = kRegisterTextTintColor;
+    self.password1Text.textColor = kRegisterTextTintColor;
     
     self.userNameText.delegate  = self;
     self.emailText.delegate     = self;
@@ -130,6 +130,7 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+    /*
     [self.userNameIMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
     CGRect rect      = self.userNameIMG.frame;
     rect.size.height = 1;
@@ -174,6 +175,7 @@
         rect5.size.height = 1;
         [self.password1IMG setFrame:rect5];
     }
+     */
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -196,10 +198,12 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
+    /*
     self.userNameIMG.backgroundColor = [UIColorUtil colorWithCodea0a0a0];
     self.emailIMG.backgroundColor = [UIColorUtil colorWithCodea0a0a0];
     self.passwordIMG.backgroundColor = [UIColorUtil colorWithCodea0a0a0];
     self.password1IMG.backgroundColor = [UIColorUtil colorWithCodea0a0a0];
+     */
 }
 
 #pragma -mark 弹出键盘

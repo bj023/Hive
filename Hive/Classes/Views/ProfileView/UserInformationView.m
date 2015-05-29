@@ -76,8 +76,8 @@
     UIFont *font = [UIFont fontWithName:Font_Helvetica size:14];
     CGFloat lineH = 12;// 线条的高度
     
-    CGFloat padding = ( 170/2 - 34/2 ) / 2;
-    CGFloat ageW = 34/2;
+    CGFloat padding = ( 170/2 - 60/2 ) / 2;
+    CGFloat ageW = 60;
     CGFloat ageH = self.frame.size.height;// 文本的高度
     CGFloat ageX = self.frame.size.width/2 - ageW/2;
     if (!self.ageLabel) {
@@ -97,7 +97,7 @@
         [self addSubview:linIMG_R];
     }
     
-    CGFloat sexW = 50;
+    CGFloat sexW = 60;
     CGFloat sexX = ageX - 2 * padding - sexW - 5; // 偏移量
     CGFloat sexH = ageH;
     if (!self.sexLabel) {
@@ -124,9 +124,9 @@
 
 - (void)set_UserInfoData:(NSString *)sex Age:(NSString *)age Distance:(NSString *)distance
 {
-    self.sexLabel.text = [sex isEqualToString:@"0"]?@"Male":@"Female";
+    self.sexLabel.text = sex;
     self.ageLabel.text = age;
-    self.rangeLabel.text = [NSString stringWithFormat:@"%@ km",@"1.8"];
+    self.rangeLabel.text = distance;
 }
 
 - (void)dealloc

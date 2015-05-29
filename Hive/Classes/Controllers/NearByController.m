@@ -39,6 +39,12 @@
     [self configTableView];
 }
 
+- (void)reloadProfileData
+{
+    [self.nearByTable reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -261,7 +267,8 @@
         }
         NSError *error = nil;
         ResponseNearByModel *res = [[ResponseNearByModel alloc] initWithString:json error:&error];
-        if (!error) {
+
+        if (res.RETURN_CODE == 200) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             
             switch (sendType) {

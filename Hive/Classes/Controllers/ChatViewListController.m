@@ -81,7 +81,9 @@
 
 - (NSMutableArray *)loadDataSource
 {
-    return [NSMutableArray arrayWithArray:[MessageModel MR_findAllSortedBy:@"msg_time" ascending:NO]];
+    NSString *userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    return [NSMutableArray arrayWithArray:[MessageModel MR_findByAttribute:@"cur_userID" withValue:userID andOrderBy:@"msg_time" ascending:NO]];
+    //return [NSMutableArray arrayWithArray:[MessageModel MR_findAllSortedBy:@"msg_time" ascending:NO]];
 }
 
 

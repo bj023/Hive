@@ -9,6 +9,9 @@
 #import "BaseView.h"
 #import "Utils.h"
 
+#define Color [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1]
+
+
 @interface BaseView ()
 //@property (strong, nonatomic)UILabel *titleLabel;
 @property (strong, nonatomic) UIButton *nextBtn; // 下一步按钮
@@ -52,9 +55,9 @@
     CGFloat backBtnH = 44;
     self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.backBtn.frame = CGRectMake(backBtnX, backBtnY, backBtnW, backBtnH);
-    [self.backBtn setTitle:@"Back" forState:UIControlStateNormal];
-    [self.backBtn setTitleColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.3] forState:UIControlStateNormal];
-    self.backBtn.titleLabel.font = TitleFont;
+    [self.backBtn setTitle:@"BACK" forState:UIControlStateNormal];
+    [self.backBtn setTitleColor:Color forState:UIControlStateNormal];
+    self.backBtn.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:16];
     self.backBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     [self addSubview:self.backBtn];
     
@@ -64,9 +67,9 @@
     CGFloat nextBtnH = 44;
     self.nextBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.nextBtn.frame = CGRectMake(nextBtnX, nextBtnY, nextBtnW, nextBtnH);
-    [self.nextBtn setTitle:@"Next" forState:UIControlStateNormal];
-    [self.nextBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.nextBtn.titleLabel.font = TitleFont;
+    [self.nextBtn setTitle:@"NEXT" forState:UIControlStateNormal];
+    [self.nextBtn setTitleColor:Color forState:UIControlStateNormal];
+    self.nextBtn.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:16];
     self.nextBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
     [self addSubview:self.nextBtn];
     
@@ -79,7 +82,7 @@
 }
 
 - (void)navNextAction:(UIButton *)sender{
-    if (![sender.titleLabel.text isEqualToString:@"Sign in"]) {
+    if (![sender.titleLabel.text isEqualToString:@"SIGN IN"]) {
         [self endEditing: YES];
     }
 }
@@ -87,7 +90,7 @@
 // 设置按钮 标题
 - (void)setNavNextBtnTitle:(NSString *)title
 {
-    if ([title isEqualToString:@"Sign in"]) {
+    if ([title isEqualToString:@"SIGN IN"]) {
         [self.backBtn removeFromSuperview];
     }
     [self.nextBtn setTitle:title forState:UIControlStateNormal];

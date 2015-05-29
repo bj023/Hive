@@ -10,6 +10,7 @@
 #import "UIColorUtil.h"
 #import "ViewController.h"
 #import "LoginController.h"
+#import "LoginViewController.h"
 #import "Utils.h"
 #import "XMPPManager.h"
 #import "NSTimeUtil.h"
@@ -153,8 +154,9 @@
     if (![[UserInfoManager sharedInstance] checkUserIsLogin]) {
         // 未登陆状态
         [[UIApplication sharedApplication] setStatusBarHidden:YES];
-        LoginController *vc = [[LoginController alloc] init];
-        self.window.rootViewController = vc;
+        LoginViewController *vc = [[LoginViewController alloc] init];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+        self.window.rootViewController = nav;
     }else{
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
         [[UserInfoManager sharedInstance] loadUserInfoFromDisk];

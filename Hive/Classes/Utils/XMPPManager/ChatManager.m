@@ -57,7 +57,7 @@
         message.toUserID = toUserID;
         message.toUserName = toUserName;
         message.unReadCount = count;
-        
+        message.cur_userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
     } completion:^(BOOL success, NSError *error) {
         debugLog(@"插入成功");
         [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadChatMessage" object:nil];

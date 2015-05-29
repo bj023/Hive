@@ -35,6 +35,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self hiddenNavBackBtn:YES];
+        [self setNavNextBtnTitle:@"DONE"];
         [self initFourView];
     }
     return self;
@@ -67,11 +68,11 @@
     CGFloat nameW = UIWIDTH - 40;
     CGFloat nameH = 30;
     self.nameLabel                 = [[UILabel alloc] initWithFrame:CGRectMake(nameX, nameY, nameW, nameH)];
-    self.nameLabel.font            = TitleFont;
-    self.nameLabel.textColor       = [UIColor whiteColor];
+    self.nameLabel.font            = [UIFont fontWithName:GothamRoundedBold size:48/2];
+    self.nameLabel.textColor       = [UIColor blackColor];
     self.nameLabel.backgroundColor = [UIColor clearColor];
     self.nameLabel.textAlignment   = NSTextAlignmentCenter;
-    self.nameLabel.text            = @"haidai";
+    self.nameLabel.text            = _nameString;
     [self addSubview:self.nameLabel];
     
     // 性别
@@ -87,7 +88,7 @@
     CGFloat sexImgW = sexW;
     CGFloat sexImgH = 1;
     self.sexIMG = [[UIImageView alloc] initWithFrame:CGRectMake(sexImgX, sexImgY, sexImgW, sexImgH)];
-    [self.sexIMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
+    [self.sexIMG setBackgroundColor:kRegisterLineColor];
     [self addSubview:self.sexIMG];
     
     
@@ -96,13 +97,13 @@
     CGFloat ageW = sexImgW;
     CGFloat ageH = 30;
     self.ageText                    = [[UITextField alloc] initWithFrame:CGRectMake(ageX, ageY, ageW, ageH)];
-    self.ageText.keyboardAppearance = UIKeyboardAppearanceDark;
+    //self.ageText.keyboardAppearance = UIKeyboardAppearanceDark;
     self.ageText.keyboardType       = UIKeyboardTypeNumberPad;
     self.ageText.returnKeyType      = UIReturnKeyNext;
-    self.ageText.textColor          = [UIColor whiteColor];
-    self.ageText.tintColor          = [UIColor whiteColor];
+    self.ageText.textColor          = kRegisterTextTintColor;
+    self.ageText.tintColor          = kRegisterTextTintColor;
     self.ageText.delegate           = self;
-    UIColor *color = [UIColorUtil colorWithCodea0a0a0];
+    UIColor *color = kRegisterLineColor;
     self.ageText.font = TextFont;
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:TextFont, NSFontAttributeName,
                                 color, NSForegroundColorAttributeName, nil];
@@ -116,7 +117,7 @@
     CGFloat ageImgW = ageW;
     CGFloat ageImgH = 1;
     self.ageIMG = [[UIImageView alloc] initWithFrame:CGRectMake(ageImgX, ageImgY, ageImgW, ageImgH)];
-    [self.ageIMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
+    [self.ageIMG setBackgroundColor:kRegisterLineColor];
     [self addSubview:self.ageIMG];
 }
 
@@ -124,6 +125,7 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+    /*
     [self.ageIMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
     CGRect rect      = self.ageIMG.frame;
     rect.size.height = 1;
@@ -135,21 +137,24 @@
         rect4.size.height = 1;
         [self.ageIMG setFrame:rect4];
     }
+     */
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    /*
     if (textField == self.ageText) {
         //注册
         [self.ageIMG setBackgroundColor:[UIColorUtil colorWithCodea0a0a0]];
         [self.ageText resignFirstResponder];
     }
+     */
     return YES;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    self.ageIMG.backgroundColor = [UIColorUtil colorWithCodea0a0a0];
+    //self.ageIMG.backgroundColor = [UIColorUtil colorWithCodea0a0a0];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
