@@ -13,6 +13,7 @@
 #import "Utils.h"
 #import "CustomIMGView.h"
 #import "CustomActionSheetView.h"
+#import "UIAlertView+Block.h"
 
 #define kTopHeight 326/2
 #define kHeadSize 178/2
@@ -104,7 +105,17 @@
 
 - (void)clickLogOutBtn:(id)sender
 {
-    [self sendRequestLogOut];
+    UIAlertView *logupAlert = [[UIAlertView alloc] initWithTitle:nil
+                                                         message:@"Are you soure log up"
+                                                        delegate:self
+                                               cancelButtonTitle:@"NO"
+                                               otherButtonTitles:@"YES", nil];
+    [logupAlert handlerClickedButton:^(NSInteger btnIndex) {
+        if (btnIndex == 1) {
+            [self sendRequestLogOut];
+        }
+    }];
+    [logupAlert show];
 }
 
 #pragma -mark 头像
@@ -180,7 +191,23 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.clickCellAtIndex(indexPath);
+    if (indexPath.row == 10) {
+        UIAlertView *logupAlert = [[UIAlertView alloc] initWithTitle:nil
+                                                             message:@"Are you soure clear all chat"
+                                                            delegate:self
+                                                   cancelButtonTitle:@"NO"
+                                                   otherButtonTitles:@"YES", nil];
+        [logupAlert handlerClickedButton:^(NSInteger btnIndex) {
+            if (btnIndex == 1)
+                self.clickCellAtIndex(indexPath);
+        }];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [logupAlert show];
+        });
+    }else
+        self.clickCellAtIndex(indexPath);
+
 }
 
 #pragma -mark 请求网络

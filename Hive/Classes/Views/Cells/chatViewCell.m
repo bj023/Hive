@@ -246,12 +246,11 @@
     else
     {
         return NO;
-        //return [super canPerformAction:action withSender:sender];
     }
 }
 - (void)copyMessage:(id)sender {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    [pasteboard setString:self.message.msg_message];
+    [pasteboard setString:IsEmpty(self.message.msg_message)?@"":self.message.msg_message];
 }
 
 - (void)deleteMessage:(id)sender

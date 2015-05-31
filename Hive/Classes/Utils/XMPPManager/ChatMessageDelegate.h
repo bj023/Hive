@@ -9,9 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @protocol ChatPublicMessageDelegate <NSObject>
-
+@optional
 - (void)sendPublicMessageSuccessMessageID:(NSString *)messageID Send:(BOOL)isSend;
 - (void)receiveChatRoomMessageWithMessageID:(NSString *)messageID;
+@optional
+- (void)didReceivChatRoomeMessageId:(NSString *)msg_ID;
 
 @end
 

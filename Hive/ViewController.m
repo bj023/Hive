@@ -11,7 +11,7 @@
 #import "UIColorUtil.h"
 #import "SettingsController.h"
 //#import "MessagesController.h"
-#import "HiveController.h"
+#import "POOKController.h"
 #import "NearByController.h"
 #import <MAMapKit/MAMapKit.h>
 #import "Utils.h"
@@ -35,7 +35,7 @@
     SettingsController *_settingsVC;
 //    MessagesController *_messagesVC;
     ChatViewListController *_chatListVC;
-    HiveController *_hiveVC;
+    POOKController *_hiveVC;
     NearByController *_nearByVC;
     
     MAMapView *_mapView;
@@ -147,7 +147,7 @@
     };
     
     [_pageViewController.navigationBarView addSubview:[_nearByVC getSelectBtuuon]];
-    __weak HiveController *weakHive = _hiveVC;
+    __weak POOKController *weakHive = _hiveVC;
     __weak NearByController *weakNearByVC = _nearByVC;
     
     _pageViewController.didChangedPage = ^(NSInteger currentPageIndex){
@@ -190,7 +190,7 @@
     //UINavigationController *mesNav = [[UINavigationController alloc] initWithRootViewController:_messagesVC];
     //_messagesVC.navigationController.navigationBarHidden = YES;
 
-    _hiveVC     = [[HiveController alloc] init];
+    _hiveVC     = [[POOKController alloc] init];
     _nearByVC   = [[NearByController alloc] init];
 
     return @[_settingsVC,_chatListVC,_hiveVC,_nearByVC];

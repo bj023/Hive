@@ -32,7 +32,9 @@
         <attribute name="msg_latitude" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="msg_longitude" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="msg_message" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_send_type" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="msg_time" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="msg_type" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="userID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -47,7 +49,7 @@
     </entity>
     <elements>
         <element name="ChatModel" positionX="-63" positionY="81" width="128" height="300"/>
-        <element name="ChatRoomModel" positionX="-63" positionY="-18" width="128" height="270"/>
+        <element name="ChatRoomModel" positionX="-63" positionY="-18" width="128" height="300"/>
         <element name="MessageModel" positionX="-54" positionY="144" width="128" height="150"/>
     </elements>
 </model>

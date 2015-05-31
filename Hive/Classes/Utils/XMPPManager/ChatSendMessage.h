@@ -43,6 +43,7 @@ typedef void(^SendChatMessageSuccess)(SendChatMessageStateType sendState ,NSStri
                   SendMessageTime:(NSString *)msg_time
                     SendMessageID:(NSString *)msgID
                          AtUserID:(NSString *)msg_at_userID
+                        IsChatIMG:(BOOL)isIMG
                          CallBack:(SendChatMessageSuccess)result;
 
 /**

@@ -35,13 +35,10 @@
         
         self.delegate = delegate;
         
-        // 菊花
-        /*
-        _activtiy = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        _activtiy.frame = CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
-        _activtiy.backgroundColor = [UIColor clearColor];
-        [_activityView addSubview:_activtiy];
-        */
+        // 发送进度显示view
+        _activityView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE)];
+        [_activityView setHidden:NO];
+        [self.contentView addSubview:_activityView];
         
         _activtiyImg = [[UIImageView alloc] init];
         _activtiyImg.animationImages = @[[UIImage imageNamed:@"load1"],
@@ -95,7 +92,55 @@
     
     return self;
 }
-
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+   
+    BOOL isShow = [self.message.msg_flag isEqualToString:@"ME"]?YES:NO;
+    _activityView.frame = CGRectMake(0, self.bubbleView.frame.origin.y, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
+    
+    debugLog(@"%@-%@-%@-%@",self.indexPath,self.message.msg_flag,self.message.msg_type,self.message.msg_message);
+    
+    if (isShow) {
+        _activityView.hidden = NO;
+        
+        switch ([self.message.msg_send_type intValue]) {
+            case SendCHatMessageNomal:
+            {
+                _activtiyImg.hidden = NO;
+                _retryButton.hidden = YES;
+            }
+                break;
+            case SendChatMessageSuccessState:
+            {
+                _activtiyImg.hidden = YES;
+                _retryButton.hidden = YES;
+            }
+                break;
+            case SendChatMessageReadState:
+            {
+                _activtiyImg.hidden = YES;
+                _retryButton.hidden = YES;
+            }
+                break;
+            case SendChatMessageFailState:
+            {
+                _activtiyImg.hidden = YES;
+                _retryButton.hidden = NO;
+                [self updateBubbleFrame];
+            }
+                break;
+            default:
+                break;
+        }
+        
+    }else{
+        _activityView.hidden = YES;
+        _retryButton.hidden = YES;
+    }
+}
+/*
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -120,7 +165,7 @@
         _activtiyImg.hidden = YES;
     }
 }
-
+*/
 - (void)updateBubbleFrame
 {
     CGFloat padding = 10;
@@ -138,7 +183,6 @@
     self.timeLabel.frame = timeF;
     
     _activtiyImg.frame = CGRectMake(self.timeLabel.frame.origin.x + 7, self.timeLabel.frame.origin.y - 5, SEND_STATUS_SIZE, 4);
-
 }
 
 - (void)setMessage:(ChatRoomModel *)message
@@ -209,6 +253,6 @@
 }
 - (void)copyRoomMessage:(id)sender {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    [pasteboard setString:self.message.msg_message];
+    [pasteboard setString:IsEmpty(self.message.msg_message)?@"":self.message.msg_message];
 }
 @end

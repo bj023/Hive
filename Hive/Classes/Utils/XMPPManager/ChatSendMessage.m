@@ -20,6 +20,7 @@
                   SendMessageTime:(NSString *)msg_time
                     SendMessageID:(NSString *)msgID
                          AtUserID:(NSString *)msg_at_userID
+                        IsChatIMG:(BOOL)isIMG
                          CallBack:(SendChatMessageSuccess)result
 {
     NSXMLElement *body;
@@ -38,13 +39,15 @@
         [mes addAttributeWithName:@"flag" stringValue:@"public"];
         [mes addAttributeWithName:@"time" stringValue:msg_time];
         [mes addAttributeWithName:@"messageID" stringValue:msgID];
-        
+        [mes addAttributeWithName:@"messageType" stringValue:isIMG?@"2":@"1"];
+
         NSString *longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
         NSString *latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
         
         [mes addAttributeWithName:@"longitude" stringValue:longitude];
         [mes addAttributeWithName:@"latitude" stringValue:latitude];
         [mes addAttributeWithName:@"at" stringValue:IsEmpty(msg_at_userID)?@"":msg_at_userID];
+
         //用户名
         [mes addAttributeWithName:@"name" stringValue:[[UserInfoManager sharedInstance] getCurrentUserInfo].userName];
         //隐身
@@ -63,14 +66,14 @@
         if (messageState && !isSend) {
             isSend = YES;
             NSLog(@"chatRoom->消息已发送");
-            result(SendChatMessageSuccessState,msgID);
         }
         //debugLog(@"%@",mes);
     }
     
-    if (!isSend) {
+    if (isSend) {
+        result(SendChatMessageSuccessState,msgID);
+    }else
         result(SendChatMessageFailState,msgID);
-    }
 }
 
 #pragma -mark 单聊

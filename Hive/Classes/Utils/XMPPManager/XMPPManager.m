@@ -152,7 +152,6 @@ static XMPPManager *sharedManager;
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
 {
     debugLog(@"%@",error.description);
-
 }
 
 - (void)signOut
@@ -343,16 +342,21 @@ static XMPPManager *sharedManager;
     NSString *at = [[message attributeForName:@"at"] stringValue];
     NSString *msgId = [[message attributeForName:@"messageID"] stringValue];
     NSString *name = [[message attributeForName:@"name"] stringValue];
+    NSString *hasStealth = [[message attributeForName:@"isStealth"] stringValue];
     NSString *longitude = [[message attributeForName:@"longitude"] stringValue];
     NSString *latitude = [[message attributeForName:@"latitude"] stringValue];
-    NSString *isTime = [XMPPManager getChatRoomTime:time];
-    
+    //NSString *isTime = [XMPPManager getChatRoomTime:time];
+    NSString *isTime = [XMPPManager getChatTime:time ToUserID:[self getUserId:from]];
+
+    NSString *msg_content = [[message elementForName:@"body"]  stringValue];
+    NSString *type =[[message attributeForName:@"messageType"] stringValue];
+
 
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         
         ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
         model.userID = [self getUserId:from];
-        model.msg_message = [[message elementForName:@"body"]  stringValue];
+        model.msg_message = msg_content;
         model.msg_time = time;
         model.msg_flag = @"YOU";
         model.hasAname = at;
@@ -360,18 +364,19 @@ static XMPPManager *sharedManager;
         model.msg_latitude = latitude;
         model.messageID = msgId;
         model.userName = name;
-        model.msg_hasStealth = [[message attributeForName:@"isStealth"] stringValue];
+        model.msg_hasStealth = hasStealth;
         model.msg_hasTime = isTime;
-        model.id = [NSDataUtil setChatRoomDataID];
         model.msg_Interval_time = [NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970]];
-
-        debugLog(@"/n/n/nchatRoom->%@/n/n/n",model.id);
-        
+        model.msg_type = @([type intValue]);
+        //model.id = [NSDataUtil setChatRoomDataID];
+        NSInteger count = [ChatRoomModel MR_countOfEntitiesWithContext:localContext];
+        model.id = @(count+1);
+        debugLog(@"/n/n/nchatRoom->at->[%@]/n/n/n",at);
     } completion:^(BOOL success, NSError *error) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.publicDelegate respondsToSelector:@selector(receiveChatRoomMessageWithMessageID:)]) {
-                [self.publicDelegate receiveChatRoomMessageWithMessageID:msgId];
+            if ([self.publicDelegate respondsToSelector:@selector(didReceivChatRoomeMessageId:)]) {
+                [self.publicDelegate didReceivChatRoomeMessageId:msgId];
             }
         });
     }];
@@ -391,8 +396,6 @@ static XMPPManager *sharedManager;
     NSString *msg_content = [[message elementForName:@"body"]  stringValue];
     NSString *type =[[message attributeForName:@"messageType"] stringValue];
 
-    
-    
     [ChatManager insertChatMessageWith:[self getUserId:from]
                               UserName:name
                              MessageID:msgId
@@ -414,12 +417,9 @@ static XMPPManager *sharedManager;
         model.msg_hasStealth = hasStealth;
         model.msg_hasTime = isTime;
         model.msg_type = @([type intValue]);
-        
         debugLog(@"收到的消息->%@-%@",type,model.msg_type);
-        
         NSInteger count = [ChatModel MR_countOfEntitiesWithContext:localContext];
         model.id = @(count+1);
-
     } completion:^(BOOL success, NSError *error) {
         // 已读操作
         //[self receiptsMessage:msgId ToUserID:[self getUserId:from]];

@@ -127,9 +127,6 @@
     x = _bubbleView.frame.origin.x + _bubbleView.frame.size.width + HEAD_PADDING - 6;
     y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT - 6;
     _timeLabel.frame = CGRectMake(x, y, TIME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
-    
-    //UIImage *image = [UIImage imageNamed:@"chat_gray"];
-    
 }
 
 - (void)setRightFrame:(CGSize)messageSize
@@ -169,11 +166,6 @@
     x = _bubbleView.frame.origin.x - TIME_LABEL_WIDTH - HEAD_PADDING + 4;
     y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT;
     _timeLabel.frame = CGRectMake(x, y, TIME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
-    
-   
-    //_bubbleView.backgroundColor = [UIColor lightGrayColor];
-    //_bubbleView.layer.cornerRadius = 30;
-    //_bubbleView.clipsToBounds = YES;
 }
 
 
@@ -240,7 +232,6 @@
         
         return height;
     }
-    
 }
 
 

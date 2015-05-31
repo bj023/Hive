@@ -2,7 +2,7 @@
 //  ChatRoomModel.m
 //  
 //
-//  Created by mac on 15/5/13.
+//  Created by 那宝军 on 15/5/29.
 //
 //
 
@@ -18,6 +18,7 @@
 @dynamic msg_flag;
 @dynamic msg_hasStealth;
 @dynamic msg_hasTime;
+@dynamic msg_Interval_time;
 @dynamic msg_isSend;
 @dynamic msg_latitude;
 @dynamic msg_longitude;
@@ -25,6 +26,7 @@
 @dynamic msg_time;
 @dynamic userID;
 @dynamic userName;
-@dynamic msg_Interval_time;
+@dynamic msg_type;
+@dynamic msg_send_type;
 
 @end

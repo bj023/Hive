@@ -9,13 +9,13 @@
 /* Begin PBXBuildFile section */
 		81F8AAD06AFC3B08D9C2DAA2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B40D61FF317180402DFC4F3 /* libPods.a */; };
 		964698D81AD1634400FE7C4F /* XMPPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 964698D71AD1634400FE7C4F /* XMPPManager.m */; };
-		965111531AD4B3810045EBA5 /* ChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 965111521AD4B3810045EBA5 /* ChatCell.m */; };
 		9662AAB81B0EBBD300DB247F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9662AAB71B0EBBD300DB247F /* Foundation.framework */; };
 		9662AABA1B0EBBE200DB247F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9662AAB91B0EBBE200DB247F /* CoreGraphics.framework */; };
 		9662AABC1B0EBBF500DB247F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9662AABB1B0EBBF500DB247F /* UIKit.framework */; };
 		9662AABE1B0EBC7D00DB247F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9662AABD1B0EBC7D00DB247F /* CoreFoundation.framework */; };
 		9662AAC11B0EC12200DB247F /* FRDLivelyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 9662AAC01B0EC12200DB247F /* FRDLivelyButton.m */; };
 		9662AAC41B0EC1B900DB247F /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9662AAC31B0EC1B900DB247F /* ProfileViewController.m */; };
+		96662F0E1B184C2B006BE005 /* UIAlertView+Block.m in Sources */ = {isa = PBXBuildFile; fileRef = 96662F0D1B184C2B006BE005 /* UIAlertView+Block.m */; };
 		96663C521AF893A50015FBB6 /* ChatModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96663C511AF893A50015FBB6 /* ChatModel.m */; };
 		9668A7171B109748009E2376 /* CustomSearchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9668A7161B109748009E2376 /* CustomSearchView.m */; };
 		966C1DE91AD238F8004D33DA /* MessageTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966C1DE81AD238F8004D33DA /* MessageTextView.m */; };
@@ -54,6 +54,7 @@
 		96CE0C941AFF393400004505 /* GothamRounded-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 96CE0C921AFF393400004505 /* GothamRounded-Book.otf */; };
 		96CE0C951AFF394700004505 /* GothamRounded-Bold.otf in Sources */ = {isa = PBXBuildFile; fileRef = 96CE0C911AFF393400004505 /* GothamRounded-Bold.otf */; };
 		96CE0C961AFF394700004505 /* GothamRounded-Book.otf in Sources */ = {isa = PBXBuildFile; fileRef = 96CE0C921AFF393400004505 /* GothamRounded-Book.otf */; };
+		96CE4C151B185E7F00E78511 /* POOKController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CE4C141B185E7F00E78511 /* POOKController.m */; };
 		96E243BF1B0C88240079AE0E /* ChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E243BE1B0C88240079AE0E /* ChatController.m */; };
 		96E4E36B1B0D8BA80092DA32 /* GPLoadingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E4E36A1B0D8BA80092DA32 /* GPLoadingButton.m */; };
 		96FCDE6D1AE4D2930040688F /* UIView+Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FCDE6C1AE4D2930040688F /* UIView+Common.m */; };
@@ -80,7 +81,6 @@
 		E68714821ACD0112000ED631 /* CustomButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = E68714811ACD0112000ED631 /* CustomButtonView.m */; };
 		E69F08491ABE999F00E5ADD3 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E69F08481ABE999F00E5ADD3 /* MainViewController.m */; };
 		E69F084C1ABE99B700E5ADD3 /* SettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = E69F084B1ABE99B700E5ADD3 /* SettingsController.m */; };
-		E69F084F1ABE99D400E5ADD3 /* MessagesController.m in Sources */ = {isa = PBXBuildFile; fileRef = E69F084E1ABE99D400E5ADD3 /* MessagesController.m */; };
 		E69F08521ABE9A1100E5ADD3 /* HiveController.m in Sources */ = {isa = PBXBuildFile; fileRef = E69F08511ABE9A1100E5ADD3 /* HiveController.m */; };
 		E69F08551ABE9A3D00E5ADD3 /* NearByController.m in Sources */ = {isa = PBXBuildFile; fileRef = E69F08541ABE9A3D00E5ADD3 /* NearByController.m */; };
 		E6A808421ABE55CB005E48C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A808411ABE55CB005E48C2 /* main.m */; };
@@ -108,8 +108,6 @@
 		962B2E7D1AFC5FF8005E9993 /* UserTalkDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserTalkDelegate.h; sourceTree = "<group>"; };
 		964698D61AD1634400FE7C4F /* XMPPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPManager.h; sourceTree = "<group>"; };
 		964698D71AD1634400FE7C4F /* XMPPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPManager.m; sourceTree = "<group>"; };
-		965111511AD4B3810045EBA5 /* ChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCell.h; sourceTree = "<group>"; };
-		965111521AD4B3810045EBA5 /* ChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatCell.m; sourceTree = "<group>"; };
 		9662AAB71B0EBBD300DB247F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9662AAB91B0EBBE200DB247F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9662AABB1B0EBBF500DB247F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -118,6 +116,8 @@
 		9662AAC01B0EC12200DB247F /* FRDLivelyButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FRDLivelyButton.m; sourceTree = "<group>"; };
 		9662AAC21B0EC1B900DB247F /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		9662AAC31B0EC1B900DB247F /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
+		96662F0C1B184C2B006BE005 /* UIAlertView+Block.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Block.h"; sourceTree = "<group>"; };
+		96662F0D1B184C2B006BE005 /* UIAlertView+Block.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Block.m"; sourceTree = "<group>"; };
 		96663C501AF893A50015FBB6 /* ChatModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatModel.h; sourceTree = "<group>"; };
 		96663C511AF893A50015FBB6 /* ChatModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatModel.m; sourceTree = "<group>"; };
 		9668A7151B109748009E2376 /* CustomSearchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSearchView.h; sourceTree = "<group>"; };
@@ -189,6 +189,8 @@
 		96CBA7F71B0C5D04002FA7F6 /* ChatViewListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewListController.m; sourceTree = "<group>"; };
 		96CE0C911AFF393400004505 /* GothamRounded-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamRounded-Bold.otf"; sourceTree = "<group>"; };
 		96CE0C921AFF393400004505 /* GothamRounded-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamRounded-Book.otf"; sourceTree = "<group>"; };
+		96CE4C131B185E7F00E78511 /* POOKController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POOKController.h; sourceTree = "<group>"; };
+		96CE4C141B185E7F00E78511 /* POOKController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POOKController.m; sourceTree = "<group>"; };
 		96E243BD1B0C88240079AE0E /* ChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatController.h; sourceTree = "<group>"; };
 		96E243BE1B0C88240079AE0E /* ChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatController.m; sourceTree = "<group>"; };
 		96E4E3691B0D8BA80092DA32 /* GPLoadingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPLoadingButton.h; sourceTree = "<group>"; };
@@ -243,8 +245,6 @@
 		E69F08481ABE999F00E5ADD3 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		E69F084A1ABE99B700E5ADD3 /* SettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsController.h; sourceTree = "<group>"; };
 		E69F084B1ABE99B700E5ADD3 /* SettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsController.m; sourceTree = "<group>"; };
-		E69F084D1ABE99D400E5ADD3 /* MessagesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessagesController.h; sourceTree = "<group>"; };
-		E69F084E1ABE99D400E5ADD3 /* MessagesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessagesController.m; sourceTree = "<group>"; };
 		E69F08501ABE9A1100E5ADD3 /* HiveController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HiveController.h; sourceTree = "<group>"; };
 		E69F08511ABE9A1100E5ADD3 /* HiveController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HiveController.m; sourceTree = "<group>"; };
 		E69F08531ABE9A3D00E5ADD3 /* NearByController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NearByController.h; sourceTree = "<group>"; };
@@ -460,8 +460,6 @@
 				968703951AEF2C7E00088718 /* ChatBaseCell.m */,
 				9687039E1AEF402E00088718 /* chatViewCell.h */,
 				9687039F1AEF402E00088718 /* chatViewCell.m */,
-				965111511AD4B3810045EBA5 /* ChatCell.h */,
-				965111521AD4B3810045EBA5 /* ChatCell.m */,
 				967D52DF1AFB8B8000BF77E1 /* ChatRoomBaseCell.h */,
 				967D52E01AFB8B8000BF77E1 /* ChatRoomBaseCell.m */,
 				967D52E21AFB8BF400BF77E1 /* ChatRoomCell.h */,
@@ -611,10 +609,10 @@
 				E69F08481ABE999F00E5ADD3 /* MainViewController.m */,
 				E69F084A1ABE99B700E5ADD3 /* SettingsController.h */,
 				E69F084B1ABE99B700E5ADD3 /* SettingsController.m */,
-				E69F084D1ABE99D400E5ADD3 /* MessagesController.h */,
-				E69F084E1ABE99D400E5ADD3 /* MessagesController.m */,
 				E69F08501ABE9A1100E5ADD3 /* HiveController.h */,
 				E69F08511ABE9A1100E5ADD3 /* HiveController.m */,
+				96CE4C131B185E7F00E78511 /* POOKController.h */,
+				96CE4C141B185E7F00E78511 /* POOKController.m */,
 				E69F08531ABE9A3D00E5ADD3 /* NearByController.h */,
 				E69F08541ABE9A3D00E5ADD3 /* NearByController.m */,
 				9662AAC21B0EC1B900DB247F /* ProfileViewController.h */,
@@ -763,6 +761,8 @@
 				96FCDE6C1AE4D2930040688F /* UIView+Common.m */,
 				96FCDE6E1AE4D99C0040688F /* MBProgressHUD+Helper.h */,
 				96FCDE6F1AE4D99C0040688F /* MBProgressHUD+Helper.m */,
+				96662F0C1B184C2B006BE005 /* UIAlertView+Block.h */,
+				96662F0D1B184C2B006BE005 /* UIAlertView+Block.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -889,7 +889,6 @@
 				96A47C6B1B00680800837F7E /* WelcomeView.m in Sources */,
 				967D52E11AFB8B8000BF77E1 /* ChatRoomBaseCell.m in Sources */,
 				96CBA7F81B0C5D04002FA7F6 /* ChatViewListController.m in Sources */,
-				965111531AD4B3810045EBA5 /* ChatCell.m in Sources */,
 				96E243BF1B0C88240079AE0E /* ChatController.m in Sources */,
 				E6A808481ABE55CC005E48C2 /* Hive.xcdatamodeld in Sources */,
 				E6F95CF51ACD764E005CE112 /* MessageCell.m in Sources */,
@@ -916,6 +915,7 @@
 				E65D07F51ACABA9F0074A3FB /* UserInformationController.m in Sources */,
 				96AFB68C1AD3C8E700D6128E /* LoginModel.m in Sources */,
 				E6B8BAE11AC7ABD0003CA484 /* LoginView.m in Sources */,
+				96662F0E1B184C2B006BE005 /* UIAlertView+Block.m in Sources */,
 				968703961AEF2C7E00088718 /* ChatBaseCell.m in Sources */,
 				E650FA831AC8DD6D0010DD06 /* CustomActionSheetView.m in Sources */,
 				E650FA801AC8BD490010DD06 /* SexView.m in Sources */,
@@ -940,12 +940,12 @@
 				E6B8BAF21AC7E036003CA484 /* RegisterFourView.m in Sources */,
 				967386D31B06F99F0018777C /* MessageModel.m in Sources */,
 				966C1DEC1AD239FD004D33DA /* MessageToolBar.m in Sources */,
-				E69F084F1ABE99D400E5ADD3 /* MessagesController.m in Sources */,
 				E65D07E61ACA3C730074A3FB /* CustomIMGView.m in Sources */,
 				96663C521AF893A50015FBB6 /* ChatModel.m in Sources */,
 				E6446D7A1AC969D50099AFF1 /* HttpTool.m in Sources */,
 				9662AAC41B0EC1B900DB247F /* ProfileViewController.m in Sources */,
 				96AFB68F1AD421D500D6128E /* NearByModel.m in Sources */,
+				96CE4C151B185E7F00E78511 /* POOKController.m in Sources */,
 				E69F084C1ABE99B700E5ADD3 /* SettingsController.m in Sources */,
 				E69F08491ABE999F00E5ADD3 /* MainViewController.m in Sources */,
 				E6B8BAEE1AC7DA3C003CA484 /* RegisterThirdView.m in Sources */,
@@ -1128,7 +1128,7 @@
 					"\"UIKit\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c276a4c7-9afb-4477-a7a5-f8121ed5af86";
+				PROVISIONING_PROFILE = "c2dfc240-e74a-4784-9193-f992e84260d4";
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
@@ -1201,7 +1201,7 @@
 					"\"UIKit\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c276a4c7-9afb-4477-a7a5-f8121ed5af86";
+				PROVISIONING_PROFILE = "c2dfc240-e74a-4784-9193-f992e84260d4";
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;

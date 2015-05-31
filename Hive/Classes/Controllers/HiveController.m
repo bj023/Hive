@@ -247,7 +247,6 @@
         model.userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
         model.messageID = messageID;
         model.hasAname = self.chatToolBar.aNameLength>0?_isAname:@"";
-
         model.msg_message = message;
         model.msg_time = currentTime;
         model.msg_flag = @"ME";
