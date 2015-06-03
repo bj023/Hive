@@ -83,7 +83,6 @@
 {
     NSString *userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
     return [NSMutableArray arrayWithArray:[MessageModel MR_findByAttribute:@"cur_userID" withValue:userID andOrderBy:@"msg_time" ascending:NO]];
-    //return [NSMutableArray arrayWithArray:[MessageModel MR_findAllSortedBy:@"msg_time" ascending:NO]];
 }
 
 
@@ -125,6 +124,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     
     //MessageModel *model = _dataSource[indexPath.row];
@@ -134,12 +134,12 @@
 - (void)tapHeadImgSendAction:(MessageModel *)model
 {
     //点击头像 查看个人信息
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     [HttpTool sendRequestProfileWithUserID:model.toUserID success:^(id json) {
         ResponseChatUserInforModel *res = [[ResponseChatUserInforModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             // 跳转
             self.messageBlock(res.RETURN_OBJ);
         }else

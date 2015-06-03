@@ -23,7 +23,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self initFirstView];
-        [self hiddenNavBackBtn:YES];
+        //[self hiddenNavBackBtn:YES];
     }
     
     return self;
@@ -46,9 +46,9 @@
     CGFloat phoneNumW = UIWIDTH - phoneNumX - 121/2;
     CGFloat phoneNumH = 30;
     self.phoneNumText                    = [[UITextField alloc] initWithFrame:CGRectMake(phoneNumX,phoneNumY, phoneNumW, phoneNumH)];
-    self.phoneNumText.font               = TextFont;
+    self.phoneNumText.font               = [UIFont fontWithName:Font_Helvetica size:18];
     self.phoneNumText.delegate           = self;
-    self.phoneNumText.textColor          = kRegisterTextTintColor;
+    self.phoneNumText.textColor          = kRegisterTextColor;
     self.phoneNumText.tintColor          = kRegisterTextTintColor;
     self.phoneNumText.keyboardType       = UIKeyboardTypeNumberPad;
     //self.phoneNumText.keyboardAppearance = UIKeyboardAppearanceDark;
@@ -66,15 +66,46 @@
     [self addSubview:self.phoneNumLineIMG];
 
     CGFloat introX = self.phoneNumLineIMG.frame.origin.x;
-    CGFloat introY = self.phoneNumLineIMG.frame.origin.y + 60/2;
+    CGFloat introY = self.phoneNumLineIMG.frame.origin.y + 30/2;
     CGFloat introW = UIWIDTH - 2 * introX;
-    CGFloat introH = 40;
-    self.phoneNumIntroLabel                 = [[UILabel alloc] initWithFrame:CGRectMake(introX, introY, introW, introH)];
-    self.phoneNumIntroLabel.text            = ValidationCodeStrin;
-    self.phoneNumIntroLabel.font            = HintFont;
-    self.phoneNumIntroLabel.textColor       = kRegisterLineColor;
+    CGFloat introH = 50;
+    
+    self.phoneNumIntroLabel                 = [[UILabel alloc] init];
+    
+    UIFont *tetxFont = [UIFont fontWithName:Font_Helvetica size:14];
+    CGSize textSize = [UIFontUtil sizeWithString:ValidationCodeStrin font:tetxFont maxSize:CGSizeMake(introW, MAXFLOAT)];
+    introH = textSize.height + 10;
+    
+    debugLog(@"%lf",introH);
+    
+    self.phoneNumIntroLabel.frame           = CGRectMake(introX, introY, introW, introH);
     self.phoneNumIntroLabel.backgroundColor = [UIColor clearColor];
     self.phoneNumIntroLabel.numberOfLines   = 0;
+//    self.phoneNumIntroLabel.text            = ValidationCodeStrin;
+    // 行间距
+    
+    self.phoneNumIntroLabel.textColor = [UIColorUtil colorWithHexString:@"#B2B2B2"];
+    
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:ValidationCodeStrin];
+//    [str addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(0,5)];
+//    [str addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(6,12)];
+//    [str addAttribute:NSForegroundColorAttributeName value:[UIColor greenColor] range:NSMakeRange(19,6)];
+    
+    [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:Font_Bold size:14] range:NSMakeRange(28, 12)];
+    [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:Font_Bold size:14] range:NSMakeRange([ValidationCodeStrin length] - 14, 14)];
+    self.phoneNumIntroLabel.attributedText = str;
+    
+    /*
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 7;// 字体的行间距
+    paragraphStyle.alignment = NSTextAlignmentLeft;
+    NSDictionary *attributes = @{
+                                 NSFontAttributeName : tetxFont,
+                                 NSParagraphStyleAttributeName : paragraphStyle,
+                                 NSForegroundColorAttributeName : [UIColorUtil colorWithHexString:@"#B2B2B2"]
+                                 };
+    self.phoneNumIntroLabel.attributedText = [[NSAttributedString alloc] initWithString:ValidationCodeStrin attributes:attributes];
+    */
     [self addSubview:self.phoneNumIntroLabel];
 }
 

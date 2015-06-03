@@ -21,12 +21,12 @@
     return  locationString;
 }
 
-+(NSString *)getCurrentSendTime
++(NSString *)getCurrentMilliScondTime
 {
     //获得系统时间
     NSDate *  senddate=[NSDate date];
     NSDateFormatter  *dateformatter=[[NSDateFormatter alloc] init];
-    [dateformatter setDateFormat:DateFormat_HM];
+    [dateformatter setDateFormat:DataFormat_YMD_HM_ss_SSS];
     NSString *  locationString=[dateformatter stringFromDate:senddate];
     return  locationString;
 }
@@ -64,7 +64,14 @@
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSInteger weekNumber =  [calendar component:NSCalendarUnitWeekday fromDate:date];
 
-    return arrWeek[weekNumber-1];
+    NSLog(@"weekNumber->%ld",weekNumber);
+    return arrWeek[weekNumber==0?0:weekNumber-1];
+}
+
++ (NSNumber *)getCurrentTimeInterval
+{
+    UInt64 recordTime = [[NSDate date] timeIntervalSince1970]*1000*1000;
+    return [NSNumber numberWithLongLong:recordTime];
 }
 
 @end

@@ -17,5 +17,8 @@ typedef void(^SelectPhoto)(NSString *str);
 
 - (void)reloadSetting_ProfileData;
 
+
+- (void)updateViewState;
+
 - (void)set_HeadIMG:(UIImage *)image;
 @end

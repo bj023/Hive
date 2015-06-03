@@ -20,7 +20,7 @@
 
 @property (strong, nonatomic)UIScrollView *scrollerView;
 
-@property (strong, nonatomic)LoginView *loginView;
+@property (strong, nonatomic) LoginView *loginView;
 
 @property (strong, nonatomic) RegisterView       *registerFirst;
 @property (strong, nonatomic) RegisterSecondView *registerSecond;
@@ -84,13 +84,17 @@
         [self.scrollerView addSubview:self.loginView];
         
         self.loginView.block = ^(NSString *str){
-            
+            /*
             if ([str isEqualToString:@"Sign up"]) {
                 [weakSelf.loginView endEditing:YES];
                 [weakSelf.registerFirst become_FirstResponder];
                 CGRect frame = weakSelf.view.bounds;
                 frame.origin.x = UIWIDTH;
                 [weakSelf.scrollerView scrollRectToVisible:frame animated:YES];
+            }
+             */
+            if ([str isEqualToString:@"Back"]) {
+                [weakSelf.navigationController popViewControllerAnimated:YES];
             }else if([str isEqualToString:@"Terms"]){
                 // 点击条款
             }else if ([str isEqualToString:@"Login"]){
@@ -132,11 +136,13 @@
         self.registerFirst.block = ^(NSString *str){
             
             if ([str isEqualToString:@"Back"]) {
+                /*
                 CGRect frame = weakSelf.view.bounds;
                 [weakSelf.loginView become_FirstResponder];
                 frame.origin.x = 0;
                 [weakSelf.scrollerView scrollRectToVisible:frame animated:YES];
-                
+                */
+                [weakSelf.navigationController popViewControllerAnimated:YES];
             }else{
                 [weakSelf sendRequestFist:str];
             }
@@ -157,7 +163,14 @@
         };
         
         self.registerThird.block = ^(NSString *str){
-            [weakSelf sendRequestThird:str];
+            
+            if ([str isEqualToString:@"Back"]) {
+                CGRect frame = weakSelf.view.bounds;
+                [weakSelf.registerSecond become_FirstResponder];
+                frame.origin.x = UIWIDTH;
+                [weakSelf.scrollerView scrollRectToVisible:frame animated:YES];
+            }else
+                [weakSelf sendRequestThird:str];
         };
         
         self.registerFour.block = ^(NSString *str){
@@ -208,13 +221,14 @@
         [[UIApplication sharedApplication] setStatusBarHidden:YES];
         // 上传图片
         [self.registerFour setHeadImgae:img];
-        
+        [self.registerFour become_FirstResponder];
     }];
 }
 
 #pragma -mark 跳转
 - (void)pushNextRegister:(NSString *)navStr
 {
+    /*
     CGRect frame = self.view.bounds;
     if ([navStr isEqualToString:@"Back"]) {
         [self.loginView become_FirstResponder];
@@ -224,10 +238,18 @@
         frame.origin.x = UIWIDTH*1;
     }
     [self.scrollerView scrollRectToVisible:frame animated:YES];
+     */
+    
+    CGRect frame = self.view.bounds;
+    [self.registerSecond become_FirstResponder];
+    frame.origin.x = UIWIDTH*1;
+    [self.scrollerView scrollRectToVisible:frame animated:YES];
+
 }
 
 - (void)pushThirdRegister:(NSString *)navStr
 {
+    /*
     CGRect frame = self.view.bounds;
     if ([navStr isEqualToString:@"Back"]) {
         [self.registerFirst become_FirstResponder];
@@ -237,18 +259,35 @@
         frame.origin.x = UIWIDTH*2;
     }
     [self.scrollerView scrollRectToVisible:frame animated:YES];
+     
+     */
+    
+    CGRect frame = self.view.bounds;
+    [self.registerThird become_FirstResponder];
+    frame.origin.x = UIWIDTH*2;
+    [self.scrollerView scrollRectToVisible:frame animated:YES];
+
 }
 
 - (void)pushFourRegister:(NSString *)navStr
 {
+    /*
     CGRect frame = self.view.bounds;
     if ([navStr isEqualToString:@"Back"]) {
         [self.registerSecond become_FirstResponder];
         frame.origin.x = UIWIDTH*1;
     }else{
         [self.registerFour become_FirstResponder];
+        self.registerFour.nameString = self.registerThird.userNameText.text;
         frame.origin.x = UIWIDTH*3;
     }
+     [self.scrollerView scrollRectToVisible:frame animated:YES];
+
+     */
+    CGRect frame = self.view.bounds;
+    [self.registerFour become_FirstResponder];
+    self.registerFour.nameString = self.registerThird.userNameText.text;
+    frame.origin.x = UIWIDTH*3;
     [self.scrollerView scrollRectToVisible:frame animated:YES];
 }
 

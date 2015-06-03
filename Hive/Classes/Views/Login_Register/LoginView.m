@@ -30,7 +30,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self initTopView];
+        //[self initTopView];//去掉
         [self initView];
         [self addKeyboardNotification];
         [self setNavNextBtnTitle:@"SIGN IN"];
@@ -84,18 +84,19 @@
     [self.line2IMG setBackgroundColor:kRegisterLineColor];
 
     
-    [self.userNameText setTextColor:kRegisterTextTintColor];
-    [self.passwordText setTextColor:kRegisterTextTintColor];
+    [self.userNameText setTextColor:kRegisterTextColor];
+    [self.passwordText setTextColor:kRegisterTextColor];
     
     [self.userNameText setTintColor:kRegisterTextTintColor];
     [self.passwordText setTintColor:kRegisterTextTintColor];
     
     UIColor *color = kRegisterLineColor;
-    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:TextFont, NSFontAttributeName,
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:Font_Helvetica size:16], NSFontAttributeName,
                                 color, NSForegroundColorAttributeName, nil];
     
-    self.userNameText.font = TextFont;
-    self.passwordText.font = TextFont;
+    
+    self.userNameText.font = [UIFont fontWithName:Font_Helvetica size:16];
+    self.passwordText.font = [UIFont fontWithName:Font_Helvetica size:16];
 
     self.userNameText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Email" attributes:attributes];
     self.passwordText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Password" attributes:attributes];
@@ -124,8 +125,8 @@
     self.forgetBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.forgetBtn.frame = CGRectMake(forgetX, forgetY, forgetW, forgetH);
     [self.forgetBtn setTitle:ForgetString forState:UIControlStateNormal];
-    [self.forgetBtn setTitleColor:[UIColorUtil colorWithCodea0a0a0] forState:UIControlStateNormal];
-    self.forgetBtn.titleLabel.font = HintFont;
+    [self.forgetBtn setTitleColor:[UIColorUtil colorWithHexString:@"#B2B2B2"] forState:UIControlStateNormal];
+    self.forgetBtn.titleLabel.font = [UIFont fontWithName:Font_Helvetica size:14];
     self.forgetBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     [self addSubview:self.forgetBtn];
     
@@ -204,6 +205,11 @@
 }
 
 #pragma -mark 按钮事件
+- (void)navBackAction:(UIButton *)sender
+{
+    [super navBackAction:sender];
+    self.block(@"Back");
+}
 
 - (void)navNextAction:(UIButton *)sender
 {

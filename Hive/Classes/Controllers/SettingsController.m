@@ -8,16 +8,21 @@
 
 #import "SettingsController.h"
 #import "SettingsCell.h"
+#import "LogOutCell.h"
 #import "ProfileCell.h"
 #import "NotificationNorCell.h"
 #import "Utils.h"
 #import "CustomIMGView.h"
 #import "CustomActionSheetView.h"
 #import "UIAlertView+Block.h"
+#import "UIActionSheet+Block.h"
+#import "UIView+Animation.h"
 
 #define kTopHeight 326/2
 #define kHeadSize 178/2
 #define kTopY 216/2
+
+#define ICONIMGARR @[@"delete",@"quit"]
 
 @interface SettingsController ()<UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
@@ -59,7 +64,7 @@
                   @"Block List",
                   @"Privacy Police",
                   @"Terms of Service",
-                  @"Clear All Chats"];
+                  @"Clear All Chats",@"Log out"];
 
 }
 
@@ -69,17 +74,15 @@
     UIView *headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.settingTableView.bounds.size.width, kTopHeight)];
     headView.backgroundColor = [UIColorUtil colorWithHexString:@"#f1efee"];
     self.settingTableView.tableHeaderView = headView;
-    
+    //线
     self.headIMG = [self getProfileIMG];
     
     [headView addSubview:self.headIMG];
     
     CurrentUserInfo *user = [[UserInfoManager sharedInstance] getCurrentUserInfo];
 
-    
-    [self.headIMG setImageURLStr:User_Head(user.userID) placeholder:nil];
-
-    
+    //[self.headIMG setImageURLStr:User_Head(user.userID) placeholder:nil];
+    [self.headIMG setImageURLStr:user.userHead];
     //self.headIMG.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:User_Head(user.userID)]]];
     debugLog(@"用户头像->%@",User_Head(user.userID));
     
@@ -89,22 +92,37 @@
 
 - (void)setTableFooterView
 {
-    
     UIView *footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, 60)];
     footView.backgroundColor = [UIColor whiteColor];
     self.settingTableView.tableFooterView = footView;
     
     UIButton *mlogOutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    mlogOutBtn.frame = CGRectMake(0, 10, UIWIDTH, 40);
+    mlogOutBtn.frame = CGRectMake(0, 8, UIWIDTH, 44);
     mlogOutBtn.titleLabel.font = SettingsFont;
     [mlogOutBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [mlogOutBtn setTitle:@"Log Out" forState:UIControlStateNormal];
+    [mlogOutBtn setTitle:@"Log out" forState:UIControlStateNormal];
     [footView addSubview:mlogOutBtn];
     [mlogOutBtn addTarget:self action:@selector(clickLogOutBtn:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [mlogOutBtn setBackgroundImage:[UIColorUtil createImageWithColor:kLine_Color] forState:UIControlStateHighlighted];
 }
 
 - (void)clickLogOutBtn:(id)sender
 {
+    UIActionSheet *logOutSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                         destructiveButtonTitle:@"Log out"
+                                              otherButtonTitles: nil];
+    [logOutSheet handlerClickedButton:^(NSInteger btnIndex) {
+        if (btnIndex == 0) {
+            [self sendRequestLogOut];
+        }
+    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [logOutSheet showInView:self.view];
+    });
+    /*
     UIAlertView *logupAlert = [[UIAlertView alloc] initWithTitle:nil
                                                          message:@"Are you soure log up"
                                                         delegate:self
@@ -116,6 +134,7 @@
         }
     }];
     [logupAlert show];
+     */
 }
 
 #pragma -mark 头像
@@ -128,8 +147,11 @@
     headIMG.backgroundColor = [UIColor clearColor];
     headIMG.layer.cornerRadius = width/2;
     headIMG.clipsToBounds = YES;
-    headIMG.layer.borderWidth = kHeadIMG_Line_Height;
-    headIMG.layer.borderColor = kHeadIMG_Layer_Color.CGColor;
+//    headIMG.layer.borderWidth = kHeadIMG_Line_Height;
+//    headIMG.layer.borderColor = kHeadIMG_Layer_Color.CGColor;
+//    headIMG.layer.edgeAntialiasingMask = kCALayerLeftEdge | kCALayerRightEdge | kCALayerBottomEdge | kCALayerTopEdge;
+//    headIMG.layer.masksToBounds = YES;
+        
     return headIMG;
 }
 
@@ -147,7 +169,6 @@
         self.settingTableView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:self.settingTableView];
         [self setTableHeadView];
-        [self setTableFooterView];
     }
 }
 
@@ -182,7 +203,11 @@
          };
         
         return cell;
-    }else {
+    }else if(indexPath.row == 10 || indexPath.row == 11){
+        LogOutCell *cell = [LogOutCell cellWithTableView:tableView];
+        [cell setIconIMG:ICONIMGARR[indexPath.row-10] Title:_titleArr[indexPath.row]];
+        return cell;
+    }else{
         SettingsCell *cell = [SettingsCell cellWithTableView:tableView];
         [cell settingData:_titleArr[indexPath.row]];
         return cell;
@@ -191,7 +216,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 10) {
+        /*
         UIAlertView *logupAlert = [[UIAlertView alloc] initWithTitle:nil
                                                              message:@"Are you soure clear all chat"
                                                             delegate:self
@@ -205,9 +232,31 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [logupAlert show];
         });
-    }else
+         */
+        
+        UIActionSheet *clearChatSheet = [[UIActionSheet alloc] initWithTitle:@"All chats will be deleted from your devices"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Cancel"
+                                             destructiveButtonTitle:@"Delete All"
+                                                  otherButtonTitles: nil];
+        [clearChatSheet handlerClickedButton:^(NSInteger btnIndex) {
+
+            if (btnIndex == 0)
+                self.clickCellAtIndex(indexPath);
+        }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [clearChatSheet showInView:self.view];
+        });
+    }else if(indexPath.row == 11)
+        [self clickLogOutBtn:nil];
+    else
         self.clickCellAtIndex(indexPath);
 
+}
+// 删除所有记录完成 提示
+- (void)updateViewState
+{
+    [self showUpdateSuccess];
 }
 
 #pragma -mark 请求网络
@@ -263,9 +312,9 @@
 {
     UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil
                                                        delegate:self
-                                              cancelButtonTitle:@"cancel"
+                                              cancelButtonTitle:@"Cancel"
                                          destructiveButtonTitle:nil
-                                              otherButtonTitles:@"take photo",@"choose from photos", nil];
+                                              otherButtonTitles:@"Take photo",@"Choose from photos", nil];
     
     [sheet showInView:self.view];
     /*
@@ -327,8 +376,29 @@
     self.headIMG.image = image;
     NSData *imgData = UIImageJPEGRepresentation(image, 0.1);
     [HttpTool sendRequestUploadHeadImg:imgData success:^(id json) {
-        [self showHudWith:@"上传成功"];
+        
+        NSError *error = nil;
+        ResponseLoginModel *res = [[ResponseLoginModel alloc] initWithString:json error:&error];
+        
+        debugLog(@"%d-%@",res.RETURN_CODE,res.content);
+        
+        
+        if (res.RETURN_CODE == 200) {
+            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            
+            [self handleLoginCenterManager:res.content];
+            [self showUpdateSuccess];
+            
+        }else{
+            
+            [self.view lockAnimationForView:self.headIMG];
+
+            [self showHudWith:ErrorRequestText];
+        }
+        
     } faliure:^(NSError *error) {
+        [self.view lockAnimationForView:self.headIMG];
         [self showHudWith:@"上传失败"];
     }];
     
@@ -339,6 +409,14 @@
     [MBProgressHUD showTextHUDAddedTo:self.view withText:text animated:YES];
 }
 
+- (void)handleLoginCenterManager:(LoginModel *)loginModel
+{
+    CurrentUserInfo *user = [[UserInfoManager sharedInstance] getCurrentUserInfo];
+    
+    user.userHead = loginModel.iconPath;
+   
+    [[UserInfoManager sharedInstance] saveUserInfoToDisk:user];
+}
 
 - (void)handleSetRootViewController
 {

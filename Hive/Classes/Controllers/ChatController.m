@@ -35,6 +35,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self configNav];
     [self setBackGround];
     [self configTableView];
     [self configMessageToolBar];
@@ -69,6 +70,25 @@
 - (void)setBackGround
 {
     self.view.backgroundColor = [UIColor whiteColor];
+}
+
+- (void)configNav
+{
+    UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    backBtn.frame = CGRectMake(0, 10, 25/2, 41/2);
+    [backBtn setBackgroundImage:[UIImage imageNamed:@"backNav"] forState:UIControlStateNormal];
+    UIBarButtonItem *bacgItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
+    self.navigationItem.leftBarButtonItem = bacgItem;
+    [backBtn addTarget:self action:@selector(backNav:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, UIWIDTH, 1)];
+    lineView.backgroundColor = [UIColorUtil colorWithHexString:@"e5e5ea"];
+    [self.navigationController.navigationBar addSubview:lineView];
+}
+
+- (void)backNav:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma -mark 初始化 表格
@@ -134,7 +154,7 @@
 - (void)tapHeadImgSendActionWithMessage:(ChatModel *)message
 {
     //点击头像 查看个人信息
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     if (IsEmpty(message.msg_userID)) {
         [self showHudWith:RequestFailText];
@@ -145,7 +165,7 @@
     [HttpTool sendRequestProfileWithUserID:message.msg_userID success:^(id json) {
         ResponseChatUserInforModel *res = [[ResponseChatUserInforModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             // 跳转
             [self pushUserInforVC:res.RETURN_OBJ];
         }else
@@ -362,6 +382,7 @@
     
 }
 // 添加一条消息
+/*
 - (void)refreshDataWithMessageID:(NSString *)msgID
 {
 
@@ -378,6 +399,14 @@
 
         });
     });
+}
+*/
+- (void)refreshDataWithMessageID:(NSString *)msgID
+{
+    ChatModel *model = [ChatModel MR_findFirstByAttribute:@"messageID" withValue:msgID];
+    [self.mesgaeArr addObject:model];
+    [self.tableView reloadData];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.mesgaeArr.count - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
 // 修改发送状态

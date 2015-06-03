@@ -63,15 +63,19 @@
     [button addTarget:self action:@selector(closeButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
      */
+    CGFloat x = UIWIDTH - 80;
+    CGFloat y = 0;
+    CGFloat w = 70;
+    CGFloat h = 44;
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame =CGRectMake(UIWIDTH - 80, 20, 60, 40);
+    button.frame =CGRectMake(x, y, w, h);
     [button setTitle:@"SAVE" forState:UIControlStateNormal];
     [button setTitleColor:ProfileColor forState:UIControlStateNormal];
 
     //关闭颜色
     //toolBtn.backgroundColor = ProfileColor;
-    button.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:18];
+    button.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:16];
     [self.view addSubview:button];
     [button addTarget:self action:@selector(clickSaveBtn:) forControlEvents:UIControlEventTouchUpInside];
      
@@ -88,10 +92,10 @@
     _toolBtn.frame =CGRectMake(0, UIHEIGHT - 50, UIWIDTH, 50);
     [_toolBtn setTitle:@"DONE" forState:UIControlStateNormal];
     [_toolBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.5] size:toolBtn.frame.size] forState:UIControlStateNormal];
-    //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.6] size:toolBtn.frame.size] forState:UIControlStateHighlighted];
+  
     //关闭颜色
-    _toolBtn.backgroundColor = ProfileColor;
+    [_toolBtn setBackgroundImage:[UIColorUtil createImageWithColor:NormalColor] forState:UIControlStateNormal];
+    [_toolBtn setBackgroundImage:[UIColorUtil createImageWithColor:HighlightedColor] forState:UIControlStateHighlighted];
     _toolBtn.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:18];
     [self.view addSubview:_toolBtn];
     [_toolBtn addTarget:self action:@selector(closeButtonAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -111,7 +115,7 @@
 - (void)configProfile
 {
     CGFloat profileX = 0;
-    CGFloat profileY = 100;
+    CGFloat profileY = UIHEIGHT/2 - 150 + 14;
     CGFloat profileW = UIWIDTH;
     CGFloat profileH = 80;
     UIView * profileView = [[UIView alloc] init];
@@ -119,43 +123,45 @@
     profileView.frame = CGRectMake(profileX, profileY, profileW, profileH);
     [self.view addSubview:profileView];
     
-    CGFloat nameX = 40;
+    CGFloat nameX = 30;
     CGFloat nameY = 5;
     CGFloat nameW = profileW - nameX * 2;
     CGFloat nameH = 30;
     _nameField = [[UITextField alloc] init];
     _nameField.frame = CGRectMake(nameX, nameY, nameW, nameH);
     _nameField.placeholder = @"name";
-    _nameField.tintColor = ProfileColor;
-    _nameField.font = [UIFont fontWithName:GothamRoundedBook size:16];
+    _nameField.textColor = kRegisterTextColor;
+    _nameField.tintColor = kRegisterTextTintColor;
+    _nameField.font = [UIFont fontWithName:Font_Helvetica size:16];
     [profileView addSubview:_nameField];
     
     CGFloat lineN_X = nameX;
     CGFloat lineN_Y = nameY + nameH + 1;
     CGFloat lineN_W = nameW;
-    CGFloat lineN_H = kLine_Height;
+    CGFloat lineN_H = 1;
     UIImageView *lineN_IMG = [[UIImageView alloc] init];
-    lineN_IMG.backgroundColor = kLine_Color;
+    lineN_IMG.backgroundColor = kRegisterLineColor;
     lineN_IMG.frame = CGRectMake(lineN_X, lineN_Y, lineN_W, lineN_H);
     [profileView addSubview:lineN_IMG];
     
     CGFloat introX = lineN_X;
-    CGFloat introY = lineN_Y+ 10;
+    CGFloat introY = lineN_Y + 14;
     CGFloat introW = nameW;
     CGFloat introH = nameH;
     _introField = [[UITextField alloc] init];
     _introField.frame = CGRectMake(introX, introY, introW, introH);
     _introField.placeholder = @"wath's up";
-    _introField.tintColor = ProfileColor;
-    _introField.font = [UIFont fontWithName:GothamRoundedBook size:16];
+    _introField.textColor = kRegisterTextColor;
+    _introField.tintColor = kRegisterTextTintColor;
+    _introField.font = [UIFont fontWithName:Font_Helvetica size:16];
     [profileView addSubview:_introField];
     
     CGFloat lineI_X = nameX;
     CGFloat lineI_Y = introY + introH + 1;
     CGFloat lineI_W = nameW;
-    CGFloat lineI_H = kLine_Height;
+    CGFloat lineI_H = 1;
     UIImageView *lineI_IMG = [[UIImageView alloc] init];
-    lineI_IMG.backgroundColor = kLine_Color;
+    lineI_IMG.backgroundColor = kRegisterLineColor;
     lineI_IMG.frame = CGRectMake(lineI_X, lineI_Y, lineI_W, lineI_H);
     [profileView addSubview:lineI_IMG];
 }
@@ -172,11 +178,12 @@
         ResponseManagerModel *res = [[ResponseManagerModel alloc] initWithString:json error:nil];
         
         if (res.RETURN_CODE == 200) {
-            [self showHudWith:@"save"];
+            //[self showHudWith:@"save"];
             CurrentUserInfo *userInfor = [[UserInfoManager sharedInstance] getCurrentUserInfo];
             userInfor.userName = _nameField.text;
             userInfor.userIntro = _introField.text;
             [[UserInfoManager sharedInstance] saveUserInfoToDisk:userInfor];
+            [self showUpdateSuccess];
         }else
             [self showHudWith:ErrorRequestText];
     } faliure:^(NSError *error) {

@@ -27,7 +27,6 @@ typedef void(^SLPagingViewMovingRedefine)(UIScrollView * scrollView, NSArray *su
 typedef void(^SLPagingViewDidChanged)(NSInteger currentPage);
 typedef void(^SLPagingViewWillChanged)(NSInteger currentPage);
 
-
 @interface SLPagingViewController : UIViewController
 
 /*

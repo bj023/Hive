@@ -90,9 +90,11 @@
 // 设置按钮 标题
 - (void)setNavNextBtnTitle:(NSString *)title
 {
+    /*
     if ([title isEqualToString:@"SIGN IN"]) {
         [self.backBtn removeFromSuperview];
     }
+     */
     [self.nextBtn setTitle:title forState:UIControlStateNormal];
 }
 

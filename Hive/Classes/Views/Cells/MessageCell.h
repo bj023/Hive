@@ -31,6 +31,7 @@
 
 @protocol MessageCellDelegate <NSObject>
 
+@optional
 - (void)deleteMessageCellData:(NSIndexPath *)indexpath;
 - (void)tapHeadImgSendAction:(MessageModel *)model;
 

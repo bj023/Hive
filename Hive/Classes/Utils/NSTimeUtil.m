@@ -241,37 +241,4 @@ static CGFloat const chageImageTime = 60.0;
     return   distance;
 }
 
-
-
-- (void)ok
-{
-    dispatch_queue_t myCustomQueue = dispatch_queue_create("example.MyCustomQueue", NULL);
-    dispatch_async(myCustomQueue, ^{
-        for (int abc=0;abc<100;abc++)
-        {
-            printf("1.Do some work here.\n");
-        }
-    });
-    dispatch_async(myCustomQueue, ^{
-        for (int abc=0;abc<100;abc++)
-        {
-            printf("2.Do some work here.\n");
-        }
-    });
-    dispatch_queue_t myCustomQueue2 = dispatch_queue_create("example.MyCustomQueue2", NULL);
-    dispatch_async(myCustomQueue2, ^{
-        for (int abc=0;abc<100;abc++)
-        {
-            printf("3. myCustomQueue2 Do some work here.\n");
-        }
-    });
-    dispatch_async(myCustomQueue2, ^{
-        for (int abc=0;abc<100;abc++)
-        {
-            printf("4. myCustomQueue2 Do some work here.\n");
-        }
-    });
-    
-}
-
 @end

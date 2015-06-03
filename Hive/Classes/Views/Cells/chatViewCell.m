@@ -65,7 +65,15 @@
         [self.contentView addSubview:_activtiyImg];
         [_activtiyImg startAnimating];
         
+        // 图片已读
+        if (!_hasRead) {
+            _hasRead = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE)];
+            _hasRead.image = [UIImage imageNamed:@"read"];
+            [_activityView addSubview:_hasRead];
+        }
+        
         //已读
+        /*
         _hasRead = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE)];
         _hasRead.text = @"Read";
         _hasRead.textColor = [UIColor whiteColor];
@@ -77,9 +85,9 @@
         _hasRead.font = [UIFont systemFontOfSize:12];
         [_hasRead sizeToFit];
         [_activityView addSubview:_hasRead];
-        
+        */
+
         /*
-        
         // 发送进度显示view
         _activityView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE)];
         [_activityView setHidden:NO];
@@ -109,6 +117,9 @@
         [self.headImgaeView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadImgAction:)]];
         //[self.bubbleView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickBubbleAction:)]];
         [self.bubbleView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressAction:)]];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ChatWillHideMenu:) name:UIMenuControllerWillHideMenuNotification object:nil];
+
     }
     
     return self;
@@ -121,7 +132,8 @@
     BOOL isShow = [self.message.msg_flag isEqualToString:@"ME"]?YES:NO;
     _activityView.frame = CGRectMake(0, self.bubbleView.frame.origin.y, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
 
-    _hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x, self.timeLabel.frame.origin.y-SEND_STATUS_SIZE-5, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE - 5);
+    //_hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x, self.timeLabel.frame.origin.y-SEND_STATUS_SIZE-5, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE - 5);
+    _hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x + self.timeLabel.frame.size.width/2 - 5, self.timeLabel.frame.origin.y-20, 15, 10);
     
     debugLog(@"%@-%@-%@-%@",self.indexPath,self.message.msg_flag,self.message.msg_type,self.message.msg_message);
     
@@ -194,6 +206,8 @@
 - (void)setMessage:(ChatModel *)message
 {
     [super setMessage:message];
+    
+    [self loadUserIconPath:message.msg_userID];
 }
 
 - (void)clickHeadImgAction:(UITapGestureRecognizer *)sender
@@ -205,8 +219,8 @@
 
 #pragma -mark 长按气泡 弹出菜单
 - (void)longPressAction:(UIGestureRecognizer *)recognizer{
-    debugMethod();
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
+
+    if (recognizer.state == UIGestureRecognizerStateBegan && [self.message.msg_type intValue] != 2) {
         
         UIView *view = recognizer.view;
         [self becomeFirstResponder];
@@ -239,8 +253,14 @@
         return NO;
     }else if (action == @selector(copyMessage:))
     {
+        [self showhighlightedBubbleView];
+
         return YES;
     }else if (action == @selector(deleteMessage:)){
+        
+
+        [self showhighlightedBubbleView];
+        
         return YES;
     }
     else
@@ -249,14 +269,56 @@
     }
 }
 - (void)copyMessage:(id)sender {
+    
+    [self hiddenHighlightedBubbleView];
+    
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     [pasteboard setString:IsEmpty(self.message.msg_message)?@"":self.message.msg_message];
 }
 
 - (void)deleteMessage:(id)sender
 {
+    [self hiddenHighlightedBubbleView];
+
     if ([self.delegate respondsToSelector:@selector(deleteMessage:IndexPath:)]) {
         [self.delegate deleteMessage:self.message IndexPath:self.indexPath];
     }
+}
+
+- (void)ChatWillHideMenu:(id)sender
+{
+    [self hiddenHighlightedBubbleView];
+}
+
+
+- (void)showhighlightedBubbleView
+{
+    self.bubbleView.highlighted = YES;
+}
+
+- (void)hiddenHighlightedBubbleView
+{
+    self.bubbleView.highlighted = NO;
+}
+
+- (void)loadUserIconPath:(NSString *)userID
+{
+    [HttpTool sendRequestProfileWithUserID:userID success:^(id json) {
+        ResponseChatUserInforModel *res = [[ResponseChatUserInforModel alloc] initWithString:json error:nil];
+        if (res.RETURN_CODE == 200) {
+            
+            NearByModel *model = res.RETURN_OBJ;
+            [self.headImgaeView setImageURLStr:model.iconPath placeholder:nil];
+            
+        }
+        
+    } faliure:^(NSError *error) {
+        
+    }];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 @end

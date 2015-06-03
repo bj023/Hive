@@ -27,7 +27,7 @@
         <attribute name="msg_flag" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="msg_hasStealth" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="msg_hasTime" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="msg_Interval_time" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="msg_Interval_time" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="msg_isSend" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="msg_latitude" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="msg_longitude" optional="YES" attributeType="String" syncable="YES"/>

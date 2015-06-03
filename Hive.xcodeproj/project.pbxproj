@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		81F8AAD06AFC3B08D9C2DAA2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B40D61FF317180402DFC4F3 /* libPods.a */; };
 		964698D81AD1634400FE7C4F /* XMPPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 964698D71AD1634400FE7C4F /* XMPPManager.m */; };
+		96603C0B1B1D4D200071479D /* UIView+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 96603C0A1B1D4D200071479D /* UIView+Animation.m */; };
 		9662AAB81B0EBBD300DB247F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9662AAB71B0EBBD300DB247F /* Foundation.framework */; };
 		9662AABA1B0EBBE200DB247F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9662AAB91B0EBBE200DB247F /* CoreGraphics.framework */; };
 		9662AABC1B0EBBF500DB247F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9662AABB1B0EBBF500DB247F /* UIKit.framework */; };
@@ -55,6 +56,7 @@
 		96CE0C951AFF394700004505 /* GothamRounded-Bold.otf in Sources */ = {isa = PBXBuildFile; fileRef = 96CE0C911AFF393400004505 /* GothamRounded-Bold.otf */; };
 		96CE0C961AFF394700004505 /* GothamRounded-Book.otf in Sources */ = {isa = PBXBuildFile; fileRef = 96CE0C921AFF393400004505 /* GothamRounded-Book.otf */; };
 		96CE4C151B185E7F00E78511 /* POOKController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CE4C141B185E7F00E78511 /* POOKController.m */; };
+		96E0987A1B1AD59D00257DDB /* UIActionSheet+Block.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E098791B1AD59D00257DDB /* UIActionSheet+Block.m */; };
 		96E243BF1B0C88240079AE0E /* ChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E243BE1B0C88240079AE0E /* ChatController.m */; };
 		96E4E36B1B0D8BA80092DA32 /* GPLoadingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E4E36A1B0D8BA80092DA32 /* GPLoadingButton.m */; };
 		96FCDE6D1AE4D2930040688F /* UIView+Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FCDE6C1AE4D2930040688F /* UIView+Common.m */; };
@@ -81,7 +83,6 @@
 		E68714821ACD0112000ED631 /* CustomButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = E68714811ACD0112000ED631 /* CustomButtonView.m */; };
 		E69F08491ABE999F00E5ADD3 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E69F08481ABE999F00E5ADD3 /* MainViewController.m */; };
 		E69F084C1ABE99B700E5ADD3 /* SettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = E69F084B1ABE99B700E5ADD3 /* SettingsController.m */; };
-		E69F08521ABE9A1100E5ADD3 /* HiveController.m in Sources */ = {isa = PBXBuildFile; fileRef = E69F08511ABE9A1100E5ADD3 /* HiveController.m */; };
 		E69F08551ABE9A3D00E5ADD3 /* NearByController.m in Sources */ = {isa = PBXBuildFile; fileRef = E69F08541ABE9A3D00E5ADD3 /* NearByController.m */; };
 		E6A808421ABE55CB005E48C2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A808411ABE55CB005E48C2 /* main.m */; };
 		E6A808451ABE55CC005E48C2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E6A808441ABE55CC005E48C2 /* AppDelegate.m */; };
@@ -108,6 +109,8 @@
 		962B2E7D1AFC5FF8005E9993 /* UserTalkDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserTalkDelegate.h; sourceTree = "<group>"; };
 		964698D61AD1634400FE7C4F /* XMPPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPManager.h; sourceTree = "<group>"; };
 		964698D71AD1634400FE7C4F /* XMPPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPManager.m; sourceTree = "<group>"; };
+		96603C091B1D4D200071479D /* UIView+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Animation.h"; sourceTree = "<group>"; };
+		96603C0A1B1D4D200071479D /* UIView+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animation.m"; sourceTree = "<group>"; };
 		9662AAB71B0EBBD300DB247F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9662AAB91B0EBBE200DB247F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9662AABB1B0EBBF500DB247F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -191,6 +194,8 @@
 		96CE0C921AFF393400004505 /* GothamRounded-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamRounded-Book.otf"; sourceTree = "<group>"; };
 		96CE4C131B185E7F00E78511 /* POOKController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POOKController.h; sourceTree = "<group>"; };
 		96CE4C141B185E7F00E78511 /* POOKController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POOKController.m; sourceTree = "<group>"; };
+		96E098781B1AD59D00257DDB /* UIActionSheet+Block.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Block.h"; sourceTree = "<group>"; };
+		96E098791B1AD59D00257DDB /* UIActionSheet+Block.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Block.m"; sourceTree = "<group>"; };
 		96E243BD1B0C88240079AE0E /* ChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatController.h; sourceTree = "<group>"; };
 		96E243BE1B0C88240079AE0E /* ChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatController.m; sourceTree = "<group>"; };
 		96E4E3691B0D8BA80092DA32 /* GPLoadingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPLoadingButton.h; sourceTree = "<group>"; };
@@ -245,8 +250,6 @@
 		E69F08481ABE999F00E5ADD3 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		E69F084A1ABE99B700E5ADD3 /* SettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsController.h; sourceTree = "<group>"; };
 		E69F084B1ABE99B700E5ADD3 /* SettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsController.m; sourceTree = "<group>"; };
-		E69F08501ABE9A1100E5ADD3 /* HiveController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HiveController.h; sourceTree = "<group>"; };
-		E69F08511ABE9A1100E5ADD3 /* HiveController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HiveController.m; sourceTree = "<group>"; };
 		E69F08531ABE9A3D00E5ADD3 /* NearByController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NearByController.h; sourceTree = "<group>"; };
 		E69F08541ABE9A3D00E5ADD3 /* NearByController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NearByController.m; sourceTree = "<group>"; };
 		E6A8083C1ABE55CB005E48C2 /* Hive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hive.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -609,8 +612,6 @@
 				E69F08481ABE999F00E5ADD3 /* MainViewController.m */,
 				E69F084A1ABE99B700E5ADD3 /* SettingsController.h */,
 				E69F084B1ABE99B700E5ADD3 /* SettingsController.m */,
-				E69F08501ABE9A1100E5ADD3 /* HiveController.h */,
-				E69F08511ABE9A1100E5ADD3 /* HiveController.m */,
 				96CE4C131B185E7F00E78511 /* POOKController.h */,
 				96CE4C141B185E7F00E78511 /* POOKController.m */,
 				E69F08531ABE9A3D00E5ADD3 /* NearByController.h */,
@@ -763,6 +764,10 @@
 				96FCDE6F1AE4D99C0040688F /* MBProgressHUD+Helper.m */,
 				96662F0C1B184C2B006BE005 /* UIAlertView+Block.h */,
 				96662F0D1B184C2B006BE005 /* UIAlertView+Block.m */,
+				96E098781B1AD59D00257DDB /* UIActionSheet+Block.h */,
+				96E098791B1AD59D00257DDB /* UIActionSheet+Block.m */,
+				96603C091B1D4D200071479D /* UIView+Animation.h */,
+				96603C0A1B1D4D200071479D /* UIView+Animation.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -880,6 +885,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96CE0C951AFF394700004505 /* GothamRounded-Bold.otf in Sources */,
+				96603C0B1B1D4D200071479D /* UIView+Animation.m in Sources */,
 				96CE0C961AFF394700004505 /* GothamRounded-Book.otf in Sources */,
 				E687147C1ACCEC11000ED631 /* UserInformationView.m in Sources */,
 				E6B8BAE81AC7CD1F003CA484 /* BaseView.m in Sources */,
@@ -889,6 +895,7 @@
 				96A47C6B1B00680800837F7E /* WelcomeView.m in Sources */,
 				967D52E11AFB8B8000BF77E1 /* ChatRoomBaseCell.m in Sources */,
 				96CBA7F81B0C5D04002FA7F6 /* ChatViewListController.m in Sources */,
+				96E0987A1B1AD59D00257DDB /* UIActionSheet+Block.m in Sources */,
 				96E243BF1B0C88240079AE0E /* ChatController.m in Sources */,
 				E6A808481ABE55CC005E48C2 /* Hive.xcdatamodeld in Sources */,
 				E6F95CF51ACD764E005CE112 /* MessageCell.m in Sources */,
@@ -926,7 +933,6 @@
 				E680C7781ACEBCE300E26136 /* UILabel+Size.m in Sources */,
 				96C8A64B1AD6311D00372AF8 /* NSDataUtil.m in Sources */,
 				E6A808741ABE6809005E48C2 /* UIFontUtil.m in Sources */,
-				E69F08521ABE9A1100E5ADD3 /* HiveController.m in Sources */,
 				966C5D181AECA059004EE35D /* ChatRoomModel.m in Sources */,
 				966ECFD21AD38EC900C93440 /* UIScrollView+UpdateContentSize.m in Sources */,
 				966ECFD11AD38EC900C93440 /* UIColor+SLAddition.m in Sources */,

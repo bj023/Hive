@@ -53,7 +53,7 @@
     [self.contentView addSubview:_headImgaeView];
     
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _nameLabel.textColor = [UIColorUtil colorWithHexString:@"#b2b2b2"];
+    _nameLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
     _nameLabel.font = [UIFont fontWithName:Font_Helvetica size:23/2];
     [self.contentView addSubview:_nameLabel];
     
@@ -63,7 +63,7 @@
     
     _timeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     _timeLabel.font = [UIFont fontWithName:Font_Helvetica size:23/2];
-    _timeLabel.textColor = [UIColorUtil colorWithHexString:@"#b2b2b2"];
+    _timeLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
     _timeLabel.textAlignment = NSTextAlignmentCenter;
     [self.contentView addSubview:_timeLabel];
 }
@@ -161,10 +161,15 @@
         UIImage *image = [UIImage imageNamed:isAname?@"WeChat_Orange":@"WeChat_gray"];
         image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
         _bubbleView.image = image;
+        UIImage *highlight = [UIImage imageNamed:isAname?@"WeChat_Orange_Highlighted":@"WeChat_Gray_Highlighted"];
+        highlight = [highlight stretchableImageWithLeftCapWidth:floorf(highlight.size.width/2) topCapHeight:floorf(highlight.size.height/2)];
+        _bubbleView.highlightedImage = highlight;
+        
+        self.bubbleView.isMe = isAname;
     }
     
     // 发表时间
-    x = _bubbleView.frame.origin.x + _bubbleView.frame.size.width + HEAD_PADDING - 6;
+    x = _bubbleView.frame.origin.x + _bubbleView.frame.size.width + HEAD_PADDING - 8;
     y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT - 6;
     _timeLabel.frame = CGRectMake(x, y, TIME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
 }
@@ -202,12 +207,17 @@
         image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
         _bubbleView.image = image;
 
+        
+        UIImage *highlight = [UIImage imageNamed:@"WeChat_Me_Highlighted"];
+        highlight = [highlight stretchableImageWithLeftCapWidth:floorf(highlight.size.width/2) topCapHeight:floorf(highlight.size.height/2)];
+        _bubbleView.highlightedImage = highlight;
+
         //_bubbleView.contentMode = UIViewContentModeScaleAspectFill;
     }
     
     // 发表时间
-    x = _bubbleView.frame.origin.x - TIME_LABEL_WIDTH - HEAD_PADDING + 4;
-    y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT;
+    x = _bubbleView.frame.origin.x - TIME_LABEL_WIDTH - HEAD_PADDING + 6;
+    y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT - 4;
     _timeLabel.frame = CGRectMake(x, y, TIME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
 }
 
@@ -220,7 +230,7 @@
     _bubbleView.isMe = isShow;
     
     if (!isShow) {
-        [_headImgaeView setImageURLStr:User_Head(_message.userID)];
+        //[_headImgaeView setImageURLStr:User_Head(_message.userID)];
         
         NSString *distance = [NSTimeUtil getDistance:message.msg_longitude latitude:message.msg_latitude];
         
@@ -228,7 +238,7 @@
             _nameLabel.text = [NSString stringWithFormat:@"隐身用户 %@",distance];
         }else
             _nameLabel.text = [NSString stringWithFormat:@"%@  %@",_message.userName,distance];
-        debugLog(@"%@----%@",_message.userName,distance);
+
     }
     
     self.timeLabel.text = [UtilDate dateFromString:_message.msg_time withFormat:DateFormat_HM];

@@ -19,6 +19,14 @@
 
 static XMPPManager *sharedManager;
 
+@interface XMPPManager ()
+{
+    dispatch_queue_t myCustomQueue;
+    dispatch_queue_t myCustomChatQueue;
+
+}
+@end
+
 @implementation XMPPManager
 
 + (XMPPManager *)sharedInstance
@@ -27,9 +35,9 @@ static XMPPManager *sharedManager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedManager = [[XMPPManager alloc] init];
+        [sharedManager setupCustomQueue];
     });
     return sharedManager;
-
 }
 //初始化XMPPStream
 - (void)setupStream{
@@ -269,10 +277,7 @@ static XMPPManager *sharedManager;
         [NSDataUtil setChatTime:currentTime ToUserID:userID];
         return currentTime;
     }
-    
-    //NSString *h_current = [UtilDate dateFromString:currentTime withFormat:DateFormat_HH];
-    //NSString *h_time = [UtilDate dateFromString:model.time withFormat:DateFormat_HH];
-    
+
     NSString *d_current = [UtilDate dateFromString:currentTime withFormat:DateFormat_DD];
     NSString *d_time = [UtilDate dateFromString:time withFormat:DateFormat_DD];
     
@@ -336,100 +341,105 @@ static XMPPManager *sharedManager;
 // 聊天室
 - (void)receiveChatRoomMessage:(XMPPMessage *)message
 {
-
-    NSString *from = [[message attributeForName:@"from"] stringValue];
-    NSString *time = [[message attributeForName:@"time"] stringValue];
-    NSString *at = [[message attributeForName:@"at"] stringValue];
-    NSString *msgId = [[message attributeForName:@"messageID"] stringValue];
-    NSString *name = [[message attributeForName:@"name"] stringValue];
-    NSString *hasStealth = [[message attributeForName:@"isStealth"] stringValue];
-    NSString *longitude = [[message attributeForName:@"longitude"] stringValue];
-    NSString *latitude = [[message attributeForName:@"latitude"] stringValue];
-    //NSString *isTime = [XMPPManager getChatRoomTime:time];
-    NSString *isTime = [XMPPManager getChatTime:time ToUserID:[self getUserId:from]];
-
-    NSString *msg_content = [[message elementForName:@"body"]  stringValue];
-    NSString *type =[[message attributeForName:@"messageType"] stringValue];
-
-
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+    dispatch_async(myCustomQueue, ^{
+        NSString *from = [[message attributeForName:@"from"] stringValue];
+        NSString *time = [[message attributeForName:@"time"] stringValue];
+        NSString *at = [[message attributeForName:@"at"] stringValue];
+        NSString *msgId = [[message attributeForName:@"messageID"] stringValue];
+        NSString *name = [[message attributeForName:@"name"] stringValue];
+        NSString *hasStealth = [[message attributeForName:@"isStealth"] stringValue];
+        NSString *longitude = [[message attributeForName:@"longitude"] stringValue];
+        NSString *latitude = [[message attributeForName:@"latitude"] stringValue];
+        NSString *isTime = [XMPPManager getChatRoomTime:time];
+        //NSString *isTime = [XMPPManager getChatTime:time ToUserID:[self getUserId:from]];
         
-        ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
-        model.userID = [self getUserId:from];
-        model.msg_message = msg_content;
-        model.msg_time = time;
-        model.msg_flag = @"YOU";
-        model.hasAname = at;
-        model.msg_longitude = longitude;
-        model.msg_latitude = latitude;
-        model.messageID = msgId;
-        model.userName = name;
-        model.msg_hasStealth = hasStealth;
-        model.msg_hasTime = isTime;
-        model.msg_Interval_time = [NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970]];
-        model.msg_type = @([type intValue]);
-        //model.id = [NSDataUtil setChatRoomDataID];
-        NSInteger count = [ChatRoomModel MR_countOfEntitiesWithContext:localContext];
-        model.id = @(count+1);
-        debugLog(@"/n/n/nchatRoom->at->[%@]/n/n/n",at);
-    } completion:^(BOOL success, NSError *error) {
+        NSString *msg_content = [[message elementForName:@"body"]  stringValue];
+        NSString *type =[[message attributeForName:@"messageType"] stringValue];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.publicDelegate respondsToSelector:@selector(didReceivChatRoomeMessageId:)]) {
-                [self.publicDelegate didReceivChatRoomeMessageId:msgId];
-            }
-        });
-    }];
+        
+        [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+            
+            ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
+            model.userID = [self getUserId:from];
+            model.msg_message = msg_content;
+            model.msg_time = time;
+            model.msg_flag = @"YOU";
+            model.hasAname = at;
+            model.msg_longitude = longitude;
+            model.msg_latitude = latitude;
+            model.messageID = msgId;
+            model.userName = name;
+            model.msg_hasStealth = hasStealth;
+            model.msg_hasTime = isTime;
+            model.msg_Interval_time = [UtilDate getCurrentTimeInterval];
+            model.msg_type = @([type intValue]);
+            model.id = [NSDataUtil setChatRoomDataID];
+
+            //NSInteger count = [ChatRoomModel MR_countOfEntitiesWithContext:localContext];
+            //model.id = @(count+1);
+
+            debugLog(@"收到聊天大厅创建记录->%@",model.id);
+            
+        } completion:^(BOOL success, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self.publicDelegate respondsToSelector:@selector(didReceivChatRoomeMessageId:)]) {
+                    [self.publicDelegate didReceivChatRoomeMessageId:msgId];
+                }
+            });
+        }];
+    });
 }
 
 // 私聊
 - (void)receiveChatMessage:(XMPPMessage *)message
 {
-    NSString *from = [[message attributeForName:@"from"] stringValue];
-    NSString *time = [[message attributeForName:@"time"] stringValue];
-    NSString *msgId = [[message attributeForName:@"messageID"] stringValue];
-    NSString *name = [[message attributeForName:@"name"] stringValue];
-    NSString *longitude = [[message attributeForName:@"longitude"] stringValue];
-    NSString *latitude = [[message attributeForName:@"latitude"] stringValue];
-    NSString *hasStealth = [[message attributeForName:@"isStealth"] stringValue];
-    NSString *isTime = [XMPPManager getChatTime:time ToUserID:[self getUserId:from]];
-    NSString *msg_content = [[message elementForName:@"body"]  stringValue];
-    NSString *type =[[message attributeForName:@"messageType"] stringValue];
-
-    [ChatManager insertChatMessageWith:[self getUserId:from]
-                              UserName:name
-                             MessageID:msgId
-                        MessageContent:msg_content
-                           MessageTime:time isShow:NO];
-
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+    dispatch_async(myCustomChatQueue, ^{
+        NSString *from = [[message attributeForName:@"from"] stringValue];
+        NSString *time = [[message attributeForName:@"time"] stringValue];
+        NSString *msgId = [[message attributeForName:@"messageID"] stringValue];
+        NSString *name = [[message attributeForName:@"name"] stringValue];
+        NSString *longitude = [[message attributeForName:@"longitude"] stringValue];
+        NSString *latitude = [[message attributeForName:@"latitude"] stringValue];
+        NSString *hasStealth = [[message attributeForName:@"isStealth"] stringValue];
+        NSString *isTime = [XMPPManager getChatTime:time ToUserID:[self getUserId:from]];
+        NSString *msg_content = [[message elementForName:@"body"]  stringValue];
+        NSString *type =[[message attributeForName:@"messageType"] stringValue];
         
-        ChatModel *model = [ChatModel MR_createInContext:localContext];
-        model.msg_userID = [self getUserId:from];
-        model.userName = name;
-        model.user_ID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
-        model.msg_message = msg_content;
-        model.msg_time = time;
-        model.msg_flag = @"YOU";
-        model.msg_longitude = longitude;
-        model.msg_latitude = latitude;
-        model.messageID = msgId;
-        model.msg_hasStealth = hasStealth;
-        model.msg_hasTime = isTime;
-        model.msg_type = @([type intValue]);
-        debugLog(@"收到的消息->%@-%@",type,model.msg_type);
-        NSInteger count = [ChatModel MR_countOfEntitiesWithContext:localContext];
-        model.id = @(count+1);
-    } completion:^(BOOL success, NSError *error) {
-        // 已读操作
-        //[self receiptsMessage:msgId ToUserID:[self getUserId:from]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.privatedelegate respondsToSelector:@selector(didReceiveMessageId:)]) {
-                [self.privatedelegate didReceiveMessageId:msgId];
-            }
-        });
-    }];
-
+        [ChatManager insertChatMessageWith:[self getUserId:from]
+                                  UserName:name
+                                 MessageID:msgId
+                            MessageContent:msg_content
+                               MessageTime:time isShow:NO];
+        
+        [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+            
+            ChatModel *model = [ChatModel MR_createInContext:localContext];
+            model.msg_userID = [self getUserId:from];
+            model.userName = name;
+            model.user_ID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+            model.msg_message = msg_content;
+            model.msg_time = time;
+            model.msg_flag = @"YOU";
+            model.msg_longitude = longitude;
+            model.msg_latitude = latitude;
+            model.messageID = msgId;
+            model.msg_hasStealth = hasStealth;
+            model.msg_hasTime = isTime;
+            model.msg_type = @([type intValue]);
+            debugLog(@"收到的消息->%@-%@",type,model.msg_type);
+            NSInteger count = [ChatModel MR_countOfEntitiesWithContext:localContext];
+            model.id = @(count+1);
+        } completion:^(BOOL success, NSError *error) {
+            // 已读操作
+            //[self receiptsMessage:msgId ToUserID:[self getUserId:from]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self.privatedelegate respondsToSelector:@selector(didReceiveMessageId:)]) {
+                    [self.privatedelegate didReceiveMessageId:msgId];
+                }
+            });
+        }];
+    });
 }
 
 - (void)receiptsChatMessage:(XMPPMessage *)message
@@ -438,5 +448,12 @@ static XMPPManager *sharedManager;
     if ([self.privatedelegate respondsToSelector:@selector(didReceiveHasReadResponse:)]) {
         [self.privatedelegate didReceiveHasReadResponse:msgId];
     }
+}
+
+- (void)setupCustomQueue
+{
+    myCustomQueue = dispatch_queue_create("example.MyCustomQueue", NULL);
+    myCustomChatQueue = dispatch_queue_create("example.MyCustomChatQueue", NULL);
+
 }
 @end

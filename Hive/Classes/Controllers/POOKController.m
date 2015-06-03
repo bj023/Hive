@@ -18,7 +18,6 @@
 #import "ChatSendMessage.h"
 #import "DataBaseModel.h"
 
-
 #define kChatCount 20
 
 @interface POOKController ()<   UITableViewDelegate, UITableViewDataSource, MessageToolBarDelegate, ChatRoomViewCellDelegate, ChatPublicMessageDelegate>
@@ -54,6 +53,18 @@
     _messageQueue = dispatch_queue_create("easemob.com", NULL);
 }
 
+- (void)startRun
+{
+    dispatch_queue_t myCustomQueue = dispatch_queue_create("example.MyCustomQueue", NULL);
+    dispatch_async(myCustomQueue, ^{
+        
+        while (1) {
+            debugLog(@"example.MyCustomQueue Do some work here.");
+            sleep(1);
+        }
+        
+    });
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -69,18 +80,18 @@
 {
     self.mesgaeArr = [NSMutableArray array];
     
-    //NSArray *array = [DataBaseModel getChatWithStartChatRoom:nil andCount:100];
-    NSArray *array = [DataBaseModel getChatRoomWithStart:self.mesgaeArr.count andCount:kChatCount];
+    NSArray *array = [DataShareInstance getChatsCount:kChatCount];
+    
+    
     NSRange range = NSMakeRange(0, [array count]);
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
     [self.mesgaeArr insertObjects:array atIndexes:indexSet];
     
     
     for (ChatRoomModel *model in [ChatRoomModel MR_findAll]) {
-        debugLog(@"%@",model.id);
+        debugLog(@"%@-%@",model.id,model.msg_Interval_time);
     }
     
-    debugLog(@"----->%@",self.mesgaeArr);
     
     if (self.mesgaeArr.count == 0) {
         return;
@@ -117,7 +128,7 @@
 - (void)beginPullDownRefreshing:(id)sender
 {
     [_refreshControl endRefreshing];
-    NSArray *array = [DataBaseModel getChatRoomWithStart:self.mesgaeArr.count andCount:kChatCount];
+    NSArray *array = [DataShareInstance getChatsCount:kChatCount];
     NSRange range = NSMakeRange(0, [array count]);
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
     [self.mesgaeArr insertObjects:array atIndexes:indexSet];
@@ -164,7 +175,7 @@
 - (void)tapHeadImgSendActionWithMessage:(ChatRoomModel *)message
 {
     //点击头像 查看个人信息
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     if (IsEmpty(message.userID)) {
         [self showHudWith:RequestFailText];
@@ -174,7 +185,7 @@
     [HttpTool sendRequestProfileWithUserID:message.userID success:^(id json) {
         ResponseChatUserInforModel *res = [[ResponseChatUserInforModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             // 跳转
             self.hiveBlock(res.RETURN_OBJ);
         }else
@@ -281,8 +292,9 @@
         model.msg_latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
         model.msg_send_type = @(SendCHatMessageNomal);
         model.msg_type = @(SendChatMessageChatType);
-        model.msg_Interval_time = [NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970]];
+        model.msg_Interval_time = [UtilDate getCurrentTimeInterval];
 
+        debugLog(@"收到聊天大厅创建记录->%@",model.id);
 
     } completion:^(BOOL success, NSError *error) {
         
@@ -317,8 +329,8 @@
         model.msg_latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
         model.msg_send_type = @(SendCHatMessageNomal);
         model.msg_type = @(SendChatMessageChatIMGType);
-        model.msg_Interval_time = [NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970]];
-
+        model.msg_Interval_time = [UtilDate getCurrentTimeInterval];
+        
     } completion:^(BOOL success, NSError *error) {
         
         [self refreshDataWithMessageID:messageID];
@@ -431,8 +443,6 @@
 {
     [self refreshDataWithMessageID:msg_ID];
 }
-
-#pragma -mark 发送已读操作
 
 - (void)dealloc
 {

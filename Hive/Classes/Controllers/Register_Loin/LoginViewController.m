@@ -43,21 +43,44 @@
 #pragma -mark 按钮
 - (void)configButton
 {
-    NSString *string = @"CHAT WITH PEOPLE";
+    CGFloat helpWH = 25;
+    UIButton *helpBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    helpBtn.frame = CGRectMake(UIWIDTH - 40, 20, helpWH, helpWH);
+    [helpBtn setTitle:@"?" forState:UIControlStateNormal];
+    helpBtn.titleLabel.font = [UIFont systemFontOfSize:16];
+    [helpBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    helpBtn.layer.borderColor = [UIColor whiteColor].CGColor;
+    helpBtn.layer.borderWidth = 1;
+    helpBtn.layer.cornerRadius = helpWH/2;
+    [self.view addSubview:helpBtn];
+    
+    UIImage *image = [UIImage imageNamed:@"Logo"];
+   
+    CGFloat w = image.size.width;
+    CGFloat h = image.size.height;
+    CGFloat x = UIWIDTH/2 - w/2;
+    CGFloat y = 100;
+    UIImageView *logoIMG = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, w, h)];
+    logoIMG.image = image;
+    [self.view addSubview:logoIMG];
+    
+    //NSString *string = @"CHAT WITH PEOPLE AROUND YOU";
+    NSString *string = @"Chat With People Around You";
     NSString *string1 = @"AROUND YOU";
 
-    CGFloat x = 0;
-    CGFloat y = UIHEIGHT/2 - 100;
-    CGFloat w = UIWIDTH;
-    CGFloat h = 30;
+    y = UIHEIGHT/2 - 120;
+    w = UIWIDTH/2;
+    x = UIWIDTH/2 - w/2;
+    h = 50;
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
-    label.font = [UIFont fontWithName:GothamRoundedBook size:34/2];
+    label.font = [UIFont fontWithName:GothamRoundedBold size:34/2];
     label.backgroundColor = [UIColor clearColor];
     label.textColor = [UIColor whiteColor];
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 0;
     label.text = string;
     [self.view addSubview:label];
+    
     
     y = y + h + 10;
     UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
@@ -67,28 +90,34 @@
     label1.textAlignment = NSTextAlignmentCenter;
     label1.numberOfLines = 0;
     label1.text = string1;
-    [self.view addSubview:label1];
+    //[self.view addSubview:label1];
     
     w = UIWIDTH;
     h = 100/2;
     x = 0;
     y = UIHEIGHT - h;
-    UIButton *signOutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    signOutBtn.frame = CGRectMake(x, y, w, h);
-    signOutBtn.backgroundColor = [UIColor clearColor];
-    [signOutBtn setTitle:@"sign up" forState:UIControlStateNormal];
-    signOutBtn.titleLabel.font = [UIFont fontWithName:GothamRoundedBook size:16];
-    [self.view addSubview:signOutBtn];
-    
-    y = y - h;
     UIButton *signInBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     signInBtn.frame = CGRectMake(x, y, w, h);
-    signInBtn.backgroundColor = [UIColor whiteColor];
-    [signInBtn setTitleColor:Color forState:UIControlStateNormal];
-    [signInBtn setTitle:@"sign in" forState:UIControlStateNormal];
-    signInBtn.titleLabel.font = [UIFont fontWithName:GothamRoundedBook size:16];
+    signInBtn.backgroundColor = [UIColor clearColor];
+    [signInBtn setTitle:@"Log In" forState:UIControlStateNormal];
+    signInBtn.titleLabel.font = [UIFont fontWithName:Font_Medium size:17];
     [self.view addSubview:signInBtn];
+
+    y = y - h;
+    UIButton *signOutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    signOutBtn.frame = CGRectMake(x, y, w, h);
+    signOutBtn.backgroundColor = [UIColor whiteColor];
+    [signOutBtn setTitleColor:Color forState:UIControlStateNormal];
+    [signOutBtn setTitle:@"Sign Up" forState:UIControlStateNormal];
+    signOutBtn.titleLabel.font = [UIFont fontWithName:Font_Medium size:17];
+    [self.view addSubview:signOutBtn];
+
     
+    [signInBtn setBackgroundImage:[UIColorUtil createImageWithColor:NormalColor] forState:UIControlStateNormal];
+    [signOutBtn setBackgroundImage:[UIColorUtil createImageWithColor:HighlightedColor] forState:UIControlStateHighlighted];
+    
+    [signOutBtn setBackgroundImage:[UIColorUtil createImageWithColor:kLine_Color] forState:UIControlStateHighlighted];
+
     [signInBtn addTarget:self action:@selector(clickLogIn:) forControlEvents:UIControlEventTouchUpInside];
     [signOutBtn addTarget:self action:@selector(clickLogOut:) forControlEvents:UIControlEventTouchUpInside];
 

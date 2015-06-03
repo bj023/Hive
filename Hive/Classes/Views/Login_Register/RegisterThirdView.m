@@ -31,9 +31,27 @@
 
 - (void)initThirdView
 {
-    CGFloat textX = 20;
-    CGFloat textY = UIWIDTH/2 - 80;
-    CGFloat textW = UIWIDTH - 40;
+    
+    CGFloat x = 0 ;
+    CGFloat y = 182/2;
+    CGFloat w = UIWIDTH;
+    CGFloat h = 20;
+    UILabel *alertLab = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
+    alertLab.text = @"Something really";
+    alertLab.textAlignment = NSTextAlignmentCenter;
+    alertLab.font = [UIFont fontWithName:GothamRoundedBold size:34/2];
+    [self addSubview:alertLab];
+    
+    y = y+h;
+    UILabel *alertLab1 = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
+    alertLab1.text = @"impotant";
+    alertLab1.textAlignment = NSTextAlignmentCenter;
+    alertLab1.font = [UIFont fontWithName:GothamRoundedBold size:34/2];
+    [self addSubview:alertLab1];
+    
+    CGFloat textX = 30;
+    CGFloat textY = 375/2;
+    CGFloat textW = UIWIDTH - textX*2;;
     CGFloat textH = 30;
     
     CGFloat imgH = 1;
@@ -62,25 +80,51 @@
     textY = textY + textH + imgH;
     self.password1IMG = [[UIImageView alloc] initWithFrame:CGRectMake(textX, textY, textW, imgH)];
     
-    UIColor *color = [UIColorUtil colorWithCodea0a0a0];
-    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:TextFont, NSFontAttributeName,
+    x = textX;
+    y = textY + 30/2;
+    w = UIWIDTH - 2*textX;
+    h = 30;
+    
+    UIFont *tetxFont = [UIFont fontWithName:Font_Helvetica size:14];
+
+    UILabel * introLabel = [[UILabel alloc] init];
+    introLabel.frame = CGRectMake(x, y, w, h);
+    introLabel.font = tetxFont;
+    introLabel.numberOfLines = 0;
+    introLabel.textColor = [UIColorUtil colorWithHexString:@"#B2B2B2"];
+    CGSize textSize = [UIFontUtil sizeWithString:ValidationCodeStrin font:tetxFont maxSize:CGSizeMake(w, MAXFLOAT)];
+    h = textSize.height + 10;
+    
+    /*
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 7;// 字体的行间距
+    paragraphStyle.alignment = NSTextAlignmentLeft;
+    NSDictionary *introAttributes = @{
+                                 NSFontAttributeName :tetxFont,
+                                 NSParagraphStyleAttributeName : paragraphStyle,
+                                 NSForegroundColorAttributeName : [UIColorUtil colorWithHexString:@"#B2B2B2"]
+                                 };
+    introLabel.attributedText = [[NSAttributedString alloc] initWithString:RegisterThirdString attributes:introAttributes];
+    */
+    [self addSubview:introLabel];
+    
+    
+    
+    
+    UIColor *color = [UIColorUtil colorWithHexString:@"#DEDEDE"];
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:Font_Helvetica size:16], NSFontAttributeName,
                                 color, NSForegroundColorAttributeName, nil];
 
-    self.userNameText.attributedPlaceholder  = [[NSAttributedString alloc] initWithString:@"Username" attributes:attributes];
+    self.userNameText.attributedPlaceholder  = [[NSAttributedString alloc] initWithString:@"User Name" attributes:attributes];
     self.emailText.attributedPlaceholder     = [[NSAttributedString alloc] initWithString:@"Email" attributes:attributes];
-    self.passwordText.attributedPlaceholder  = [[NSAttributedString alloc] initWithString:@"Password" attributes:attributes];
-    self.password1Text.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Confirm password" attributes:attributes];
+    self.passwordText.attributedPlaceholder  = [[NSAttributedString alloc] initWithString:@"Create Password (8-16)" attributes:attributes];
+    self.password1Text.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Repeat Password" attributes:attributes];
     
-    self.userNameText.font  = TextFont;
-    self.emailText.font     = TextFont;
-    self.passwordText.font  = TextFont;
-    self.password1Text.font = TextFont;
+    self.userNameText.font  = [UIFont fontWithName:Font_Helvetica size:16];
+    self.emailText.font     = [UIFont fontWithName:Font_Helvetica size:16];
+    self.passwordText.font  = [UIFont fontWithName:Font_Helvetica size:16];
+    self.password1Text.font = [UIFont fontWithName:Font_Helvetica size:16];
 
-    
-    self.userNameText.tintColor  = kRegisterTextTintColor;
-    self.emailText.tintColor     = kRegisterTextTintColor;
-    self.passwordText.tintColor  = kRegisterTextTintColor;
-    self.password1Text.tintColor = kRegisterTextTintColor;
 
     self.passwordText.secureTextEntry  = YES;
     self.password1Text.secureTextEntry = YES;
@@ -106,10 +150,15 @@
     [self.passwordIMG setBackgroundColor:kRegisterLineColor];
     [self.password1IMG setBackgroundColor:kRegisterLineColor];
     
-    self.userNameText.textColor  = kRegisterTextTintColor;
-    self.emailText.textColor     = kRegisterTextTintColor;
-    self.passwordText.textColor  = kRegisterTextTintColor;
-    self.password1Text.textColor = kRegisterTextTintColor;
+    self.userNameText.tintColor  = kRegisterTextTintColor;
+    self.emailText.tintColor     = kRegisterTextTintColor;
+    self.passwordText.tintColor  = kRegisterTextTintColor;
+    self.password1Text.tintColor = kRegisterTextTintColor;
+    
+    self.userNameText.textColor  = kRegisterTextColor;
+    self.emailText.textColor     = kRegisterTextColor;
+    self.passwordText.textColor  = kRegisterTextColor;
+    self.password1Text.textColor = kRegisterTextColor;
     
     self.userNameText.delegate  = self;
     self.emailText.delegate     = self;
@@ -124,6 +173,8 @@
     [self addSubview:self.emailIMG];
     [self addSubview:self.passwordIMG];
     [self addSubview:self.password1IMG];
+    
+    
 }
 
 #pragma UITextFieldDelegate

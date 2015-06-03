@@ -2,7 +2,7 @@
 //  ChatRoomModel.h
 //  
 //
-//  Created by 那宝军 on 15/5/29.
+//  Created by 那宝军 on 15/6/2.
 //
 //
 
@@ -24,10 +24,10 @@
 @property (nonatomic, retain) NSString * msg_latitude;
 @property (nonatomic, retain) NSString * msg_longitude;
 @property (nonatomic, retain) NSString * msg_message;
+@property (nonatomic, retain) NSNumber * msg_send_type;
 @property (nonatomic, retain) NSString * msg_time;
+@property (nonatomic, retain) NSNumber * msg_type;
 @property (nonatomic, retain) NSString * userID;
 @property (nonatomic, retain) NSString * userName;
-@property (nonatomic, retain) NSNumber * msg_type;
-@property (nonatomic, retain) NSNumber * msg_send_type;
 
 @end

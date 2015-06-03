@@ -68,8 +68,8 @@
         pathAnimation.removedOnCompletion = false;
         pathAnimation.repeatCount = HUGE;
         pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-        pathAnimation.duration = 30;
-        CGMutablePathRef curvedPath =CGPathCreateMutable();
+        pathAnimation.duration = 60;
+        CGMutablePathRef curvedPath = CGPathCreateMutable();
         
         long index = [self.activityViewArray indexOfObject:view];
         [self insertSubview:view atIndex:index];

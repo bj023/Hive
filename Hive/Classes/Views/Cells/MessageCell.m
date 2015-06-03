@@ -39,7 +39,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        //self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self initMessageCell];
     }
     
@@ -82,7 +82,7 @@
         self.dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(timeX, timeY, timeW, timeH)];
         self.dateLabel.textAlignment = NSTextAlignmentRight;
         self.dateLabel.font = [UIFont systemFontOfSize:12];
-        self.dateLabel.textColor = [UIColorUtil colorWithHexString:@"#929292"];
+        self.dateLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
     }
     
     CGFloat nameX = headX + headW + padding;
@@ -102,9 +102,9 @@
     CGFloat messageH = 20;
     if (!self.messageLabel) {
         self.messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(messageX, messageY, messageW, messageH)];
-        self.messageLabel.font = [UIFont fontWithName:Font_Helvetica size:12];
+        self.messageLabel.font = [UIFont fontWithName:Font_Helvetica size:14];
         self.messageLabel.textAlignment = NSTextAlignmentLeft;
-        self.messageLabel.textColor = [UIColorUtil colorWithHexString:@"#929292"];
+        self.messageLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
     }
     
     
@@ -116,8 +116,8 @@
         self.unreadLabel = [[UILabel alloc] init];
         self.unreadLabel.frame = CGRectMake(readX, readY, readW, readH);
         self.unreadLabel.textAlignment = NSTextAlignmentCenter;
-        self.unreadLabel.font = [UIFont systemFontOfSize:11];
-        self.unreadLabel.backgroundColor = [UIColor redColor];
+        self.unreadLabel.font = [UIFont systemFontOfSize:31/2];
+        self.unreadLabel.backgroundColor = [UIColorUtil colorWithHexString:@"#FF5B2F"];
         self.unreadLabel.textColor = [UIColor whiteColor];
         self.unreadLabel.layer.cornerRadius = readH/2;
         self.unreadLabel.layer.masksToBounds = YES;
@@ -151,7 +151,10 @@
     self.userNameLabel.text = model.toUserName;
 
     self.messageLabel.text = model.msg_content;
-    [self.headIMG setImageURLStr:User_Head(model.toUserID)];
+    
+    //[self.headIMG setImageURLStr:User_Head(model.toUserID)];
+    
+    [self loadUserIconPath:model.toUserID];
     
     NSString *current_time = [UtilDate dateFromString:[UtilDate getCurrentTime] withFormat:DateFormat_MM];
     NSString *publis_time = [UtilDate dateFromString:model.msg_time withFormat:DateFormat_MM];
@@ -180,7 +183,24 @@
         }else
             _unreadLabel.text = _chatModel.unReadCount;
     }
+    
+    debugLog(@"%@",model);
+}
 
+- (void)loadUserIconPath:(NSString *)userID
+{
+    [HttpTool sendRequestProfileWithUserID:userID success:^(id json) {
+        ResponseChatUserInforModel *res = [[ResponseChatUserInforModel alloc] initWithString:json error:nil];
+        if (res.RETURN_CODE == 200) {
+
+            NearByModel *model = res.RETURN_OBJ;
+            [self.headIMG setImageURLStr:model.iconPath];
+            
+        }
+
+    } faliure:^(NSError *error) {
+        
+    }];
 }
 
 - (void)clickHeadIMG:(id)sender

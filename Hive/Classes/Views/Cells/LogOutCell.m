@@ -8,9 +8,14 @@
 
 #import "LogOutCell.h"
 #import "Utils.h"
+#import "SettingsCell.h"
 
 @interface LogOutCell ()
+
 @property (strong, nonatomic) UILabel *titleLabel;
+@property (strong, nonatomic) UIImageView *iconIMG;
+@property (strong, nonatomic) UIImageView *lineIMG;
+
 @end
 
 @implementation LogOutCell
@@ -30,22 +35,55 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         
-        self.selectionStyle  = UITableViewCellSelectionStyleNone;
-        self.backgroundColor = [UIColorUtil colorWithHexString:@"#ff5b2f"];
+        //self.selectionStyle  = UITableViewCellSelectionStyleNone;
+        //self.backgroundColor = [UIColorUtil colorWithHexString:@"#ff5b2f"];
         
-        if (!self.titleLabel) {
-            
-            self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, self.frame.size.height)];
-            
-            self.titleLabel.font = SettingsFont;
-            self.titleLabel.textColor = [UIColor whiteColor];
-            self.titleLabel.backgroundColor = [UIColor clearColor];
-            self.titleLabel.textAlignment = NSTextAlignmentCenter;
-            [self.contentView addSubview:self.titleLabel];
-            self.titleLabel.text = @"Log Out";
-        }
+        [self initUI];
     }
     return self;
+}
+
+- (void)initUI
+{
+    CGFloat w = 15;
+    CGFloat h = w;
+    CGFloat x = 16;
+    CGFloat y = [SettingsCell getSettingsCellHeight]/2 - h/2;
+    if (!_iconIMG) {
+        _iconIMG = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, w, h)];
+        _iconIMG.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:_iconIMG];
+    }
+    
+    
+    x = x + h + 10;
+    y = 0;
+    w = UIWIDTH - x;
+    h  = [SettingsCell getSettingsCellHeight];
+    if (!_titleLabel) {
+        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
+        _titleLabel.font = SettingsFont;
+        _titleLabel.backgroundColor = [UIColor clearColor];
+        _titleLabel.textAlignment = NSTextAlignmentLeft;
+        [self.contentView addSubview:_titleLabel];
+    }
+    
+    x = 16;
+    y = [SettingsCell getSettingsCellHeight] - kLine_Height;
+    w = UIWIDTH - 16;
+    h = kLine_Height;
+    
+    if (!_lineIMG) {
+        _lineIMG = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, w, h)];
+        _lineIMG.backgroundColor = kLine_Color;
+        [self.contentView addSubview:self.lineIMG];
+    }
+}
+
+- (void)setIconIMG:(NSString *)iconStr Title:(NSString *)title
+{
+    _iconIMG.image = [UIImage imageNamed:iconStr];
+    _titleLabel.text = title;
 }
 
 - (void)awakeFromNib {
@@ -61,11 +99,7 @@
 - (void)dealloc
 {
     self.titleLabel = nil;
-}
-
-+ (CGFloat)getLogOutCellHeight
-{
-    return 43;
+    self.iconIMG = nil;
 }
 
 @end

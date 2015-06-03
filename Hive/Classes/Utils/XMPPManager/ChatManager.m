@@ -12,11 +12,18 @@
 #import "ChatModel.h"
 
 @implementation ChatManager
++ (NSPredicate*)predicateForToUserID:(NSString *)toUserID
+{
+    NSString *userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
 
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"toUserID = %@ and cur_userID = %@",toUserID,userID];
+
+    return predicate;
+}
 
 + (MessageModel *)chatMessage:(NSString *)toUserID
 {
-    MessageModel *chat = [MessageModel MR_findFirstByAttribute:@"toUserID" withValue:toUserID];
+    MessageModel *chat = [MessageModel MR_findFirstWithPredicate:[ChatManager predicateForToUserID:toUserID]];
     return chat;
 }
 
@@ -28,7 +35,8 @@
     debugLog(@"需要修改->%@",toUserID);
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         
-        MessageModel *message = [MessageModel MR_findFirstByAttribute:@"toUserID" withValue:toUserID inContext:localContext];
+        //MessageModel *message = [MessageModel MR_findFirstByAttribute:@"toUserID" withValue:toUserID inContext:localContext];
+        MessageModel *message  = [MessageModel MR_findFirstWithPredicate:[ChatManager predicateForToUserID:toUserID] inContext:localContext];
         
         message.msg_ID = msgID;
         message.msg_time = msg_time;
@@ -89,8 +97,9 @@
 + (NSString *)chatMessageUnreadCount
 {
     NSInteger unReadCount = 0;
-    
-    NSArray *readArr = [MessageModel MR_findAll];
+    NSString * cur_userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+
+    NSArray *readArr = [MessageModel MR_findByAttribute:@"cur_userID" withValue:cur_userID];
     for (MessageModel *model in readArr) {
         unReadCount = unReadCount + [model.unReadCount intValue];
     }

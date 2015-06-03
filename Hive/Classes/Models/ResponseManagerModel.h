@@ -44,3 +44,4 @@
 @property (nonatomic, assign) int RETURN_CODE;
 @property (nonatomic, strong) NearByModel *RETURN_OBJ;
 @end
+

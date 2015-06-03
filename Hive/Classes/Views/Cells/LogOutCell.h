@@ -16,6 +16,6 @@
 
 + (instancetype)cellWithTableView:(UITableView *)tableView;
 
-+ (CGFloat)getLogOutCellHeight;
+- (void)setIconIMG:(NSString *)iconStr Title:(NSString *)title;
 
 @end

@@ -114,6 +114,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (self.resultArray.count>0) {
         if ([self.delegate respondsToSelector:@selector(clickSerchChatSearView:ChatMessageModel:)]) {
             [self.delegate clickSerchChatSearView:self ChatMessageModel:_resultArray[indexPath.row]];

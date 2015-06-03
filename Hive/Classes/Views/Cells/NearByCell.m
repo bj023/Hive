@@ -36,7 +36,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        //self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self initNearByCell];
     }
     
@@ -80,7 +80,7 @@
         self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(timeX, timeY, timeW, timeH)];
         self.timeLabel.font = [UIFont fontWithName:Font_Helvetica size:15];
         self.timeLabel.textAlignment = NSTextAlignmentRight;
-        self.timeLabel.textColor = [UIColorUtil colorWithHexString:@"#b3b3b3"];
+        self.timeLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
     }
     
     CGFloat nameX = headX + headW + padding;
@@ -104,7 +104,7 @@
         self.introLabel.font = [UIFont fontWithName:Font_Helvetica size:14];
         //self.introLabel.font = [UIFont systemFontOfSize:14];;
         self.introLabel.textAlignment = NSTextAlignmentLeft;
-        self.introLabel.textColor = [UIColorUtil colorWithHexString:@"#b7b7b7"];
+        self.introLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
     }
     
     /*
@@ -195,19 +195,21 @@
 //    NSString *distance = [NSTimeUtil getDistance:model.longitude latitude:model.latitude];
 //    self.timeLabel.text = distance;
     
-    NSString *headUrl = [NSString stringWithFormat:@"%d",model.userId];
-    //self.introLabel.text = model.label;
-    [self.headIMG setImageURLStr:User_Head(headUrl)];
-
+    //NSString *headUrl = [NSString stringWithFormat:@"%d",model.userId];
+    //[self.headIMG setImageURLStr:User_Head(headUrl)];
+    [self.headIMG setImageURLStr:model.iconPath];
     //UIColor *sexColor = [model.gender isEqualToString:@"0"]?[UIColorUtil colorWithHexString:@"#64baff"]:[UIColorUtil colorWithHexString:@"#ff5b2f"];
     //self.sexLabel.backgroundColor = sexColor;
 }
 
 - (void)set_NearByCellUserData
 {
+    self.timeLabel.text = @"";
     self.userNameLabel.text = [[UserInfoManager sharedInstance] getCurrentUserInfo].userName;
-    NSString *urlString = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
-    [self.headIMG setImageURLStr:User_Head(urlString) placeholder:nil];
+    //NSString *urlString = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    //[self.headIMG setImageURLStr:User_Head(urlString) placeholder:nil];
+    NSString *headUrl = [[[UserInfoManager sharedInstance] getCurrentUserInfo] userHead];
+    [self.headIMG setImageURLStr:headUrl placeholder:nil];
 }
 
 static NSString *DateFormatMDHM = @"MM-dd HH:mm";

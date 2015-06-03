@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@class ChatRoomModel;
+#define DataShareInstance [DataBaseModel shareInstance]
+
 @interface DataBaseModel : NSObject
 
-+ (NSArray *)getChatRoomWithStart:(NSInteger)start andCount:(NSInteger)count;
++ (DataBaseModel *)shareInstance;
 
-+ (NSArray *)getChatWithStartChatRoom:(ChatRoomModel *)model andCount:(NSInteger)count;
-
+- (NSArray *)getChatsCount:(NSInteger)count;
 
 @end

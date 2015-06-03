@@ -39,6 +39,8 @@
 #define ForgetString @"Forget the password?"
 #define ValidationCodeStrin @"By sign in,you agree to the Terms of Use and Privacy Policy"
 #define EnterCodeString @"This might take a minute.Didn't get it? Tap to Resend"
+#define RegisterThirdString @"We'll never share your email or spam you."
+#define RegisterFourString @"You can't change gender and age after this step."
 
 #define NotificationIntro @"Enable or disable WeChat Notifications via \"Settings\"->\"Notification\" on your iPhone."
 
@@ -54,8 +56,11 @@
 
 #define GothamRoundedBook @"GothamRounded-Book"
 #define GothamRoundedBold @"GothamRounded-Bold"
+//#define GothamRoundedMedium @"GothamRounded-Medium"
+
 
 // 中号字体
+#define Font_Bold @"HelveticaNeue-Bold"
 #define Font_Medium @"HelveticaNeue-Medium"
 #define Font_Helvetica @"HelveticaNeue"
 #define Font_Light @"HelveticaNeue-Light"
@@ -91,8 +96,13 @@
 
 #define kRegisterLineColor [UIColorUtil colorWithHexString:@"#d7d7d5"]
 #define kRegisterTextTintColor [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1]
+#define kRegisterTextColor [UIColorUtil colorWithHexString:@"#1B1B1B"]
 
 // 所有头像 外边框
 #define kHeadIMG_Line_Height 0.5
 #define kHeadIMG_Layer_Color [UIColorUtil colorWithHexString:@"#f1efee"]
+
+#define NormalColor [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1]
+#define HighlightedColor [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.8]
+
 #endif

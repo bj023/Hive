@@ -51,4 +51,14 @@
  *  @return 返回图片颜色
  */
 + (UIColor *)colorWithImgae:(NSString *)imgString;
+
+/**
+ *  颜色转换成图片
+ *
+ *  @param color 颜色
+ *
+ *  @return 返回图片
+ */
++ (UIImage*)createImageWithColor:(UIColor*)color;
+
 @end

@@ -78,12 +78,17 @@
     [toolBtn setTitle:@"CLOSE" forState:UIControlStateNormal];
     [toolBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.5] size:toolBtn.frame.size] forState:UIControlStateNormal];
-    //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.6] size:toolBtn.frame.size] forState:UIControlStateHighlighted];
+    //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.8] size:toolBtn.frame.size] forState:UIControlStateHighlighted];
     //关闭颜色
-    toolBtn.backgroundColor = [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1];
+    /**/
+    [toolBtn setBackgroundImage:[UIColorUtil createImageWithColor:NormalColor] forState:UIControlStateNormal];
+    [toolBtn setBackgroundImage:[UIColorUtil createImageWithColor:HighlightedColor] forState:UIControlStateHighlighted];
+    
     toolBtn.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:18];
     [self.view addSubview:toolBtn];
     [toolBtn addTarget:self action:@selector(clickCloseBtn:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
 }
 // 关闭按钮点击事件
 - (void)clickCloseBtn:(id)sender
@@ -217,9 +222,9 @@
     self.scrollerView.contentSize = CGSizeMake(self.view.frame.size.width, buttonH + buttonY);
     
     
-    NSString *urlString = [NSString stringWithFormat:@"%d",self.model.userId];
-    urlString = User_Head(urlString);
-    [self.headIMG setImageURLStr:urlString];
+    //NSString *urlString = [NSString stringWithFormat:@"%d",self.model.userId];
+    //urlString = User_Head(urlString);
+    [self.headIMG setImageURLStr:self.model.iconPath];
     
     NSString *introString;
     if (hide) {
@@ -229,9 +234,9 @@
         self.nameLabel.text = @"Hide User";
         introString = @"Why so serious.";
     }else{
-        [self.userinfor set_UserInfoData:[self.model.gender isEqualToString:@"0"]?@"Male":@"Female"
+        [self.userinfor set_UserInfoData:[self.model.gender isEqualToString:@"1"]?@"Male":@"Female"
                                      Age:[NSString stringWithFormat:@"%d",self.model.age]
-                                Distance:self.model.distance];
+                                Distance:[NSString stringWithFormat:@"%@ km",self.model.distance]];
         self.nameLabel.text = self.model.userName;
         introString = self.model.label;
     }

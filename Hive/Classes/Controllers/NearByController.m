@@ -13,10 +13,10 @@
 #import "NSTimeUtil.h"
 #import <MJRefresh.h>
 
-#define kSelectBtnTopPadding 9
-#define kSelectBtnRightPadding 70
+#define kSelectBtnTopPadding 12
+#define kSelectBtnRightPadding 90
 #define kSelectBtnHeight 26
-#define kSelectBtnWidth 60
+#define kSelectBtnWidth 80
 
 #define kTopViewHeight 50/2
 
@@ -54,13 +54,13 @@
 {
     if (!_selectBtn) {
         _selectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_selectBtn setTitle:@"Select" forState:UIControlStateNormal];
+        [_selectBtn setTitle:@"SELECT" forState:UIControlStateNormal];
         [_selectBtn setTitleColor:[UIColorUtil colorWithHexString:@"#64baff"] forState:UIControlStateNormal];
         _selectBtn.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:16];
         _selectBtn.frame = CGRectMake(UIWIDTH - kSelectBtnRightPadding, kSelectBtnTopPadding, kSelectBtnWidth, kSelectBtnHeight);
-        _selectBtn.layer.borderColor = [UIColorUtil colorWithHexString:@"#64baff"].CGColor;
-        _selectBtn.layer.cornerRadius = 5;
-        _selectBtn.layer.borderWidth = 1;
+        //_selectBtn.layer.borderColor = [UIColorUtil colorWithHexString:@"#64baff"].CGColor;
+        //_selectBtn.layer.cornerRadius = 5;
+        //_selectBtn.layer.borderWidth = 1;
         [_selectBtn addTarget:self action:@selector(clickSelectAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _selectBtn;
@@ -143,8 +143,8 @@
     
     UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 200, kTopViewHeight)];
     titleLab.backgroundColor = [UIColor clearColor];
-    titleLab.textColor = [UIColor grayColor];
-    titleLab.font = [UIFont fontWithName:GothamRoundedBook size:14];
+    titleLab.textColor = [UIColorUtil colorWithHexString:@"#929292"];
+    titleLab.font = [UIFont systemFontOfSize:12];//[UIFont fontWithName:GothamRoundedBook size:12];
     titleLab.text = @"People Nearby";
     [peopleView addSubview:titleLab];
 }
@@ -194,6 +194,7 @@
     if (indexPath.row == 0) {
         [cell set_NearByCellUserData];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
     }else{
         [cell set_NearByCellData:self.dataSource[indexPath.row -1]];
         cell.accessoryType = UITableViewCellAccessoryNone;
@@ -204,6 +205,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 0) {
         self.nearByBlock(nil,indexPath);// 传递用户ID
     }else{
@@ -295,8 +297,9 @@
                 default:
                     break;
             }
-            
-            [self.nearByTable reloadData];
+            if (res.content.count>0) {
+                [self.nearByTable reloadData];
+            }
         }else
             [self showHudWith:ErrorRequestText];
         

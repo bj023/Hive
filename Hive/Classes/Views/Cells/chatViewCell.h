@@ -19,7 +19,7 @@
 @property (nonatomic, strong) UIImageView *activtiyImg;
 @property (nonatomic, strong) UIView *activityView;
 @property (nonatomic, strong) UIButton *retryButton;
-@property (nonatomic, strong) UILabel *hasRead;
+@property (nonatomic, strong) UIImageView *hasRead;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView Delegate:(id<ChatViewCellDelegate>)delegate;
 

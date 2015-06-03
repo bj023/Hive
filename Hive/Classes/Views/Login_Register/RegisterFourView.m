@@ -11,7 +11,7 @@
 #import "SexView.h"
 #import "CustomActionSheetView.h"
 
-@interface RegisterFourView ()<UITextFieldDelegate>
+@interface RegisterFourView ()<UITextFieldDelegate, UIActionSheetDelegate>
 {
     BOOL _isSelectHeadIMG;
 }
@@ -34,7 +34,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self hiddenNavBackBtn:YES];
+        //[self hiddenNavBackBtn:YES];
         [self setNavNextBtnTitle:@"DONE"];
         [self initFourView];
     }
@@ -63,9 +63,9 @@
     self.headIMG.image              = [UIImage imageNamed:@"profile"];
     [headView addSubview:self.headIMG];
     
-    CGFloat nameX = 20;
+    CGFloat nameX = 30;
     CGFloat nameY = headH + headY + 10;
-    CGFloat nameW = UIWIDTH - 40;
+    CGFloat nameW = UIWIDTH - nameX * 2;
     CGFloat nameH = 30;
     self.nameLabel                 = [[UILabel alloc] initWithFrame:CGRectMake(nameX, nameY, nameW, nameH)];
     self.nameLabel.font            = [UIFont fontWithName:GothamRoundedBold size:48/2];
@@ -79,12 +79,12 @@
     CGFloat sexX = nameX;
     CGFloat sexY = nameY + nameH + 50;
     CGFloat sexW = nameW;
-    CGFloat sexH = 58/2;
+    CGFloat sexH = 60/2;
     self.sexView = [[SexView alloc] initWithFrame:CGRectMake(sexX, sexY, sexW, sexH)];
     [self addSubview:self.sexView];
     
     CGFloat sexImgX = sexX;
-    CGFloat sexImgY = sexY + sexH + 5;
+    CGFloat sexImgY = sexY + sexH + 15;
     CGFloat sexImgW = sexW;
     CGFloat sexImgH = 1;
     self.sexIMG = [[UIImageView alloc] initWithFrame:CGRectMake(sexImgX, sexImgY, sexImgW, sexImgH)];
@@ -100,17 +100,16 @@
     //self.ageText.keyboardAppearance = UIKeyboardAppearanceDark;
     self.ageText.keyboardType       = UIKeyboardTypeNumberPad;
     self.ageText.returnKeyType      = UIReturnKeyNext;
-    self.ageText.textColor          = kRegisterTextTintColor;
+    self.ageText.textColor          = kRegisterTextColor;
     self.ageText.tintColor          = kRegisterTextTintColor;
     self.ageText.delegate           = self;
-    UIColor *color = kRegisterLineColor;
-    self.ageText.font = TextFont;
-    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:TextFont, NSFontAttributeName,
+    UIColor *color = [UIColorUtil colorWithHexString:@"#DEDEDE"];
+    self.ageText.font = [UIFont fontWithName:Font_Helvetica size:18];
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:Font_Helvetica size:16], NSFontAttributeName,
                                 color, NSForegroundColorAttributeName, nil];
     
     self.ageText.attributedPlaceholder  = [[NSAttributedString alloc] initWithString:@"How old are you" attributes:attributes];
     [self addSubview:self.ageText];
-    
     
     CGFloat ageImgX = ageX;
     CGFloat ageImgY = ageY + ageH;
@@ -119,6 +118,32 @@
     self.ageIMG = [[UIImageView alloc] initWithFrame:CGRectMake(ageImgX, ageImgY, ageImgW, ageImgH)];
     [self.ageIMG setBackgroundColor:kRegisterLineColor];
     [self addSubview:self.ageIMG];
+    
+    CGFloat x = ageX;
+    CGFloat y = ageImgY + 30/2;
+    CGFloat w = UIWIDTH - 2*x;
+    CGFloat h = 30;
+    
+    UILabel * introLabel = [[UILabel alloc] init];
+    
+    UIFont *tetxFont = [UIFont fontWithName:Font_Helvetica size:14];
+    CGSize textSize = [UIFontUtil sizeWithString:ValidationCodeStrin font:tetxFont maxSize:CGSizeMake(w, MAXFLOAT)];
+    h = textSize.height + 10;
+
+    introLabel.frame = CGRectMake(x, y, w, h);
+    introLabel.font = HintFont;
+    introLabel.numberOfLines = 0;
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 7;// 字体的行间距
+    paragraphStyle.alignment = NSTextAlignmentLeft;
+    NSDictionary *introAttributes = @{
+                                      NSFontAttributeName : tetxFont,
+                                      NSParagraphStyleAttributeName : paragraphStyle,
+                                      NSForegroundColorAttributeName : [UIColorUtil colorWithHexString:@"#B2B2B2"]
+                                      };
+    introLabel.attributedText = [[NSAttributedString alloc] initWithString:RegisterFourString attributes:introAttributes];
+    
+    [self addSubview:introLabel];
 }
 
 #pragma UITextFieldDelegate
@@ -170,6 +195,12 @@
     [self.ageText becomeFirstResponder];
 }
 
+- (void)setNameString:(NSString *)nameString
+{
+    _nameString = nameString;
+    self.nameLabel.text = nameString;
+}
+
 #pragma -mark 导航按钮事件
 - (void)navBackAction:(UIButton *)sender
 {
@@ -219,6 +250,36 @@
 #pragma -mark 头像点击事件
 - (void)clickHeadIMGAction
 {
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:@"Take photo",@"Choose from photos", nil];
+    
+    [sheet showInView:self];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    switch (buttonIndex) {
+        case 0:
+        {
+            [self takePhoto];
+        }
+            break;
+        case 1:
+        {
+            [self choosePhoto];
+        }
+            break;
+        default:
+            break;
+    }
+}
+/*
+- (void)clickHeadIMGAction
+{
     [self endEditing:YES];
     self.sheet = [[CustomActionSheetView alloc] initWithFrame:self.bounds withTitles:@[@"Take photo",@"Choose photo"]];
     [self.sheet showWithBackgroundColor:[UIColor whiteColor]];
@@ -233,6 +294,7 @@
         }
     };
 }
+ */
 - (void)takePhoto
 {
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]){

@@ -60,11 +60,12 @@
     self.validationText.keyboardType        = UIKeyboardTypeNumberPad;
     self.validationText.returnKeyType       = UIReturnKeyNext;
     self.validationText.delegate            = self;
-    self.validationText.textColor           = kRegisterTextTintColor;
+    self.validationText.textColor           = kRegisterTextColor;
     self.validationText.tintColor           = kRegisterTextTintColor;
     self.validationText.textAlignment = NSTextAlignmentCenter;
     [self addSubview:self.validationText];
     
+    // 线
     UIImageView *lineIMG = [[UIImageView alloc] initWithFrame:CGRectMake(x, y+h, w, 1)];
     lineIMG.backgroundColor = kRegisterLineColor;
     [self addSubview:lineIMG];
@@ -73,11 +74,35 @@
     y = y + h + 30/2;
     w = UIWIDTH - 2*x;
     h = 50;
-    self.introLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
+    
+    self.introLabel = [[UILabel alloc] init];
+    
+    UIFont *tetxFont = [UIFont fontWithName:Font_Helvetica size:14];
+    CGSize textSize = [UIFontUtil sizeWithString:ValidationCodeStrin font:tetxFont maxSize:CGSizeMake(w, MAXFLOAT)];
+    h = textSize.height + 10;
+    
+    self.introLabel.frame = CGRectMake(x, y, w, h);
     self.introLabel.font = HintFont;
     self.introLabel.numberOfLines = 0;
-    self.introLabel.textColor = kRegisterLineColor;
-    self.introLabel.text = EnterCodeString;
+    
+    self.introLabel.textColor = [UIColorUtil colorWithHexString:@"#B2B2B2"];
+    
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:EnterCodeString];
+
+    [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:Font_Bold size:14] range:NSMakeRange([EnterCodeString length] - 13, 13)];
+    self.introLabel.attributedText = str;
+    
+    /*
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 7;// 字体的行间距
+    paragraphStyle.alignment = NSTextAlignmentLeft;
+    NSDictionary *attributes = @{
+                                 NSFontAttributeName : tetxFont,
+                                 NSParagraphStyleAttributeName : paragraphStyle,
+                                 NSForegroundColorAttributeName : [UIColorUtil colorWithHexString:@"#B2B2B2"]
+                                 };
+    self.introLabel.attributedText = [[NSAttributedString alloc] initWithString:EnterCodeString attributes:attributes];
+    */
     [self addSubview:self.introLabel];
     
 }

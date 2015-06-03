@@ -88,6 +88,8 @@
         [self.headImgaeView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadImgAction:)]];
         [self.bubbleView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickBubbleAction:)]];
         [self.bubbleView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressChatRoomAction:)]];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(WillHideMenu:) name:UIMenuControllerWillHideMenuNotification object:nil];
     }
     
     return self;
@@ -139,6 +141,7 @@
         _activityView.hidden = YES;
         _retryButton.hidden = YES;
     }
+    
 }
 /*
 - (void)layoutSubviews
@@ -166,6 +169,8 @@
     }
 }
 */
+
+
 - (void)updateBubbleFrame
 {
     CGFloat padding = 10;
@@ -188,7 +193,10 @@
 - (void)setMessage:(ChatRoomModel *)message
 {
     [super setMessage:message];
+    
+    [self loadUserIconPath:message.userID];
 }
+
 
 
 - (void)clickHeadImgAction:(UITapGestureRecognizer *)sender
@@ -200,16 +208,21 @@
 
 - (void)clickBubbleAction:(UITapGestureRecognizer *)sender
 {
+    if ([self.message.msg_type intValue] != 2) {
+        [self showhighlightedBubbleView];
+    }
+    
     if ([self.delegate respondsToSelector:@selector(tapBubbleSendActionWithMessage:)]) {
         [self.delegate tapBubbleSendActionWithMessage:self.message];
     }
+ 
+    [self performSelector:@selector(hiddenHighlightedBubbleView) withObject:nil afterDelay:0.5];
 }
 
 #pragma -mark 长按气泡 弹出菜单
 - (void)longPressChatRoomAction:(UIGestureRecognizer *)recognizer{
     
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
-        
+    if (recognizer.state == UIGestureRecognizerStateBegan && [self.message.msg_type intValue] != 2) {
         UIView *view = recognizer.view;
         [self becomeFirstResponder];
         UIMenuItem *flag = [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(copyRoomMessage:)];
@@ -243,6 +256,8 @@
         return NO;
     }else if (action == @selector(copyRoomMessage:))
     {
+        [self showhighlightedBubbleView];
+
         return YES;
     }
     else
@@ -252,7 +267,44 @@
     }
 }
 - (void)copyRoomMessage:(id)sender {
+    [self hiddenHighlightedBubbleView];
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     [pasteboard setString:IsEmpty(self.message.msg_message)?@"":self.message.msg_message];
+}
+
+- (void)WillHideMenu:(id)sender
+{
+    [self hiddenHighlightedBubbleView];
+}
+
+- (void)showhighlightedBubbleView
+{
+    self.bubbleView.highlighted = YES;
+}
+
+- (void)hiddenHighlightedBubbleView
+{
+    self.bubbleView.highlighted = NO;
+}
+
+- (void)loadUserIconPath:(NSString *)userID
+{
+    [HttpTool sendRequestProfileWithUserID:userID success:^(id json) {
+        ResponseChatUserInforModel *res = [[ResponseChatUserInforModel alloc] initWithString:json error:nil];
+        if (res.RETURN_CODE == 200) {
+            
+            NearByModel *model = res.RETURN_OBJ;
+            [self.headImgaeView setImageURLStr:model.iconPath placeholder:nil];
+            
+        }
+        
+    } faliure:^(NSError *error) {
+        
+    }];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 @end

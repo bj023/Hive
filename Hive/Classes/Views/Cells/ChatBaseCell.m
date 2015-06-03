@@ -53,7 +53,7 @@
     [self.contentView addSubview:_headImgaeView];
     
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _nameLabel.textColor = [UIColorUtil colorWithHexString:@"#b2b2b2"];
+    _nameLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
     _nameLabel.font = [UIFont fontWithName:Font_Helvetica size:23/2];
     [self.contentView addSubview:_nameLabel];
     
@@ -63,7 +63,7 @@
     
     _timeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     _timeLabel.font = [UIFont fontWithName:Font_Helvetica size:23/2];
-    _timeLabel.textColor = [UIColorUtil colorWithHexString:@"#b2b2b2"];
+    _timeLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
     _timeLabel.textAlignment = NSTextAlignmentCenter;
     [self.contentView addSubview:_timeLabel];
 }
@@ -112,19 +112,26 @@
     
     
     
-    if ([_message.msg_type intValue] == SendChatMessageChatType) {
+    if ([_message.msg_type intValue] == SendChatMessageChatIMGType) {
+        
+        UIImage *bubIMG = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg",_message.msg_message]];
+        
+        _bubbleView.image = bubIMG;
+        _bubbleView.frame = CGRectMake(x, y, bubIMG.size.width * (kChatImageHeight/bubIMG.size.height), kChatImageHeight);
+        
+    }else {
+        
         UIImage *image = [UIImage imageNamed:@"WeChat_gray"];
         image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
         _bubbleView.image = image;
-    }else {
-        UIImage *bubIMG = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg",_message.msg_message]];
-
-        _bubbleView.image = bubIMG;
-        _bubbleView.frame = CGRectMake(x, y, bubIMG.size.width * (kChatImageHeight/bubIMG.size.height), kChatImageHeight);
+        
+        UIImage *highlight = [UIImage imageNamed:@"WeChat_Gray_Highlighted"];
+        highlight = [highlight stretchableImageWithLeftCapWidth:floorf(highlight.size.width/2) topCapHeight:floorf(highlight.size.height/2)];
+        _bubbleView.highlightedImage = highlight;
     }
     
     // 发表时间
-    x = _bubbleView.frame.origin.x + _bubbleView.frame.size.width + HEAD_PADDING - 6;
+    x = _bubbleView.frame.origin.x + _bubbleView.frame.size.width + HEAD_PADDING - 8;
     y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT - 6;
     _timeLabel.frame = CGRectMake(x, y, TIME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
 }
@@ -146,13 +153,8 @@
     _bubbleView.frame = CGRectMake(x, y, width, height);
     
     
-    if ([_message.msg_type intValue] == SendChatMessageChatType) {
-        // 设置气泡
-        UIImage *image = [UIImage imageNamed:@"WeChat"];//myChat
-        image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
-        _bubbleView.image = image;
-    }else
-    {
+    if ([_message.msg_type intValue] == SendChatMessageChatIMGType) {
+        
         UIImage *bubIMG = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg",_message.msg_message]];
         _bubbleView.image = bubIMG;
         CGFloat imgWidth = bubIMG.size.width *  (kChatImageHeight/bubIMG.size.height);
@@ -160,11 +162,22 @@
         
         _bubbleView.frame = CGRectMake(x - 10, y, imgWidth, kChatImageHeight);
         //_bubbleView.contentMode = UIViewContentModeScaleAspectFill;
+    }else
+    {
+        // 设置气泡
+        UIImage *image = [UIImage imageNamed:@"WeChat"];//myChat
+        image = [image stretchableImageWithLeftCapWidth:floorf(image.size.width/2) topCapHeight:floorf(image.size.height/2)];
+        _bubbleView.image = image;
+        
+        UIImage *highlight = [UIImage imageNamed:@"WeChat_Me_Highlighted"];
+        highlight = [highlight stretchableImageWithLeftCapWidth:floorf(highlight.size.width/2) topCapHeight:floorf(highlight.size.height/2)];
+        _bubbleView.highlightedImage = highlight;
+
     }
     
     // 发表时间
-    x = _bubbleView.frame.origin.x - TIME_LABEL_WIDTH - HEAD_PADDING + 4;
-    y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT;
+    x = _bubbleView.frame.origin.x - TIME_LABEL_WIDTH - HEAD_PADDING + 6;
+    y = _bubbleView.frame.origin.y + _bubbleView.frame.size.height - NAME_LABEL_HEIGHT - 4;
     _timeLabel.frame = CGRectMake(x, y, TIME_LABEL_WIDTH, NAME_LABEL_HEIGHT);
 }
 
@@ -178,7 +191,7 @@
     _bubbleView.isMe = isShow;
     
     if (!isShow) {
-        [_headImgaeView setImageURLStr:User_Head(_message.msg_userID)];
+        //[_headImgaeView setImageURLStr:User_Head(_message.msg_userID)];
         
         NSString *distance = [NSTimeUtil getDistance:message.msg_longitude latitude:message.msg_latitude];
         

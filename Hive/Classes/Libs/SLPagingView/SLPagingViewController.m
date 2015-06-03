@@ -267,6 +267,7 @@
     // Get the right position and update it
     CGFloat xOffset    = (index * ((int)SCREEN_SIZE.width));
     [self.scrollView setContentOffset:CGPointMake(xOffset, self.scrollView.contentOffset.y) animated:animated];
+    
 }
 
 -(void)addViewControllers:(UIViewController *) controller needToRefresh:(BOOL) refresh{
@@ -377,21 +378,24 @@
 
 -(void)setupPagingProcess{
     // Make our ScrollView
-    CGRect frame                                              = CGRectMake(0, 0, SCREEN_SIZE.width, self.view.bounds.size.height);
-    self.scrollView                                           = [[UIScrollView alloc] initWithFrame:frame];
-    self.scrollView.backgroundColor                           = [UIColor clearColor];
-    self.scrollView.pagingEnabled                             = YES;
-    self.scrollView.showsHorizontalScrollIndicator            = NO;
-    self.scrollView.showsVerticalScrollIndicator              = NO;
-    self.scrollView.delegate                                  = self;
-    self.scrollView.bounces                                   = NO;
-    [self.scrollView setContentInset:UIEdgeInsetsMake(0, 0, -80, 0)];
-    [self.view addSubview:self.scrollView];
+    
+    if (!_scrollView) {
+        CGRect frame                                              = CGRectMake(0, 0, SCREEN_SIZE.width, self.view.bounds.size.height);
+        self.scrollView                                           = [[UIScrollView alloc] initWithFrame:frame];
+        self.scrollView.backgroundColor                           = [UIColor clearColor];
+        self.scrollView.pagingEnabled                             = YES;
+        self.scrollView.showsHorizontalScrollIndicator            = NO;
+        self.scrollView.showsVerticalScrollIndicator              = NO;
+        self.scrollView.delegate                                  = self;
+        self.scrollView.bounces                                   = NO;
+        [self.scrollView setContentInset:UIEdgeInsetsMake(0, 0, -80, 0)];
+        [self.view addSubview:self.scrollView];
+    }
     
     // Adds all views
     [self addControllers];
     
-    if(self.needToShowPageControl){
+    if(!_needToShowPageControl){
         // Make the page control
         self.pageControl               = [[UIPageControl alloc] init];
         self.pageControl.frame         = (CGRect){0, 35, 0, 0};
@@ -406,7 +410,7 @@
 
 // Add all views
 -(void)addControllers{
-    if(self.viewControllers
+    if(_viewControllers
        && self.viewControllers.count > 0){
         float width                 = SCREEN_SIZE.width * self.viewControllers.count;
         float height                = CGRectGetHeight(self.view.bounds) - CGRectGetHeight(self.navigationBarView.bounds);
@@ -529,12 +533,14 @@
 
 // Call when the screen orientation is updated
 - (void)orientationChanged:(NSNotification *)notification{
-    [self adaptViews];
+    //这个通知影响屏幕 横向增加页数 暂时去掉
+    //[self adaptViews];
 }
 
 #pragma mark - SLPagingViewDidChanged delegate
 
 -(void)sendNewIndex:(UIScrollView *)scrollView{
+    
     CGFloat xOffset    = scrollView.contentOffset.x;
     NSInteger oldIndex = self.indexSelected;
     self.indexSelected = ((int) roundf(xOffset) % (self.navigationBarView.subviews.count * (int)SCREEN_SIZE.width)) / SCREEN_SIZE.width;

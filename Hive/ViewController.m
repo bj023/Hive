@@ -106,13 +106,13 @@
 #pragma -mark TWitter 导航效果
 - (void)configPagingVC
 {
-    UIColor *orange = [UIColorUtil colorWithHexString:@"#1e2d3b"];
-    UIColor *gray = [UIColorUtil colorWithHexString:@"#ced3d7"];
+    UIColor *orange = [UIColorUtil colorWithHexString:@"#5bb6ff"];//1e2d3b
+    UIColor *gray = [UIColorUtil colorWithHexString:@"#b7beca"];//ced3d7
 //[UIColorUtil colorWithHexString:@"#1b2430"]
     _pageViewController = [[SLPagingViewController alloc] initWithNavBarItems:[self titlesArr]
                                                             navBarBackground:[UIColorUtil colorWithHexString:@"#fafafa"]
                                                                  controllers:[self twitterVC]
-                                                             showPageControl:NO];
+                                                             showPageControl:YES];
     
     _pageViewController.navigationSideItemsStyle = SLNavigationSideItemsStyleOnBounds;
     // Tinder Like
@@ -146,7 +146,8 @@
         }
     };
     
-    [_pageViewController.navigationBarView addSubview:[_nearByVC getSelectBtuuon]];
+    // 暂时去掉 附近人 select 按钮
+    //[_pageViewController.navigationBarView addSubview:[_nearByVC getSelectBtuuon]];
     __weak POOKController *weakHive = _hiveVC;
     __weak NearByController *weakNearByVC = _nearByVC;
     
@@ -159,8 +160,6 @@
             [weakNearByVC sendNearByAction];
         }
         [weakHive set_HiddenKeyboard];
-        
-        
     };
 
     _pageViewController.pagingViewMovingRedefine = ^(UIScrollView * scrollView, NSArray *subviews){
@@ -200,19 +199,19 @@
 {    
     UILabel *ticketNameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [ticketNameLabel setText:@"SETTING"];
-    [ticketNameLabel setFont:TextFont];
+    [ticketNameLabel setFont:NavTitleFont];
     
     _messageLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     [_messageLabel setText:@"CHATS"];
-    [_messageLabel setFont:TextFont];
+    [_messageLabel setFont:NavTitleFont];
     
     UILabel *ticketNameLabel3 = [[UILabel alloc] initWithFrame:CGRectZero];
     [ticketNameLabel3 setText:@"POOK"];
-    [ticketNameLabel3 setFont:TextFont];
+    [ticketNameLabel3 setFont:NavTitleFont];
     
     UILabel *ticketNameLabel4 = [[UILabel alloc] initWithFrame:CGRectZero];
     [ticketNameLabel4 setText:@"NEARBY"];
-    [ticketNameLabel4 setFont:TextFont];
+    [ticketNameLabel4 setFont:NavTitleFont];
     return @[ticketNameLabel,_messageLabel,ticketNameLabel3,ticketNameLabel4];
 }
 
@@ -289,7 +288,7 @@
 - (void)clickCellAction
 {
     __weak ViewController *weakSelf = self;
-
+    __weak SettingsController *weakSettingVC = _settingsVC;
     _settingsVC.clickCellAtIndex = ^(NSIndexPath *indexpath){
         switch (indexpath.row) {
             case 0:
@@ -339,6 +338,7 @@
                 } completion:^(BOOL success, NSError *error) {
                     [NSDataUtil removeChatMessage];
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadChatMessage" object:nil];
+                    [weakSettingVC updateViewState];
                     debugLog(@"------->清除所有私聊记录");
                 }];
             }

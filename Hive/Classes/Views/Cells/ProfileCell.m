@@ -31,7 +31,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.selectionStyle  = UITableViewCellSelectionStyleNone;
+        //self.selectionStyle  = UITableViewCellSelectionStyleNone;
         self.backgroundColor = [UIColor whiteColor];
         self.accessoryType   = UITableViewCellAccessoryDisclosureIndicator;
         
@@ -55,17 +55,18 @@
         if (!self.intrLabel) {
             self.intrLabel = [[UILabel alloc] initWithFrame:CGRectMake(introX, introY, introW, introH)];
             self.intrLabel.font = [UIFont systemFontOfSize:12];
-            self.intrLabel.textColor = [UIColorUtil colorWithHexString:@"#929292"];
+            self.intrLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
             self.intrLabel.textAlignment = NSTextAlignmentLeft;
             self.intrLabel.backgroundColor = [UIColor clearColor];
             [self.contentView addSubview:self.intrLabel];
         }
         
+        /*
         UIImageView *lineIMG = [[UIImageView alloc] init];
         lineIMG.frame = CGRectMake(0, 0,  UIWIDTH - 0, 1);
         lineIMG.backgroundColor = kLine_Color;
         [self.contentView addSubview:lineIMG];
-        
+        */
         self.lineIMG = [[UIImageView alloc] init];
         self.lineIMG.backgroundColor = kLine_Color;
         [self.contentView addSubview:self.lineIMG];

@@ -27,8 +27,8 @@
 
 - (void)setImageUrl:(NSURL *)url placehoder:(UIImage *)placeholder
 {
-    [[SDImageCache sharedImageCache] clearMemory];
-    [[SDImageCache sharedImageCache] clearDisk];
+    //[[SDImageCache sharedImageCache] clearMemory];
+    //[[SDImageCache sharedImageCache] clearDisk];
     
     [self sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed | SDWebImageLowPriority];
 }
