@@ -51,6 +51,7 @@
     
     [ChatManager clearUnReadCountWith:self.userID];
     [self reloadData];
+    [self sendRead];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -385,8 +386,6 @@
 /*
 - (void)refreshDataWithMessageID:(NSString *)msgID
 {
-
-    
     __weak ChatController *weakSelf = self;
     dispatch_async(_messageQueue, ^{
         ChatModel *model = [ChatModel MR_findFirstByAttribute:@"messageID" withValue:msgID];
@@ -467,7 +466,6 @@
                     return ;
                 });
             }];
-            
         }
     }
 }
@@ -475,6 +473,24 @@
 
 
 #pragma -mark 发送已读操作
+- (void)sendRead
+{
+    NSString *curuserID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"user_ID = %@ and msg_userID = %@ and msg_send_type = %@",curuserID,self.userID,@(SendChatMessageNoReadState)];
+    NSArray *chatModelArr = [ChatModel MR_findAllWithPredicate:predicate];
+    
+    if (chatModelArr.count>0) {
+        
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            for (ChatModel *model in chatModelArr) {
+                [ChatSendMessage ReplyToChatMessageWithMessageID:model.self.user_ID ToUserID:curuserID CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
+                    
+                }];
+            }
+        });
+        
+    }
+}
 
 - (void)dealloc
 {

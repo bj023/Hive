@@ -21,6 +21,7 @@ typedef enum{
     SendChatMessageSuccessState = 1,
     SendChatMessageReadState = 2,
     SendChatMessageFailState = 3,
+    SendChatMessageNoReadState = 4,
 
 } SendChatMessageStateType;
 

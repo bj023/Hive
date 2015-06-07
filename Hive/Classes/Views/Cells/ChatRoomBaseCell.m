@@ -13,8 +13,8 @@
 
 #define MESSAGE_FONT_SIZE [UIFont systemFontOfSize:16] // 字体
 
-#define kChatImageWidth 60
-#define kChatImageHeight 80
+#define kChatImageWidth 200
+#define kChatImageHeight 200
 
 @interface ChatRoomBaseCell ()
 {
@@ -47,7 +47,7 @@
     _headImgaeView.layer.cornerRadius = HEAD_SIZE/2;
     _headImgaeView.layer.masksToBounds = YES;
     _headImgaeView.userInteractionEnabled = YES;
-    _headImgaeView.backgroundColor = [UIColor clearColor];
+    _headImgaeView.backgroundColor = [UIColor whiteColor];
     _headImgaeView.layer.borderWidth = kHeadIMG_Line_Height;
     _headImgaeView.layer.borderColor = kHeadIMG_Layer_Color.CGColor;
     [self.contentView addSubview:_headImgaeView];
@@ -151,8 +151,13 @@
 
     
     if ([_message.msg_type intValue] == SendChatMessageChatIMGType) {
-        UIImage *bubIMG = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg",_message.msg_message]];
-        
+        //UIImage *bubIMG = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg",_message.msg_message]];
+        UIImage *bubIMG;
+        if (![FACEARRAY containsObject:_message.msg_message]) {
+            bubIMG = [UIImage imageNamed:FACEARRAY[0]];
+        }else
+            bubIMG = [UIImage imageNamed:_message.msg_message];
+
         _bubbleView.image = bubIMG;
         _bubbleView.frame = CGRectMake(x, y, bubIMG.size.width * (kChatImageHeight/bubIMG.size.height), kChatImageHeight);
     }else {
@@ -193,7 +198,15 @@
     
     if ([_message.msg_type intValue] == SendChatMessageChatIMGType) {
         
-        UIImage *bubIMG = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg",_message.msg_message]];
+        //UIImage *bubIMG = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg",_message.msg_message]];
+        
+        UIImage *bubIMG;
+        if (![FACEARRAY containsObject:_message.msg_message]) {
+            bubIMG = [UIImage imageNamed:FACEARRAY[0]];
+        }else
+            bubIMG = [UIImage imageNamed:_message.msg_message];
+        
+
         _bubbleView.image = bubIMG;
         CGFloat imgWidth = bubIMG.size.width *  (kChatImageHeight/bubIMG.size.height);
         x = UIWIDTH - imgWidth - 10;

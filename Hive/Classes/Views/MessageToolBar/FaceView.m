@@ -43,30 +43,41 @@
     
     CGFloat pading = 10;
     CGFloat width = 80;
-    CGFloat height = 85;
+    CGFloat height = 80;
 
     CGFloat x = (UIWIDTH - width*4 - pading * 3)/2;
     NSInteger star = 1;
-    for (int i=0; i<5; i++) {
-        for (int j=0; j< (i==4?2:8); j++) {
+    for (int i=0; i<3; i++) {
+        for (int j=0; j< (i==2?3:8); j++) {
             CGRect frame = CGRectMake(x + pading*(j%4) + UIWIDTH*i + width*(j%4), 8 + pading*(j/4)  + height*(j/4) , width, height);
+            /*
             UIButton *faceImg = [UIButton buttonWithType:UIButtonTypeCustom];
             faceImg.frame = frame;
             faceImg.tag = star++;
             faceImg.backgroundColor = [UIColor clearColor];
             [_faceScr addSubview:faceImg];
-            [faceImg setImage:[UIImage imageNamed:[NSString stringWithFormat:@"0%d%d",i,j]] forState:UIControlStateNormal];
+            //[faceImg setImage:[UIImage imageNamed:[NSString stringWithFormat:@"0%d%d",i,j]] forState:UIControlStateNormal];
+            [faceImg setImage:[UIImage imageNamed:FACEARRAY[i*8+j]] forState:UIControlStateNormal];
+            //debugLog(@"%d",i*8+j);
             [faceImg addTarget:self action:@selector(clickFaceImg:) forControlEvents:UIControlEventTouchUpInside];
+             */
+            UIImageView *faceImg = [[UIImageView alloc] initWithFrame:frame];
+            faceImg.userInteractionEnabled = YES;
+            faceImg.tag = star++;
+            faceImg.backgroundColor = [UIColor clearColor];
+            [_faceScr addSubview:faceImg];
+            faceImg.image = [UIImage imageNamed:FACEARRAY[i*8+j]];
+            [faceImg addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickFaceImg:)]];
         }
     }
     
-    _faceScr.contentSize = CGSizeMake(UIWIDTH * 5, self.frame.size.height);
+    _faceScr.contentSize = CGSizeMake(UIWIDTH * (FACEARRAY.count/8+1), self.frame.size.height);
 }
 
 - (void)initPageControl
 {
     _facePageCtr = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 26, UIWIDTH, 20)];
-    _facePageCtr.numberOfPages = 5;
+    _facePageCtr.numberOfPages =FACEARRAY.count/8+1;
     _facePageCtr.currentPage = 0;
     _facePageCtr.userInteractionEnabled = YES;
     // 设置非选中页的圆点颜色
@@ -92,17 +103,18 @@
     _facePageCtr.currentPage = page;
 }
 
-- (void)clickFaceImg:(UIButton *)sender
+- (void)clickFaceImg:(UITapGestureRecognizer *)sender
 {
-    
-    NSString *faceString;
-    NSInteger index = sender.tag - 1;
+    NSInteger index = sender.view.tag - 1;
+    NSString *faceString = FACEARRAY[index];
+
+    /*
     if (index<10) {
         faceString = [NSString stringWithFormat:@"00%ld",index];
     }else{
         faceString = [NSString stringWithFormat:@"0%ld",index];
     }
-    
+    */
     if ([self.delegate respondsToSelector:@selector(selectedFacialView:)]) {
         [self.delegate selectedFacialView:faceString];
     }

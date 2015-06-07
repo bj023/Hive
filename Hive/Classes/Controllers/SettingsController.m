@@ -78,14 +78,14 @@
     self.headIMG = [self getProfileIMG];
     
     [headView addSubview:self.headIMG];
+
     
     CurrentUserInfo *user = [[UserInfoManager sharedInstance] getCurrentUserInfo];
 
     //[self.headIMG setImageURLStr:User_Head(user.userID) placeholder:nil];
-    [self.headIMG setImageURLStr:user.userHead];
     //self.headIMG.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:User_Head(user.userID)]]];
-    debugLog(@"用户头像->%@",User_Head(user.userID));
-    
+    [self.headIMG setImageURLStr:user.userHead];
+
     [self.headIMG addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadIMGAction:)]];
 
 }
@@ -145,13 +145,16 @@
     CGRect frame = CGRectMake(self.settingTableView.bounds.size.width/2 - width/2, headY, width, width);
     CustomIMGView *headIMG = [[CustomIMGView alloc] initWithFrame:frame];
     headIMG.backgroundColor = [UIColor clearColor];
+    headIMG.contentMode = UIViewContentModeScaleAspectFill;
     headIMG.layer.cornerRadius = width/2;
-    headIMG.clipsToBounds = YES;
+    headIMG.layer.shouldRasterize = NO;
+    headIMG.layer.masksToBounds = YES;
+    //headIMG.clipsToBounds = YES;
 //    headIMG.layer.borderWidth = kHeadIMG_Line_Height;
 //    headIMG.layer.borderColor = kHeadIMG_Layer_Color.CGColor;
 //    headIMG.layer.edgeAntialiasingMask = kCALayerLeftEdge | kCALayerRightEdge | kCALayerBottomEdge | kCALayerTopEdge;
 //    headIMG.layer.masksToBounds = YES;
-        
+    
     return headIMG;
 }
 

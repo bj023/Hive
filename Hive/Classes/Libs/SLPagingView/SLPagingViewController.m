@@ -360,11 +360,12 @@
 }
 
 // Add a view as a navigationBarItem
+// 添加
 -(void)addNavigationItem:(UIView*)v tag:(int)tag{
     CGFloat distance = (SCREEN_SIZE.width/2) - self.navigationSideItemsStyle;
     CGSize vSize = ([v isKindOfClass:[UILabel class]])? [self getLabelSize:(UILabel*)v] : v.frame.size;
     CGFloat originX = (SCREEN_SIZE.width/2 - vSize.width/2) + self.navItemsViews.count*distance;
-    v.frame = (CGRect){originX, 16, vSize.width + kTitleWidthPadding, vSize.height};
+    v.frame = (CGRect){originX, 16, vSize.width, vSize.height};
     v.tag = tag;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(tapOnHeader:)];
@@ -507,13 +508,23 @@
 -(void)updateNavItems:(CGFloat) xOffset{
     __block int i = 0;
     [self.navItemsViews enumerateObjectsUsingBlock:^(UIView* v, NSUInteger idx, BOOL *stop) {
-     
-        CGFloat distance = (SCREEN_SIZE.width/2) - self.navigationSideItemsStyle;
         
-        CGSize vSize     = ([v isKindOfClass:[UILabel class]])? [self getLabelSize:(UILabel*)v] : v.frame.size;
+        /*
+         CGFloat distance = (SCREEN_SIZE.width/2) - self.navigationSideItemsStyle;
+         CGSize vSize = ([v isKindOfClass:[UILabel class]])? [self getLabelSize:(UILabel*)v] : v.frame.size;
+         CGFloat originX = (SCREEN_SIZE.width/2 - vSize.width/2) + self.navItemsViews.count*distance;
+         v.frame = (CGRect){originX, 16, vSize.width + kTitleWidthPadding, vSize.height};
+         */
+        UILabel *titleLab = (UILabel*)v;
+        
+        CGSize vSize     = ([v isKindOfClass:[UILabel class]])? [self getLabelSize:titleLab] : v.frame.size;
+
+        CGFloat distance = (SCREEN_SIZE.width/2) - vSize.width + kTitleWidthPadding ;//- self.navigationSideItemsStyle;
+        
         CGFloat originX  = ((SCREEN_SIZE.width/2 - vSize.width/2) + i*distance) - xOffset/(SCREEN_SIZE.width/distance);
-        v.frame          = (CGRect){originX, 16, vSize.width + kTitleWidthPadding, vSize.height};
+        v.frame          = (CGRect){originX, 16, vSize.width, vSize.height};
         i++;
+        
     }];
 }
 

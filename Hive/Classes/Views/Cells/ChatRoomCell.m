@@ -195,6 +195,7 @@
     [super setMessage:message];
     
     [self loadUserIconPath:message.userID];
+    
 }
 
 
@@ -289,13 +290,16 @@
 
 - (void)loadUserIconPath:(NSString *)userID
 {
+    NSString *currentUserID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    if ([currentUserID isEqualToString:userID]) {
+        return;
+    }
+    
     [HttpTool sendRequestProfileWithUserID:userID success:^(id json) {
         ResponseChatUserInforModel *res = [[ResponseChatUserInforModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
-            
             NearByModel *model = res.RETURN_OBJ;
             [self.headImgaeView setImageURLStr:model.iconPath placeholder:nil];
-            
         }
         
     } faliure:^(NSError *error) {

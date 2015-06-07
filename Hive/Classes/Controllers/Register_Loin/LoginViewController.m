@@ -13,7 +13,9 @@
 #define Color [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1]
 
 @interface LoginViewController ()
-
+{
+    UIView *_mainView;
+}
 @end
 
 @implementation LoginViewController
@@ -28,6 +30,15 @@
 {
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = YES;
+    [self startAnimate];
+}
+
+- (void)startAnimate
+{
+    _mainView.center = CGPointMake(UIWIDTH/2, UIHEIGHT);
+    [UIView animateWithDuration:0.5 animations:^{
+        _mainView.center = CGPointMake(UIWIDTH/2, UIHEIGHT/2);
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -43,6 +54,11 @@
 #pragma -mark 按钮
 - (void)configButton
 {
+    _mainView = [[UIView alloc] initWithFrame:self.view.bounds];
+    _mainView.backgroundColor = [UIColor clearColor];
+    _mainView.userInteractionEnabled = YES;
+    [self.view addSubview:_mainView];
+    
     CGFloat helpWH = 25;
     UIButton *helpBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     helpBtn.frame = CGRectMake(UIWIDTH - 40, 20, helpWH, helpWH);
@@ -62,13 +78,13 @@
     CGFloat y = 100;
     UIImageView *logoIMG = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, w, h)];
     logoIMG.image = image;
-    [self.view addSubview:logoIMG];
+    [_mainView addSubview:logoIMG];
     
     //NSString *string = @"CHAT WITH PEOPLE AROUND YOU";
     NSString *string = @"Chat With People Around You";
     NSString *string1 = @"AROUND YOU";
 
-    y = UIHEIGHT/2 - 120;
+    y = y + h + 30;
     w = UIWIDTH/2;
     x = UIWIDTH/2 - w/2;
     h = 50;
@@ -79,7 +95,7 @@
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 0;
     label.text = string;
-    [self.view addSubview:label];
+    [_mainView addSubview:label];
     
     
     y = y + h + 10;
@@ -101,7 +117,7 @@
     signInBtn.backgroundColor = [UIColor clearColor];
     [signInBtn setTitle:@"Log In" forState:UIControlStateNormal];
     signInBtn.titleLabel.font = [UIFont fontWithName:Font_Medium size:17];
-    [self.view addSubview:signInBtn];
+    [_mainView addSubview:signInBtn];
 
     y = y - h;
     UIButton *signOutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -110,7 +126,7 @@
     [signOutBtn setTitleColor:Color forState:UIControlStateNormal];
     [signOutBtn setTitle:@"Sign Up" forState:UIControlStateNormal];
     signOutBtn.titleLabel.font = [UIFont fontWithName:Font_Medium size:17];
-    [self.view addSubview:signOutBtn];
+    [_mainView addSubview:signOutBtn];
 
     
     [signInBtn setBackgroundImage:[UIColorUtil createImageWithColor:NormalColor] forState:UIControlStateNormal];

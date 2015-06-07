@@ -427,6 +427,7 @@ static XMPPManager *sharedManager;
             model.msg_hasStealth = hasStealth;
             model.msg_hasTime = isTime;
             model.msg_type = @([type intValue]);
+            model.msg_send_type = @(SendChatMessageNoReadState);
             debugLog(@"收到的消息->%@-%@",type,model.msg_type);
             NSInteger count = [ChatModel MR_countOfEntitiesWithContext:localContext];
             model.id = @(count+1);

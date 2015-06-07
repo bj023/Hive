@@ -44,6 +44,7 @@
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 }
 
+/*
 - (void)configNavBar
 {
     self.title = @"Follow";
@@ -60,7 +61,22 @@
     lineView.backgroundColor = [UIColorUtil colorWithHexString:@"e5e5ea"];
     [self.navigationController.navigationBar addSubview:lineView];
 }
+*/
+- (void)configNavBar
+{
+    self.title = @"Follow";
 
+    UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    backBtn.frame = CGRectMake(0, 10, 25/2, 41/2);
+    [backBtn setBackgroundImage:[UIImage imageNamed:@"backNav"] forState:UIControlStateNormal];
+    UIBarButtonItem *bacgItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
+    self.navigationItem.leftBarButtonItem = bacgItem;
+    [backBtn addTarget:self action:@selector(backNav) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, UIWIDTH, 1)];
+    lineView.backgroundColor = [UIColorUtil colorWithHexString:@"e5e5ea"];
+    [self.navigationController.navigationBar addSubview:lineView];
+}
 - (void)backNav
 {
     //[self.navigationController dismissViewControllerAnimated:YES completion:nil];

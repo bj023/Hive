@@ -81,7 +81,7 @@
 #define IsEmpty(str) (![str respondsToSelector:@selector(isEqualToString:)] || [str isEqualToString:@""])
 
 // 用户头像
-#define User_Head(str) [NSString stringWithFormat:@"http://115.28.51.196/X_USER_ICON/%@.jpg",str]
+//#define User_Head(str) [NSString stringWithFormat:@"http://115.28.51.196/X_USER_ICON/%@.jpg",str]
 
 #pragma mark -
 #pragma mark --- 判断是否为ios8
@@ -104,5 +104,8 @@
 
 #define NormalColor [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1]
 #define HighlightedColor [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.8]
+
+// 表情数组
+#define FACEARRAY @[@"AWESOME",@"down",@"GYM",@"happy",@"HELP",@"hi",@"letsdrink",@"LONELY",@"LOVE",@"MORNING",@"OOPS",@"poor",@"run",@"runrun",@"SHIT",@"SORRY",@"sowhat",@"worrking",@"yeah"]
 
 #endif
