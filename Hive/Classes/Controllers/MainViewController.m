@@ -56,10 +56,10 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     if (iOS8)
         [[UINavigationBar appearance] setTranslucent:NO];
-    [[UINavigationBar appearance] setBarTintColor:[UIColorUtil colorWithHexString:@"#fafafa"]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColorUtil colorWithHexString:@"#f7f7f7"]];// 背景色
     //[[UINavigationBar appearance] setTintColor:[UIColorUtil colorWithHexString:@"#f8f8f8"]];
-    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont fontWithName:Font_Medium size:17], NSFontAttributeName,
-                                [UIColorUtil colorWithHexString:@"#1e2d3b"], NSForegroundColorAttributeName, nil];
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:NavTitleFont, NSFontAttributeName,
+                                [UIColorUtil colorWithHexString:@"#424242"], NSForegroundColorAttributeName, nil];
     [[UINavigationBar appearance] setTitleTextAttributes:attributes];
 }
 

@@ -38,18 +38,32 @@
 {
     if (!_topView) {
         _topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, 44)];
-        _topView.backgroundColor = [UIColorUtil colorWithHexString:@"#eeeeee"];
+        _topView.backgroundColor = [UIColor whiteColor];
         self.tableView.tableHeaderView = _topView;
         
         UIButton *searBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        searBtn.frame = CGRectMake(8 , 7, UIWIDTH - 16, 30);
-        searBtn.backgroundColor = [UIColor whiteColor];
-        searBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        searBtn.frame = CGRectMake(25/2 , 9, UIWIDTH - 25, 26);
+        searBtn.backgroundColor = [UIColorUtil colorWithHexString:@"#eeeeee"];
+        searBtn.titleLabel.font = [UIFont systemFontOfSize:13];
         searBtn.layer.cornerRadius = 5;
-        [searBtn setTitle:@"Search" forState:UIControlStateNormal];
+        [searBtn setTitle:@"Search for people and messages" forState:UIControlStateNormal];
         [searBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         [searBtn addTarget:self action:@selector(searchBarButtonItemAction:) forControlEvents:UIControlEventTouchUpInside];
         [_topView addSubview:searBtn];
+                
+        /* */
+        CGSize size = [UILabel sizeWithString:@"Search for people and messages" font:searBtn.titleLabel.font maxSize:CGSizeMake(MAXFLOAT, searBtn.frame.size.height)];
+        CGFloat w = 13;
+        CGFloat h = w;
+        CGFloat y = _topView.frame.size.height/2 - h/2;
+        CGFloat x = _topView.frame.size.width/2 - w/2 - size.width/2 - 3;
+        UIImageView *searchIMG = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, w, h)];
+        searchIMG.backgroundColor = [UIColor clearColor];
+        searchIMG.alpha = 0.7;
+        searchIMG.image = [UIImage imageNamed:@"searchIMG"];
+        [_topView addSubview:searchIMG];
+        
+        searBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -w-3);
     }
 }
 

@@ -222,6 +222,11 @@ typedef void(^SLPagingViewWillChanged)(NSInteger currentPage);
  */
 -(void)setNavigationBarColor:(UIColor*) color;
 
+/**
+ *  宽度改变时 更新
+ */
+- (void)updateNavFrame;
+
 @end
 
 extern NSString* const SLPagingViewPrefixIdentifier;  // this is @"sl_"

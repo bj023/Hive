@@ -12,9 +12,10 @@
 #import "UserInformationView.h"
 #import "CustomButtonView.h"
 #import "NearByModel.h"
+#import "FRDLivelyButton.h"
 
 #define TopGrayBackGroundHeight 321/2
-#define kHeadSize 178/2
+#define kHeadSize 150
 
 @interface UserInformationController ()<CustomButtonViewDelegate, UIActionSheetDelegate>
 {
@@ -75,8 +76,11 @@
 {
     UIButton *toolBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     toolBtn.frame =CGRectMake(0, UIHEIGHT - 50, UIWIDTH, 50);
-    [toolBtn setTitle:@"CLOSE" forState:UIControlStateNormal];
-    [toolBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    //[toolBtn setTitle:@"CLOSE" forState:UIControlStateNormal];
+    //[toolBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    //[toolBtn setImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
+    
     //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.5] size:toolBtn.frame.size] forState:UIControlStateNormal];
     //[toolBtn setBackgroundImage:[self buttonImageFromColor:[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.8] size:toolBtn.frame.size] forState:UIControlStateHighlighted];
     //关闭颜色
@@ -88,7 +92,22 @@
     [self.view addSubview:toolBtn];
     [toolBtn addTarget:self action:@selector(clickCloseBtn:) forControlEvents:UIControlEventTouchUpInside];
     
+    /**/
+    UIImageView *imageBtn = [[UIImageView alloc] initWithFrame:CGRectMake(UIWIDTH/2 - 15, toolBtn.frame.size.height/2 - 20/2, 20, 20)];
+    imageBtn.image = [UIImage imageNamed:@"close"];
+    [toolBtn addSubview:imageBtn];
     
+    
+    /*
+    UIColor *color = [UIColor whiteColor];
+    FRDLivelyButton *button = [[FRDLivelyButton alloc] initWithFrame:CGRectMake(UIWIDTH/2 - 15, 15, 20, 20)];
+    [button setOptions:@{ kFRDLivelyButtonLineWidth: @(2.0f),
+                          kFRDLivelyButtonHighlightedColor:color,
+                          kFRDLivelyButtonColor: color
+                          }];
+    [button setStyle:kFRDLivelyButtonStyleClose animated:YES];
+    [toolBtn addSubview:button];
+     */
 }
 // 关闭按钮点击事件
 - (void)clickCloseBtn:(id)sender
@@ -113,7 +132,9 @@
 {
     _topGrayBackGroundHeight = TopGrayBackGroundHeight * self.view.frame.size.width / 375;
     UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, _topGrayBackGroundHeight)];
-    topView.backgroundColor = [UIColorUtil colorWithHexString:@"#f1efee"];
+    //topView.backgroundColor = [UIColorUtil colorWithHexString:@"#f1efee"];
+    topView.backgroundColor = [UIColor whiteColor];
+    
     [self.view addSubview:topView];
 }
 
@@ -153,17 +174,17 @@
     CGFloat nameH = 44;
     if (!self.nameLabel) {
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(nameX, nameY, nameW, nameH)];
-        self.nameLabel.font = [UIFont fontWithName:Font_Regular size:17];
+        self.nameLabel.font = [UIFont fontWithName:GothamBold size:24];
         self.nameLabel.backgroundColor = [UIColor clearColor];
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
-        self.nameLabel.textColor = [UIColor blackColor];
+        self.nameLabel.textColor = [UIColorUtil colorWithHexString:@"#424242"];
         [self.view addSubview:self.nameLabel];
     }
     
     CGFloat userInfoW = UIWIDTH;
     CGFloat userInfoH = 20;
     CGFloat userInfoX = UIWIDTH/2 - userInfoW/2;
-    CGFloat userInfoY = nameY + nameH + 5;// 偏移量
+    CGFloat userInfoY = nameY + nameH + 10;// 偏移量
     if (!self.userinfor) {
         self.userinfor = [[UserInformationView alloc] initWithFrame:CGRectMake(userInfoX, userInfoY, userInfoW, userInfoH)];
        
@@ -171,7 +192,7 @@
     }
     
 
-    UIFont *introFont = [UIFont systemFontOfSize:16];
+    UIFont *introFont = [UIFont systemFontOfSize:16];//[UIFont fontWithName:@"regular" size:15];
     CGFloat introW = 600/2;
     CGFloat introX = UIWIDTH/2 - introW/2;
     CGFloat introY = userInfoY + userInfoH + 8;// 偏移量
@@ -197,18 +218,16 @@
          */
         
         self.introText = [[UITextView alloc] init];
-        self.introText.textColor = [UIColorUtil colorWithHexString:@"#aeaeae"];
+        //self.introText.textColor =  [UIColor redColor];//[UIColorUtil colorWithHexString:@"#999999"];
         self.introText.userInteractionEnabled = NO;
         self.introText.font = introFont;
         [self.view addSubview:self.introText];
-        self.introLabel.backgroundColor = [UIColor redColor];
-        
-        
+        self.introLabel.backgroundColor = [UIColor clearColor];
     }
     
     CGFloat buttonX = 0;
     //CGFloat buttonY = introY + self.introText.frame.size.height + 40;// 偏移量
-    CGFloat buttonY = 807/2;
+    CGFloat buttonY = UIHEIGHT * 2/3;
     CGFloat buttonW = UIWIDTH;
     CGFloat buttonH = 134/2;
     if (!self.buttonView) {
@@ -250,7 +269,7 @@
     NSDictionary *attributes = @{
                                  NSFontAttributeName : introFont,
                                  NSParagraphStyleAttributeName : paragraphStyle,
-                                 NSForegroundColorAttributeName : [UIColorUtil colorWithHexString:@"#aeaeae"]
+                                 NSForegroundColorAttributeName : [UIColorUtil colorWithHexString:@"#999999"]
                                  };
     self.introText.attributedText = [[NSAttributedString alloc] initWithString:introString attributes:attributes];
     

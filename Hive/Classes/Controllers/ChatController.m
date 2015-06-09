@@ -46,8 +46,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = NO;
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    //self.navigationController.navigationBarHidden = NO;
+    //self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
     [ChatManager clearUnReadCountWith:self.userID];
     [self reloadData];
@@ -57,8 +57,8 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    self.navigationController.navigationBarHidden = YES;
-    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    //self.navigationController.navigationBarHidden = YES;
+    //self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     [ChatManager clearUnReadCountWith:self.userID];
 }
 
@@ -75,16 +75,31 @@
 
 - (void)configNav
 {
+    UIView *navView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, 64)];
+    navView.backgroundColor = [UIColorUtil colorWithHexString:@"#f7f7f7"];
+    [self.view addSubview:navView];
+    
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    backBtn.frame = CGRectMake(0, 10, 25/2, 41/2);
+    backBtn.frame = CGRectMake(10, 44/2 - 18/2 + 20, 18, 18);
     [backBtn setBackgroundImage:[UIImage imageNamed:@"backNav"] forState:UIControlStateNormal];
-    UIBarButtonItem *bacgItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
-    self.navigationItem.leftBarButtonItem = bacgItem;
+    //UIBarButtonItem *bacgItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
+    //self.navigationItem.leftBarButtonItem = bacgItem;
+    
+    [navView addSubview:backBtn];
     [backBtn addTarget:self action:@selector(backNav:) forControlEvents:UIControlEventTouchUpInside];
     
+    
+    UILabel * titleLab = [[UILabel alloc] initWithFrame:CGRectMake(UIWIDTH/2 - 60, 20, 120, 44)];
+    titleLab.text = self.title;
+    titleLab.textAlignment = NSTextAlignmentCenter;
+    titleLab.font = NavTitleFont;
+    [navView addSubview:titleLab];
+    /*
+     导航 底部线
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, UIWIDTH, 1)];
-    lineView.backgroundColor = [UIColorUtil colorWithHexString:@"e5e5ea"];
+    lineView.backgroundColor = [UIColorUtil colorWithHexString:@"#f7f7f7"];
     [self.navigationController.navigationBar addSubview:lineView];
+     */
 }
 
 - (void)backNav:(id)sender
@@ -98,6 +113,7 @@
     self.mesgaeArr = [NSMutableArray array];
     if (!self.tableView) {
         CGRect frame = self.view.bounds;
+        frame.origin.y = 64;
         frame.size.height -= (64 + [MessageToolBar defaultHeight]);
         self.tableView                 = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
         self.tableView.backgroundColor = [UIColor clearColor];
@@ -107,6 +123,16 @@
         [self.view addSubview:self.tableView];
         
         [self.tableView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(keyBoardHidden)]];
+        
+        [self.tableView addGestureRecognizer:[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)]];
+    }
+}
+
+
+- (void)swipeGesture:(UISwipeGestureRecognizer *)recognizer
+{
+    if (recognizer.direction == UISwipeGestureRecognizerDirectionRight) {
+        [self backNav:nil];
     }
 }
 

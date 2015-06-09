@@ -21,7 +21,7 @@
 #define NAME_LABEL_FONT_SIZE 14 // 字体
 #define TIME_LABEL_WIDTH 40
 
-#define TIME_HEIGHT 22 // 时间周期高度
+#define TIME_HEIGHT 16 // 时间周期高度
 
 @class ChatModel;
 @interface ChatBaseCell : UITableViewCell

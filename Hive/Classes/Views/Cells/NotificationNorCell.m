@@ -60,7 +60,7 @@
             if (!self.intrLabel) {
                 self.intrLabel = [[UILabel alloc] initWithFrame:CGRectMake(introX, introY, introW, introH)];
                 self.intrLabel.font = [UIFont systemFontOfSize:12];
-                self.intrLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
+                self.intrLabel.textColor = [UIColorUtil colorWithHexString:@"#999999"];
                 self.intrLabel.textAlignment = NSTextAlignmentLeft;
                 self.intrLabel.backgroundColor = [UIColor clearColor];
                 [self.contentView addSubview:self.intrLabel];
@@ -68,7 +68,7 @@
             
             if (!self.notificationSwitch) {
                 self.notificationSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(UIWIDTH - 65, [NotificationNorCell getNotificationCellHeight]/2 - 15, 40, 30)];
-                self.notificationSwitch.onTintColor = [UIColorUtil colorWithHexString:@"#64baff"];
+                self.notificationSwitch.onTintColor = [UIColorUtil colorWithHexString:@"#52a7f4"];
                 [self.contentView addSubview:self.notificationSwitch];
                 [self.notificationSwitch addTarget:self action:@selector(switchChangeValue:) forControlEvents:UIControlEventValueChanged];
             }

@@ -37,7 +37,6 @@
 
 - (void)setup
 {
-    self.layer.cornerRadius = 10;
     self.layer.masksToBounds = YES;
     self.backgroundColor = [UIColorUtil colorWithHexString:@"e8e8e8"];
     
@@ -56,11 +55,11 @@
     [super layoutSubviews];
     
     CGFloat timeW = self.frame.size.width - 10;
-    CGFloat timeH = 20;
+    CGFloat timeH = self.frame.size.height;
     CGFloat timeY = 0;
     CGFloat timeX = self.frame.size.width/2 - timeW/2;
     _timeLabel.frame = CGRectMake(timeX, timeY, timeW, timeH);
-    
+    self.layer.cornerRadius = timeH/2;
 }
 
 - (void)setTime:(NSString *)time

@@ -33,15 +33,15 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = NO;
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    //self.navigationController.navigationBarHidden = NO;
+    //self.navigationController.interactivePopGestureRecognizer.enabled = NO;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    self.navigationController.navigationBarHidden = YES;
-    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    //self.navigationController.navigationBarHidden = YES;
+    //self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 }
 
 /*
@@ -64,18 +64,28 @@
 */
 - (void)configNavBar
 {
-    self.title = @"Follow";
-
+    UIView *navView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIWIDTH, 64)];
+    navView.backgroundColor = [UIColorUtil colorWithHexString:@"#f7f7f7"];
+    [self.view addSubview:navView];
+    
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    backBtn.frame = CGRectMake(0, 10, 25/2, 41/2);
+    backBtn.frame = CGRectMake(10, 44/2 - 18/2 + 20, 18, 18);
     [backBtn setBackgroundImage:[UIImage imageNamed:@"backNav"] forState:UIControlStateNormal];
-    UIBarButtonItem *bacgItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
-    self.navigationItem.leftBarButtonItem = bacgItem;
+    
+    [navView addSubview:backBtn];
     [backBtn addTarget:self action:@selector(backNav) forControlEvents:UIControlEventTouchUpInside];
     
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, UIWIDTH, 1)];
-    lineView.backgroundColor = [UIColorUtil colorWithHexString:@"e5e5ea"];
-    [self.navigationController.navigationBar addSubview:lineView];
+    UILabel * titleLab = [[UILabel alloc] initWithFrame:CGRectMake(UIWIDTH/2 - 60, 20, 120, 44)];
+    titleLab.text = @"FLLOW";
+    titleLab.textAlignment = NSTextAlignmentCenter;
+    titleLab.font = NavTitleFont;
+    [navView addSubview:titleLab];
+    /*
+     导航 底部线
+     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, UIWIDTH, 1)];
+     lineView.backgroundColor = [UIColorUtil colorWithHexString:@"#f7f7f7"];
+     [self.navigationController.navigationBar addSubview:lineView];
+     */
 }
 - (void)backNav
 {
@@ -88,6 +98,7 @@
 {
     if (!self.followTable) {
         CGRect frame = self.view.bounds;
+        frame.origin.y = 64;
         frame.size.height -= 64;
         self.followTable                 = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
         self.followTable.backgroundColor = [UIColor clearColor];
@@ -95,8 +106,19 @@
         self.followTable.delegate        = self;
         self.followTable.dataSource      = self;
         [self.view addSubview:self.followTable];
+        
+        [self.followTable addGestureRecognizer:[[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGesture:)]];
+
     }
 }
+
+- (void)swipeGesture:(UISwipeGestureRecognizer *)recognizer
+{
+    if (recognizer.direction == UISwipeGestureRecognizerDirectionRight) {
+        [self backNav];
+    }
+}
+
 
 #pragma -mark TableView 回调
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

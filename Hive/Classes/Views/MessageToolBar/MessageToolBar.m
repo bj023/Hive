@@ -342,6 +342,7 @@
             self.aNameLength = 0;
         }
     }
+    
     if ([text isEqualToString:@"\n"]) {
         if ([self.delegate respondsToSelector:@selector(didSendText:)]) {
             [self.delegate didSendText:textView.text];

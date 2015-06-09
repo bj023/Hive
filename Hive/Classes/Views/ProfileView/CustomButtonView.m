@@ -74,6 +74,7 @@
     
     //CGFloat padding = UIWIDTH/2 - kButtonSize/2 - kButtonSize - kLeft_Right_Padding;
     
+    /*
     CGFloat followH = kButtonSize;//self.frame.size.height;
     CGFloat followW = followH;
     CGFloat followX = UIWIDTH/2 - kButtonSize/2;//self.frame.size.width/2 - followW/2;
@@ -111,18 +112,63 @@
     [self.blockBtn setTitle:@"Block" forState:UIControlStateNormal];
     [self addSubview:self.blockBtn];
     
+    */
     
-    self.followBtn.titleLabel.font = [UIFont systemFontOfSize:16];
-    talkBtn.titleLabel.font = [UIFont systemFontOfSize:16];
-    self.blockBtn.titleLabel.font = [UIFont systemFontOfSize:16];
+    CGFloat x = 74/2;
+    CGFloat y = 0;
+    CGFloat w = (UIWIDTH - 2 * x)/3 * 5/6;
+    CGFloat h = w;
+    
+    
+    CGFloat followH = h;
+    CGFloat followW = w;
+    CGFloat followX = UIWIDTH/2 - w/2;//self.frame.size.width/2 - followW/2;
+    self.followBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.followBtn.frame = CGRectMake(followX, y, followW, followH);
+    self.followBtn.layer.cornerRadius = followH/2;
+    self.followBtn.layer.borderWidth = 1;
+    self.followBtn.layer.masksToBounds = YES;
+    self.followBtn.layer.borderColor = kButton_Layout_Line_Color.CGColor;
+    [self.followBtn setTitle:@"Follow" forState:UIControlStateNormal];
+    [self addSubview:self.followBtn];
+    
+    
+    CGFloat talkW = followW;
+    CGFloat talkH = followH;
+    CGFloat talkX = x;//followX - padding - talkW;
+    UIButton *talkBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    talkBtn.frame = CGRectMake(talkX, y, talkW, talkH);
+    talkBtn.layer.cornerRadius = talkH/2;
+    talkBtn.layer.borderWidth = 1;
+    talkBtn.layer.masksToBounds = YES;
+    talkBtn.layer.borderColor = kButton_Layout_Line_Color.CGColor;
+    [talkBtn setTitle:@"Chat" forState:UIControlStateNormal];
+    [self addSubview:talkBtn];
+    
+    CGFloat blockX = UIWIDTH - x - w;
+    CGFloat blockW = followW;
+    CGFloat blockH = followH;
+    self.blockBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.blockBtn.frame =CGRectMake(blockX, y, blockW, blockH);
+    self.blockBtn.layer.cornerRadius = blockH/2;
+    self.blockBtn.layer.borderWidth = 1;
+    self.blockBtn.layer.masksToBounds = YES;
+    self.blockBtn.layer.borderColor = kButton_Layout_Line_Color.CGColor;
+    [self.blockBtn setTitle:@"Block" forState:UIControlStateNormal];
+    [self addSubview:self.blockBtn];
+    
+    
+    self.followBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    talkBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    self.blockBtn.titleLabel.font = [UIFont systemFontOfSize:15];
 
-    [talkBtn setTitleColor:[UIColorUtil colorWithHexString:@"#a0a0a0"] forState:UIControlStateNormal];
+    [talkBtn setTitleColor:[UIColorUtil colorWithHexString:@"#999999"] forState:UIControlStateNormal];
     [talkBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
-    [self.followBtn setTitleColor:[UIColorUtil colorWithHexString:@"#a0a0a0"] forState:UIControlStateNormal];
+    [self.followBtn setTitleColor:[UIColorUtil colorWithHexString:@"#999999"] forState:UIControlStateNormal];
     [self.followBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
-    [self.blockBtn setTitleColor:[UIColorUtil colorWithHexString:@"#a0a0a0"] forState:UIControlStateNormal];
+    [self.blockBtn setTitleColor:[UIColorUtil colorWithHexString:@"#999999"] forState:UIControlStateNormal];
     [self.blockBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
 
     

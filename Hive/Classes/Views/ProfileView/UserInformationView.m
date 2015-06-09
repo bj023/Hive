@@ -73,10 +73,10 @@
     }
     */
 
-    UIFont *font = [UIFont fontWithName:Font_Helvetica size:14];
+    UIFont *font = [UIFont systemFontOfSize:14];;
     CGFloat lineH = 12;// 线条的高度
     
-    CGFloat padding = ( 170/2 - 60/2 ) / 2;
+    CGFloat padding = ( 116/2 - 60/2 ) / 2;
     CGFloat ageW = 60;
     CGFloat ageH = self.frame.size.height;// 文本的高度
     CGFloat ageX = self.frame.size.width/2 - ageW/2;
@@ -84,10 +84,11 @@
         self.ageLabel = [[UILabel alloc] initWithFrame:CGRectMake(ageX, 0, ageW, ageH)];
         self.ageLabel.font = font;
         self.ageLabel.textAlignment = NSTextAlignmentCenter;
-        self.ageLabel.textColor = [UIColor blackColor];
+        self.ageLabel.textColor = [UIColorUtil colorWithHexString:@"#999999"];
         self.ageLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:self.ageLabel];
         
+        /*
         UIImageView *linIMG_L = [[UIImageView alloc] initWithFrame:CGRectMake(ageX - padding, self.frame.size.height/2 - lineH/2, 0.5, lineH)];
         linIMG_L.backgroundColor = [UIColor blackColor];
         [self addSubview:linIMG_L];
@@ -95,6 +96,7 @@
         UIImageView *linIMG_R = [[UIImageView alloc] initWithFrame:CGRectMake(ageX + ageW + padding, self.frame.size.height/2 - lineH/2, 0.5, lineH)];
         linIMG_R.backgroundColor = [UIColor blackColor];
         [self addSubview:linIMG_R];
+         */
     }
     
     CGFloat sexW = 60;
@@ -104,7 +106,7 @@
         self.sexLabel = [[UILabel alloc] initWithFrame:CGRectMake(sexX, 0, sexW, sexH)];
         self.sexLabel.font = font;
         self.sexLabel.textAlignment = NSTextAlignmentRight;
-        self.sexLabel.textColor = [UIColor blackColor];
+        self.sexLabel.textColor = [UIColorUtil colorWithHexString:@"#999999"];
         self.sexLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:self.sexLabel];
     }
@@ -116,7 +118,7 @@
         self.rangeLabel = [[UILabel alloc] initWithFrame:CGRectMake(rangeX, 0, rangeW, rangeH)];
         self.rangeLabel.font = font;
         self.rangeLabel.textAlignment = NSTextAlignmentLeft;
-        self.rangeLabel.textColor = [UIColor blackColor];
+        self.rangeLabel.textColor = [UIColorUtil colorWithHexString:@"#999999"];
         self.rangeLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:self.rangeLabel];
     }

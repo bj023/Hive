@@ -12,6 +12,8 @@
 #import "MessageModel.h"
 #import "UtilDate.h"
 
+#define kReadHeight 22
+
 @interface MessageCell ()
 
 @property (strong, nonatomic)MessageModel *chatModel;
@@ -111,7 +113,7 @@
     CGFloat readX = UIWIDTH - 40;
     CGFloat readY = [MessageCell getMessageCellHeight] - 40;
     CGFloat readW = 26;
-    CGFloat readH = readW;
+    CGFloat readH = kReadHeight;
     if (!self.unreadLabel) {
         self.unreadLabel = [[UILabel alloc] init];
         self.unreadLabel.frame = CGRectMake(readX, readY, readW, readH);
@@ -178,10 +180,17 @@
         self.unreadLabel.hidden = YES;
     }else{
         self.unreadLabel.hidden = NO;
-        if ([_chatModel.unReadCount intValue] > 99) {
-            _unreadLabel.text = @"99+";
-        }else
-            _unreadLabel.text = _chatModel.unReadCount;
+        
+        CGSize size = [UILabel sizeWithString:_chatModel.unReadCount font:_unreadLabel.font maxSize:CGSizeMake(MAXFLOAT, kReadHeight)];
+
+        CGFloat readW = size.width + 10;
+        CGFloat readH = kReadHeight;
+        CGFloat readX = UIWIDTH - readW - 10;
+        CGFloat readY = [MessageCell getMessageCellHeight]/2 - 5;
+      
+        _unreadLabel.frame = CGRectMake(readX, readY, readW, readH);
+        _unreadLabel.text = _chatModel.unReadCount;
+        _unreadLabel.layer.cornerRadius = size.height/2;
     }
     
     debugLog(@"%@",model);

@@ -106,11 +106,11 @@
 #pragma -mark TWitter 导航效果
 - (void)configPagingVC
 {
-    UIColor *orange = [UIColorUtil colorWithHexString:@"#5bb6ff"];//1e2d3b
-    UIColor *gray = [UIColorUtil colorWithHexString:@"#b7beca"];//ced3d7
+    UIColor *orange = [UIColorUtil colorWithHexString:@"#424242"];//1e2d3b
+    UIColor *gray = [UIColorUtil colorWithHexString:@"#999999"];//ced3d7
 //[UIColorUtil colorWithHexString:@"#1b2430"]
     _pageViewController = [[SLPagingViewController alloc] initWithNavBarItems:[self titlesArr]
-                                                            navBarBackground:[UIColorUtil colorWithHexString:@"#fafafa"]
+                                                            navBarBackground:[UIColorUtil colorWithHexString:@"#f7f7f7"]
                                                                  controllers:[self twitterVC]
                                                              showPageControl:YES];
     
@@ -177,6 +177,9 @@
 
     [_pageViewController setCurrentIndex:2 animated:NO];
     [self setChatsUnReadCount];
+    
+    [_pageViewController updateNavFrame];
+
 }
 
 - (NSArray *)twitterVC
@@ -221,10 +224,15 @@
         if ([[ChatManager chatMessageUnreadCount] isEqualToString:@"0"]) {
             _messageLabel.text = @"CHATS";
             
-        }else
+        }else if([[ChatManager chatMessageUnreadCount] intValue]<99)
             _messageLabel.text = [NSString stringWithFormat:@"CHATS(%@)",[ChatManager chatMessageUnreadCount]];
+        else
+            _messageLabel.text = @"CHATS(...)";
+
         //[_messagesVC reloadChatMessage];
         [_chatListVC refreshDataSource];
+        
+        [_pageViewController updateNavFrame];
     });
     
     debugLog(@"显示未读-->%@ --- %@",_messageLabel.text,[ChatManager chatMessageUnreadCount]);
@@ -366,7 +374,7 @@
     ChatController *chatVC = [[ChatController alloc] init];
     chatVC.userID = [NSString stringWithFormat:@"%d",model.userId];
     chatVC.userName = model.userName;
-    chatVC.title = model.userName;
+    chatVC.title = [model.userName uppercaseString];
     [self.navigationController pushViewController:chatVC animated:YES];
 }
 
@@ -375,7 +383,7 @@
     ChatController *chatVC = [[ChatController alloc] init];
     chatVC.userID = model.toUserID;
     chatVC.userName = model.toUserName;
-    chatVC.title = model.toUserName;
+    chatVC.title = [model.toUserName uppercaseString];
     [self.navigationController pushViewController:chatVC animated:YES];
 }
 

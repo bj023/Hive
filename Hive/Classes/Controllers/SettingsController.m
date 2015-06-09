@@ -62,7 +62,7 @@
                   @"Be Followed",
                   @"My Following",
                   @"Block List",
-                  @"Privacy Police",
+                  @"Privacy Policy",
                   @"Terms of Service",
                   @"Clear All Chats",@"Log out"];
 

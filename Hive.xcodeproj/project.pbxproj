@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		81F8AAD06AFC3B08D9C2DAA2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B40D61FF317180402DFC4F3 /* libPods.a */; };
+		9634C1ED1B24250A00558B5B /* Gotham-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9634C1EC1B24250A00558B5B /* Gotham-Bold.otf */; };
+		9634C1EE1B24252500558B5B /* Gotham-Bold.otf in Sources */ = {isa = PBXBuildFile; fileRef = 9634C1EC1B24250A00558B5B /* Gotham-Bold.otf */; };
 		964698D81AD1634400FE7C4F /* XMPPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 964698D71AD1634400FE7C4F /* XMPPManager.m */; };
 		96603C0B1B1D4D200071479D /* UIView+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 96603C0A1B1D4D200071479D /* UIView+Animation.m */; };
 		9662AAB81B0EBBD300DB247F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9662AAB71B0EBBD300DB247F /* Foundation.framework */; };
@@ -107,6 +109,7 @@
 
 /* Begin PBXFileReference section */
 		962B2E7D1AFC5FF8005E9993 /* UserTalkDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserTalkDelegate.h; sourceTree = "<group>"; };
+		9634C1EC1B24250A00558B5B /* Gotham-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Gotham-Bold.otf"; path = "../../Gotham-Bold.otf"; sourceTree = "<group>"; };
 		964698D61AD1634400FE7C4F /* XMPPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPManager.h; sourceTree = "<group>"; };
 		964698D71AD1634400FE7C4F /* XMPPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPManager.m; sourceTree = "<group>"; };
 		96603C091B1D4D200071479D /* UIView+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Animation.h"; sourceTree = "<group>"; };
@@ -567,6 +570,7 @@
 		E6A8083F1ABE55CB005E48C2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9634C1EC1B24250A00558B5B /* Gotham-Bold.otf */,
 				96CE0C911AFF393400004505 /* GothamRounded-Bold.otf */,
 				96CE0C921AFF393400004505 /* GothamRounded-Book.otf */,
 				E6A808401ABE55CB005E48C2 /* Info.plist */,
@@ -832,6 +836,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9634C1ED1B24250A00558B5B /* Gotham-Bold.otf in Resources */,
 				96CE0C941AFF393400004505 /* GothamRounded-Book.otf in Resources */,
 				E65ADB591ABF0C9C00093199 /* 3-bg.png in Resources */,
 				E65ADB5A1ABF0C9C00093199 /* 3-bt.png in Resources */,
@@ -884,6 +889,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9634C1EE1B24252500558B5B /* Gotham-Bold.otf in Sources */,
 				96CE0C951AFF394700004505 /* GothamRounded-Bold.otf in Sources */,
 				96603C0B1B1D4D200071479D /* UIView+Animation.m in Sources */,
 				96CE0C961AFF394700004505 /* GothamRounded-Book.otf in Sources */,

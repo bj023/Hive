@@ -10,8 +10,8 @@
 #import "Utils.h"
 #import "LoginController.h"
 
-#define Color [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1]
-
+//#define Color [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1]
+#define Color [UIColorUtil colorWithHexString:@"#f7f7f7"]
 @interface LoginViewController ()
 {
     UIView *_mainView;
@@ -30,6 +30,11 @@
 {
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = YES;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
     [self startAnimate];
 }
 

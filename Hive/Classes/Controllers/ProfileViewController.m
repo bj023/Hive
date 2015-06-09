@@ -9,14 +9,16 @@
 #import "ProfileViewController.h"
 #import "FRDLivelyButton.h"
 #import "Utils.h"
+#import "MessageTextView.h"
 
 #define ProfileColor [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1]
 
-@interface ProfileViewController ()
+@interface ProfileViewController ()<UITextViewDelegate>
 {
     UITextField *_nameField;
-    UITextField *_introField;
+    MessageTextView *_introField;
     UIButton *_toolBtn;
+    UIImageView *_lineI_IMG;
 }
 @end
 
@@ -24,7 +26,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self configCloseBtn];
+    //[self configCloseBtn];
     [self configToolBarView];
     [self configProfile];
 }
@@ -90,7 +92,7 @@
 {
     _toolBtn= [UIButton buttonWithType:UIButtonTypeCustom];
     _toolBtn.frame =CGRectMake(0, UIHEIGHT - 50, UIWIDTH, 50);
-    [_toolBtn setTitle:@"DONE" forState:UIControlStateNormal];
+    [_toolBtn setTitle:@"SAVE" forState:UIControlStateNormal];
     [_toolBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
   
     //关闭颜色
@@ -98,7 +100,7 @@
     [_toolBtn setBackgroundImage:[UIColorUtil createImageWithColor:HighlightedColor] forState:UIControlStateHighlighted];
     _toolBtn.titleLabel.font = [UIFont fontWithName:GothamRoundedBold size:18];
     [self.view addSubview:_toolBtn];
-    [_toolBtn addTarget:self action:@selector(closeButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_toolBtn addTarget:self action:@selector(clickSaveBtn:) forControlEvents:UIControlEventTouchUpInside];
 }
 // 保存
 - (void)clickSaveBtn:(id)sender
@@ -117,7 +119,7 @@
     CGFloat profileX = 0;
     CGFloat profileY = UIHEIGHT/2 - 150 + 14;
     CGFloat profileW = UIWIDTH;
-    CGFloat profileH = 80;
+    CGFloat profileH = 200;
     UIView * profileView = [[UIView alloc] init];
     profileView.backgroundColor = [UIColor clearColor];
     profileView.frame = CGRectMake(profileX, profileY, profileW, profileH);
@@ -147,23 +149,40 @@
     CGFloat introX = lineN_X;
     CGFloat introY = lineN_Y + 14;
     CGFloat introW = nameW;
-    CGFloat introH = nameH;
-    _introField = [[UITextField alloc] init];
+    CGFloat introH = 200;
+    _introField = [[MessageTextView alloc] init];
     _introField.frame = CGRectMake(introX, introY, introW, introH);
-    _introField.placeholder = @"wath's up";
+    _introField.placeHolder = @"wath's up";
+    _introField.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     _introField.textColor = kRegisterTextColor;
     _introField.tintColor = kRegisterTextTintColor;
+    _introField.delegate = self;
     _introField.font = [UIFont fontWithName:Font_Helvetica size:16];
     [profileView addSubview:_introField];
     
     CGFloat lineI_X = nameX;
-    CGFloat lineI_Y = introY + introH + 1;
+    CGFloat lineI_Y = introY + nameH + 1;
     CGFloat lineI_W = nameW;
     CGFloat lineI_H = 1;
-    UIImageView *lineI_IMG = [[UIImageView alloc] init];
-    lineI_IMG.backgroundColor = kRegisterLineColor;
-    lineI_IMG.frame = CGRectMake(lineI_X, lineI_Y, lineI_W, lineI_H);
-    [profileView addSubview:lineI_IMG];
+    _lineI_IMG = [[UIImageView alloc] init];
+    _lineI_IMG.backgroundColor = kRegisterLineColor;
+    _lineI_IMG.frame = CGRectMake(lineI_X, lineI_Y, lineI_W, lineI_H);
+    [profileView addSubview:_lineI_IMG];
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    CGRect frame = _lineI_IMG.frame;
+    CGFloat height = [self getTextViewContentH:textView];
+    frame.origin.y = height + 45;
+    _lineI_IMG.frame = frame;
+    
+    return YES;
+}
+
+- (CGFloat)getTextViewContentH:(UITextView *)textView
+{
+    return ceilf([textView sizeThatFits:textView.frame.size].height);
 }
 
 - (void)sendUpdateProfileRequest
@@ -186,8 +205,14 @@
             [self showUpdateSuccess];
         }else
             [self showHudWith:ErrorRequestText];
+        
+        [self performSelector:@selector(closeButtonAction:) withObject:nil afterDelay:1];
+
     } faliure:^(NSError *error) {
+        
         [self showHudWith:ErrorText];
+        
+        [self performSelector:@selector(closeButtonAction:) withObject:nil afterDelay:1];
     }];
 }
 

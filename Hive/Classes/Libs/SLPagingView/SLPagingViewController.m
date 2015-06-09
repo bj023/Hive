@@ -243,9 +243,13 @@
     [super viewWillLayoutSubviews];
     
     self.navigationBarView.frame = (CGRect){0, 0, SCREEN_SIZE.width, 44};
+    
+    /*
+     导航底部线*/
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, SCREEN_SIZE.width, 1)];
     [self.navigationBarView addSubview:lineView];
-    lineView.backgroundColor = [UIColorUtil colorWithHexString:@"e5e5ea"];
+    lineView.backgroundColor = [UIColorUtil colorWithHexString:@"#f7f7f7"];
+     
 }
 
 #pragma mark - public methods
@@ -516,16 +520,21 @@
          v.frame = (CGRect){originX, 16, vSize.width + kTitleWidthPadding, vSize.height};
          */
         UILabel *titleLab = (UILabel*)v;
-        
+
         CGSize vSize     = ([v isKindOfClass:[UILabel class]])? [self getLabelSize:titleLab] : v.frame.size;
 
-        CGFloat distance = (SCREEN_SIZE.width/2) - vSize.width + kTitleWidthPadding ;//- self.navigationSideItemsStyle;
+        CGFloat distance = (SCREEN_SIZE.width/2) - vSize.width/2 - 8;//- self.navigationSideItemsStyle;
         
         CGFloat originX  = ((SCREEN_SIZE.width/2 - vSize.width/2) + i*distance) - xOffset/(SCREEN_SIZE.width/distance);
         v.frame          = (CGRect){originX, 16, vSize.width, vSize.height};
         i++;
         
     }];
+}
+
+- (void)updateNavFrame
+{
+    [self updateNavItems:self.scrollView.contentOffset.x];
 }
 
 // Adapt all views the main screen

@@ -55,7 +55,7 @@
         if (!self.intrLabel) {
             self.intrLabel = [[UILabel alloc] initWithFrame:CGRectMake(introX, introY, introW, introH)];
             self.intrLabel.font = [UIFont systemFontOfSize:12];
-            self.intrLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
+            self.intrLabel.textColor = [UIColorUtil colorWithHexString:@"#999999"];
             self.intrLabel.textAlignment = NSTextAlignmentLeft;
             self.intrLabel.backgroundColor = [UIColor clearColor];
             [self.contentView addSubview:self.intrLabel];

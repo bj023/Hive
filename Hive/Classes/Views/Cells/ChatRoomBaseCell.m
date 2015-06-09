@@ -53,7 +53,7 @@
     [self.contentView addSubview:_headImgaeView];
     
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _nameLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
+    _nameLabel.textColor = [UIColorUtil colorWithHexString:@"#999999"];
     _nameLabel.font = [UIFont fontWithName:Font_Helvetica size:23/2];
     [self.contentView addSubview:_nameLabel];
     
@@ -63,7 +63,7 @@
     
     _timeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     _timeLabel.font = [UIFont fontWithName:Font_Helvetica size:23/2];
-    _timeLabel.textColor = [UIColorUtil colorWithHexString:@"#B3B3B3"];
+    _timeLabel.textColor = [UIColorUtil colorWithHexString:@"#999999"];
     _timeLabel.textAlignment = NSTextAlignmentCenter;
     [self.contentView addSubview:_timeLabel];
 }
@@ -307,14 +307,14 @@
         
         CGFloat height = kChatImageHeight;
         height = height + (isShow?0:NAME_LABEL_HEIGHT) + CELLPADDING ;
-        height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING)) + CELLPADDING;
+        height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING *4)) + CELLPADDING;
         return height;
     }else{
 
         CGSize size = [ChatRoomBaseCell sizeMessage:message.msg_message];
         CGFloat height = size.height + kMessage_Top * 2;
         height = height + (isShow?0:NAME_LABEL_HEIGHT) + CELLPADDING ;
-        height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING)) + CELLPADDING;
+        height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING *4)) + CELLPADDING;
         return height;
     }
 }

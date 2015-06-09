@@ -51,11 +51,12 @@
 #define ActionSheetFont [UIFont fontWithName:@"regular" size:18]//fafafa
 
 
-#define NavTitleFont [UIFont fontWithName:GothamRoundedBold size:16]
+#define NavTitleFont [UIFont fontWithName:GothamRoundedBold size:18]
 #define TextFont [UIFont fontWithName:GothamRoundedBold size:16]
 
 #define GothamRoundedBook @"GothamRounded-Book"
 #define GothamRoundedBold @"GothamRounded-Bold"
+#define GothamBold @"Gotham-Bold"
 //#define GothamRoundedMedium @"GothamRounded-Medium"
 
 
@@ -65,6 +66,7 @@
 #define Font_Helvetica @"HelveticaNeue"
 #define Font_Light @"HelveticaNeue-Light"
 #define Font_Regular @"regular-Medium"
+#define HelveticaNeueRegular @"HelveticaNeue-Regular"
 
 // 错误提示
 #define ErrorText @"似乎已断开了互联网连接"
@@ -102,8 +104,8 @@
 #define kHeadIMG_Line_Height 0.5
 #define kHeadIMG_Layer_Color [UIColorUtil colorWithHexString:@"#f1efee"]
 
-#define NormalColor [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1]
-#define HighlightedColor [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:0.8]
+#define NormalColor [UIColorUtil colorWithHexString:@"#52a7f4"]//[UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1]
+#define HighlightedColor [UIColor colorWithRed:66/255.0 green:134/255.0 blue:196/255.0 alpha:1]
 
 // 表情数组
 #define FACEARRAY @[@"AWESOME",@"down",@"GYM",@"happy",@"HELP",@"hi",@"letsdrink",@"LONELY",@"LOVE",@"MORNING",@"OOPS",@"poor",@"run",@"runrun",@"SHIT",@"SORRY",@"sowhat",@"worrking",@"yeah"]

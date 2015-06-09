@@ -49,8 +49,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = NO;
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    //self.navigationController.navigationBarHidden = NO;
+    //self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
     [ChatManager clearUnReadCountWith:self.userID];
     
@@ -59,8 +59,8 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    self.navigationController.navigationBarHidden = YES;
-    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    //self.navigationController.navigationBarHidden = YES;
+    //self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     [ChatManager clearUnReadCountWith:self.userID];
 }
 
