@@ -149,7 +149,6 @@
 }
 
 #pragma -mark TableView 回调
-#pragma -mark TableView 回调
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.mesgaeArr.count;
@@ -206,6 +205,12 @@
         self.chatToolBar.aNameLength = [aName length];
     }
 }
+// 重发
+- (void)resendMessage:(ChatRoomModel *)message
+{
+    
+}
+
 
 - (void)showHudWith:(NSString *)text
 {
@@ -236,7 +241,7 @@
 // 发送文本
 - (void)didSendText:(NSString *)text
 {
-    if (text && text.length > 0) {
+    if (![[text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]==0) {
         [self sendTextMessage:text];
     }
 }

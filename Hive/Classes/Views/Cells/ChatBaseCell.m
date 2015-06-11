@@ -232,6 +232,30 @@
     return size;
 }
 
+
++ (CGFloat)getCellHeight:(ChatModel *)message
+{
+    BOOL isShow = [message.msg_flag isEqualToString:@"ME"]?YES:NO;
+    
+    
+    if ([message.msg_type intValue] == SendChatMessageChatIMGType)
+    {
+        
+        CGFloat height = kChatImageHeight;
+        height = height + (isShow?0:NAME_LABEL_HEIGHT) + CELLPADDING ;
+        height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING *4)) + CELLPADDING;
+        return height;
+    }else{
+        
+        CGSize size = [ChatBaseCell sizeMessage:message.msg_message];
+        CGFloat height = size.height + kMessage_Top * 2;
+        height = height + (isShow?0:NAME_LABEL_HEIGHT) + CELLPADDING ;
+        height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING *4)) + CELLPADDING;
+        return height;
+    }
+}
+
+/*
 + (CGFloat)getCellHeight:(ChatModel *)message
 {
     BOOL isShow = [message.msg_flag isEqualToString:@"ME"]?YES:NO;
@@ -260,7 +284,7 @@
     }
 }
 
-
+*/
 
 - (void)awakeFromNib {
     // Initialization code

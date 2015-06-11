@@ -9,6 +9,7 @@
 #import "LoginViewController.h"
 #import "Utils.h"
 #import "LoginController.h"
+#import "LoginView.h"
 
 //#define Color [UIColor colorWithRed:100/255.0 green:186/255.0 blue:255/255.0 alpha:1]
 #define Color [UIColorUtil colorWithHexString:@"#f7f7f7"]
@@ -96,7 +97,7 @@
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
     label.font = [UIFont fontWithName:GothamRoundedBold size:34/2];
     label.backgroundColor = [UIColor clearColor];
-    label.textColor = [UIColor whiteColor];
+    label.textColor = [UIColor blackColor];
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 0;
     label.text = string;
@@ -107,7 +108,7 @@
     UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
     label1.font = [UIFont fontWithName:GothamRoundedBook size:34/2];
     label1.backgroundColor = [UIColor clearColor];
-    label1.textColor = [UIColor whiteColor];
+    label1.textColor = [UIColor blackColor];
     label1.textAlignment = NSTextAlignmentCenter;
     label1.numberOfLines = 0;
     label1.text = string1;
@@ -119,18 +120,18 @@
     y = UIHEIGHT - h;
     UIButton *signInBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     signInBtn.frame = CGRectMake(x, y, w, h);
-    signInBtn.backgroundColor = [UIColor clearColor];
+    signInBtn.backgroundColor = [UIColorUtil colorWithHexString:@"#52a7f4"];// 蓝色
     [signInBtn setTitle:@"Log In" forState:UIControlStateNormal];
-    signInBtn.titleLabel.font = [UIFont fontWithName:Font_Medium size:17];
+    signInBtn.titleLabel.font = [UIFont fontWithName:Font_Medium size:18];
     [_mainView addSubview:signInBtn];
 
     y = y - h;
     UIButton *signOutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     signOutBtn.frame = CGRectMake(x, y, w, h);
-    signOutBtn.backgroundColor = [UIColor whiteColor];
-    [signOutBtn setTitleColor:Color forState:UIControlStateNormal];
+    signOutBtn.backgroundColor = [UIColorUtil colorWithHexString:@"#ff5b2f"];
+    [signOutBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [signOutBtn setTitle:@"Sign Up" forState:UIControlStateNormal];
-    signOutBtn.titleLabel.font = [UIFont fontWithName:Font_Medium size:17];
+    signOutBtn.titleLabel.font = [UIFont fontWithName:Font_Medium size:18];
     [_mainView addSubview:signOutBtn];
 
     
@@ -146,9 +147,15 @@
 
 - (void)clickLogIn:(id)sender
 {
+    /**/
     LoginController *vc = [[LoginController alloc] init];
     vc.selectType = SelectSignInType;
     [self.navigationController pushViewController:vc animated:YES];
+     
+    
+    //Login_View *login = [[Login_View alloc] initWithFrame:self.view.bounds];
+    //[login show];
+    
 }
 
 - (void)clickLogOut:(id)sender

@@ -43,6 +43,15 @@
     _nameField.text = [[UserInfoManager sharedInstance] getCurrentUserInfo].userName;
     _introField.text = [[UserInfoManager sharedInstance] getCurrentUserInfo].userIntro;
     //[self addKeyboardNotification];
+    CGRect frame = _lineI_IMG.frame;
+    CGFloat height = [self getTextViewContentH:_introField];
+    frame.origin.y = height + 45;
+    _lineI_IMG.frame = frame;
+    
+    
+    frame = _introField.frame;
+    frame.size.height = height;
+    _introField.frame = frame;
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -160,6 +169,7 @@
     _introField.font = [UIFont fontWithName:Font_Helvetica size:16];
     [profileView addSubview:_introField];
     
+    
     CGFloat lineI_X = nameX;
     CGFloat lineI_Y = introY + nameH + 1;
     CGFloat lineI_W = nameW;
@@ -176,6 +186,10 @@
     CGFloat height = [self getTextViewContentH:textView];
     frame.origin.y = height + 45;
     _lineI_IMG.frame = frame;
+    
+    frame = _introField.frame;
+    frame.size.height = height;
+    _introField.frame = frame;
     
     return YES;
 }
@@ -201,6 +215,7 @@
             CurrentUserInfo *userInfor = [[UserInfoManager sharedInstance] getCurrentUserInfo];
             userInfor.userName = _nameField.text;
             userInfor.userIntro = _introField.text;
+            
             [[UserInfoManager sharedInstance] saveUserInfoToDisk:userInfor];
             [self showUpdateSuccess];
         }else

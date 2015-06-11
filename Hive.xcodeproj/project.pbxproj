@@ -58,6 +58,7 @@
 		96CE0C951AFF394700004505 /* GothamRounded-Bold.otf in Sources */ = {isa = PBXBuildFile; fileRef = 96CE0C911AFF393400004505 /* GothamRounded-Bold.otf */; };
 		96CE0C961AFF394700004505 /* GothamRounded-Book.otf in Sources */ = {isa = PBXBuildFile; fileRef = 96CE0C921AFF393400004505 /* GothamRounded-Book.otf */; };
 		96CE4C151B185E7F00E78511 /* POOKController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CE4C141B185E7F00E78511 /* POOKController.m */; };
+		96E037081B2719B700DFCE7B /* Login_View.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E037071B2719B700DFCE7B /* Login_View.m */; };
 		96E0987A1B1AD59D00257DDB /* UIActionSheet+Block.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E098791B1AD59D00257DDB /* UIActionSheet+Block.m */; };
 		96E243BF1B0C88240079AE0E /* ChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E243BE1B0C88240079AE0E /* ChatController.m */; };
 		96E4E36B1B0D8BA80092DA32 /* GPLoadingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E4E36A1B0D8BA80092DA32 /* GPLoadingButton.m */; };
@@ -197,6 +198,8 @@
 		96CE0C921AFF393400004505 /* GothamRounded-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamRounded-Book.otf"; sourceTree = "<group>"; };
 		96CE4C131B185E7F00E78511 /* POOKController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POOKController.h; sourceTree = "<group>"; };
 		96CE4C141B185E7F00E78511 /* POOKController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POOKController.m; sourceTree = "<group>"; };
+		96E037061B2719B700DFCE7B /* Login_View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Login_View.h; sourceTree = "<group>"; };
+		96E037071B2719B700DFCE7B /* Login_View.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Login_View.m; sourceTree = "<group>"; };
 		96E098781B1AD59D00257DDB /* UIActionSheet+Block.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Block.h"; sourceTree = "<group>"; };
 		96E098791B1AD59D00257DDB /* UIActionSheet+Block.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Block.m"; sourceTree = "<group>"; };
 		96E243BD1B0C88240079AE0E /* ChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatController.h; sourceTree = "<group>"; };
@@ -731,6 +734,8 @@
 				E6B8BADC1AC7A6F4003CA484 /* LoginController.m */,
 				967B629A1B156A9D0069B9CC /* LoginViewController.h */,
 				967B629B1B156A9D0069B9CC /* LoginViewController.m */,
+				96E037061B2719B700DFCE7B /* Login_View.h */,
+				96E037071B2719B700DFCE7B /* Login_View.m */,
 			);
 			path = Register_Loin;
 			sourceTree = "<group>";
@@ -959,6 +964,7 @@
 				96AFB68F1AD421D500D6128E /* NearByModel.m in Sources */,
 				96CE4C151B185E7F00E78511 /* POOKController.m in Sources */,
 				E69F084C1ABE99B700E5ADD3 /* SettingsController.m in Sources */,
+				96E037081B2719B700DFCE7B /* Login_View.m in Sources */,
 				E69F08491ABE999F00E5ADD3 /* MainViewController.m in Sources */,
 				E6B8BAEE1AC7DA3C003CA484 /* RegisterThirdView.m in Sources */,
 				969378CF1AE23D4200BE585F /* UserInforCell.m in Sources */,

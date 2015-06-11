@@ -30,4 +30,5 @@
 
 - (void)tapBubbleSendActionWithMessage:(ChatRoomModel *)message;
 
+- (void)resendMessage:(ChatRoomModel *)message;
 @end

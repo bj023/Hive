@@ -36,7 +36,7 @@
 
 // ------------------------------------注册提示------------------------------------
 // 忘记密码
-#define ForgetString @"Forget the password?"
+#define ForgetString @"Forget your password?"
 #define ValidationCodeStrin @"By sign in,you agree to the Terms of Use and Privacy Policy"
 #define EnterCodeString @"This might take a minute.Didn't get it? Tap to Resend"
 #define RegisterThirdString @"We'll never share your email or spam you."

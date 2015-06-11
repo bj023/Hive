@@ -76,7 +76,7 @@
     [backBtn addTarget:self action:@selector(backNav) forControlEvents:UIControlEventTouchUpInside];
     
     UILabel * titleLab = [[UILabel alloc] initWithFrame:CGRectMake(UIWIDTH/2 - 60, 20, 120, 44)];
-    titleLab.text = @"FLLOW";
+    titleLab.text = @"FOLLOW";
     titleLab.textAlignment = NSTextAlignmentCenter;
     titleLab.font = NavTitleFont;
     [navView addSubview:titleLab];

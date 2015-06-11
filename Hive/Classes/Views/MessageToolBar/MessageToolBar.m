@@ -59,7 +59,7 @@
         self.toolbarView = [[UIView alloc] init];
         //self.toolbarView.backgroundColor = [UIColorUtil colorWithHexString:@"f5f5f5"];
         self.toolbarView.backgroundColor = [UIColor clearColor];
-        self.toolbarView.layer.borderColor = [UIColorUtil colorWithHexString:@"c8c8c8"].CGColor;
+        self.toolbarView.layer.borderColor = [UIColorUtil colorWithHexString:@"#c8c8c8"].CGColor;
         self.toolbarView.frame = CGRectMake(0, 0, self.frame.size.width, kVerticalPadding * 2 + kInputTextViewMinHeight);
         [self addSubview:self.toolbarView];
         
@@ -76,7 +76,7 @@
 - (void)setupSubviews:(BOOL)isShow
 {
     CGFloat allButtonWidth = 0.0;
-    CGFloat textViewLeftMargin = 6.0;
+    CGFloat textViewLeftMargin = 25/2;
     
     CGFloat faceW = isShow?24:24;//24
     CGFloat faceH = faceW;

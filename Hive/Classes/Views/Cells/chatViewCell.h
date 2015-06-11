@@ -31,4 +31,7 @@
 
 - (void)deleteMessage:(ChatModel *)message IndexPath:(NSIndexPath *)indexpath;
 
+
+- (void)resendMessage:(ChatModel *)message;
+
 @end

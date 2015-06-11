@@ -309,8 +309,6 @@
             
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             
-            [self handleLoginCenterManager:res.content Password:self.loginView.password];
-            [self handleSetRootViewController];
         }else
             [self showErrorWithText:ErrorRequestText];
         

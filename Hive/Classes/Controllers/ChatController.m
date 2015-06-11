@@ -243,8 +243,8 @@
 - (void)didChangeFrameToHeight:(CGFloat)toHeight
 {
     CGRect rect = self.tableView.frame;
-    rect.origin.y = 0;
-    rect.size.height = self.view.frame.size.height - toHeight - [MessageToolBar defaultHeight] - 20 + 64;
+    rect.origin.y = 64;
+    rect.size.height = self.view.frame.size.height - toHeight - [MessageToolBar defaultHeight] + 64 - 49;
     self.tableView.frame = rect;
     
     [self scrollViewToBottom:NO];
@@ -252,7 +252,7 @@
 // 发送文本
 - (void)didSendText:(NSString *)text
 {
-    if (text && text.length > 0) {
+    if (![[text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]==0) {
         [self sendTextMessage:text];
     }
 }

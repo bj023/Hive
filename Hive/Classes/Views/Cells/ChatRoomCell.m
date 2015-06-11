@@ -85,6 +85,9 @@
          [_hasRead sizeToFit];
          [_activityView addSubview:_hasRead];
          */
+        
+        [_retryButton addTarget:self action:@selector(clickResendAction:) forControlEvents:UIControlEventTouchUpInside];
+        
         [self.headImgaeView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadImgAction:)]];
         [self.bubbleView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickBubbleAction:)]];
         [self.bubbleView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressChatRoomAction:)]];
@@ -198,6 +201,12 @@
     
 }
 
+- (void)clickResendAction:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(resendMessage:)]) {
+        [self.delegate resendMessage:self.message];
+    }
+}
 
 
 - (void)clickHeadImgAction:(UITapGestureRecognizer *)sender

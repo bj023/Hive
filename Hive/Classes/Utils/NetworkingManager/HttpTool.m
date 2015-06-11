@@ -8,6 +8,7 @@
 
 #import "HttpTool.h"
 #import "Utils.h"
+#import "NSTimeUtil.h"
 
 #define APPEND_Login @"/log/login.do"// 登陆
 #define APPEND_LogOut @"/info/logout.do" // 退出登陆
@@ -362,7 +363,7 @@
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setObject:[[UserInfoManager sharedInstance] getCurrentUserInfo].userID forKey:@"userId"];
     if (!IsEmpty(username)) {
-        [parameters setObject:username forKey:@"username"];
+        [parameters setObject:username forKey:@"userName"];
     }
     if (!IsEmpty(label))
         [parameters setObject:label forKey:@"label"];
@@ -477,10 +478,24 @@
 }
 
 #pragma -mark 获取用户信息
-+ (NSMutableDictionary *)parameterUserID:(NSString *)userID
++ (NSMutableDictionary *)parameterUserID:(NSString *)toUserID
 {
+    NSString *userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setObject:toUserID forKey:@"friendId"];
     [parameters setObject:userID forKey:@"userId"];
+    
+    NSString *longitudeStr = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
+    NSString *latitudeStr = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
+    
+    if (!IsEmpty(longitudeStr)) {
+        [parameters setObject:longitudeStr forKey:@"longitude"];
+    }
+    
+    if (!IsEmpty(latitudeStr)) {
+        [parameters setObject:latitudeStr forKey:@"latitude"];
+    }
+    
     return parameters;
 }
 
