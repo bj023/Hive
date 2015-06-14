@@ -59,7 +59,6 @@
 #define GothamBold @"Gotham-Bold"
 //#define GothamRoundedMedium @"GothamRounded-Medium"
 
-
 // 中号字体
 #define Font_Bold @"HelveticaNeue-Bold"
 #define Font_Medium @"HelveticaNeue-Medium"
@@ -72,6 +71,9 @@
 #define ErrorText @"似乎已断开了互联网连接"
 #define ErrorRequestText @"请求失败，请稍后重试"
 #define RequestFailText @"获取失败"
+
+#define ErrorRequest_Login_Text @"该用户名，密码错误"
+
 
 // ------------------------------------屏幕------------------------------------
 // 屏幕宽度

@@ -17,10 +17,11 @@
 #import "UserInformationController.h"
 #import "ChatSendMessage.h"
 #import "DataBaseModel.h"
+#import "UIActionSheet+Block.h"
 
 #define kChatCount 20
 
-@interface POOKController ()<   UITableViewDelegate, UITableViewDataSource, MessageToolBarDelegate, ChatRoomViewCellDelegate, ChatPublicMessageDelegate>
+@interface POOKController ()<   UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate, MessageToolBarDelegate, ChatRoomViewCellDelegate, ChatPublicMessageDelegate>
 {
     dispatch_queue_t _messageQueue;
     
@@ -79,7 +80,7 @@
 - (void)configMessageArr
 {
     self.mesgaeArr = [NSMutableArray array];
-    
+
     NSArray *array = [DataShareInstance getChatsCount:kChatCount];
     
     
@@ -208,6 +209,41 @@
 // 重发
 - (void)resendMessage:(ChatRoomModel *)message
 {
+    /*
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
+                                                        message:@"Are you sour Resend"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Resend", nil];
+    [alertView handlerClickedButton:^(NSInteger btnIndex) {
+        
+    }];
+    [alertView show];
+     */
+    UIActionSheet *resendSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                               destructiveButtonTitle:@"Resend"
+                                                    otherButtonTitles: nil];
+    [resendSheet handlerClickedButton:^(NSInteger btnIndex) {
+        if (btnIndex == 0) {
+            
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"messageID = %@",message.messageID];
+            [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+                [ChatRoomModel MR_deleteAllMatchingPredicate:predicate inContext:localContext];
+            } completion:^(BOOL success, NSError *error) {
+
+                [self.mesgaeArr removeObject:message];
+
+                if ([message.msg_type isEqualToNumber:@(SendChatMessageChatIMGType)]) {
+                    [self sendImageMessage:message.msg_message];
+                }else
+                    [self sendTextMessage:message.msg_message];
+            }];
+        }
+    }];
+    
+    [resendSheet showInView:self.view];
     
 }
 
@@ -233,7 +269,7 @@
 {
     CGRect rect = self.tableView.frame;
     rect.origin.y = 0;
-    rect.size.height = self.view.frame.size.height - toHeight - [MessageToolBar defaultHeight] - 20;
+    rect.size.height = UIHEIGHT - toHeight - [MessageToolBar defaultHeight] - 20;
     self.tableView.frame = rect;
     
     [self scrollViewToBottom:NO];

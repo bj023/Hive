@@ -189,10 +189,10 @@
     _timeView.frame = CGRectMake(x, y, width, height);
     
     // 气泡
+    y = _timeView.frame.origin.y + _timeView.frame.size.height + 4 + height;
     width = messageSize.width + kMessage_Left + kMessage_Right;
     height = messageSize.height + kMessage_Top  + kMessage_Buttom;
     x = UIWIDTH - width - HEAD_PADDING + 6;
-    y = _timeView.frame.origin.y + _timeView.frame.size.height + 5;
     _bubbleView.frame = CGRectMake(x, y, width, height);
     
     
@@ -307,14 +307,14 @@
         
         CGFloat height = kChatImageHeight;
         height = height + (isShow?0:NAME_LABEL_HEIGHT) + CELLPADDING ;
-        height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING *4)) + CELLPADDING;
+        height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING *3)) + CELLPADDING;
         return height;
     }else{
 
         CGSize size = [ChatRoomBaseCell sizeMessage:message.msg_message];
         CGFloat height = size.height + kMessage_Top * 2;
         height = height + (isShow?0:NAME_LABEL_HEIGHT) + CELLPADDING ;
-        height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING *4)) + CELLPADDING;
+        height = height + (IsEmpty(message.msg_hasTime)?CELLPADDING:(NAME_LABEL_HEIGHT + CELLPADDING *3)) + CELLPADDING;
         return height;
     }
 }

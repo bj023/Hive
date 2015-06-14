@@ -16,14 +16,17 @@
 #import "ChatMessageDelegate.h"
 #import "UserInformationController.h"
 #import "ChatSendMessage.h"
+#import "UIActionSheet+Block.h"
+#import "DataBaseModel.h"
+#import "MessageModel.h"
 
 @interface ChatController ()<   UITableViewDelegate,
-                                UITableViewDataSource,
+                                UITableViewDataSource,UIActionSheetDelegate,
                                 MessageToolBarDelegate,
                                 ChatViewCellDelegate, ChatPrivateMessageDelegate>
 {
     dispatch_queue_t _messageQueue;
-
+    dispatch_queue_t _messageReadQueue;
 }
 @property (strong, nonatomic)MessageToolBar *chatToolBar;
 @property (strong, nonatomic)UITableView *tableView;
@@ -41,6 +44,7 @@
     [self configMessageToolBar];
     [XMPPManager sharedInstance].privatedelegate = self;
     _messageQueue = dispatch_queue_create("easemob.com", NULL);
+    _messageReadQueue = dispatch_queue_create("easemob.read.com", NULL);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -80,7 +84,7 @@
     [self.view addSubview:navView];
     
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    backBtn.frame = CGRectMake(10, 44/2 - 18/2 + 20, 18, 18);
+    backBtn.frame = CGRectMake(10, 44/2 - 20/2 + 20, 30, 20);
     [backBtn setBackgroundImage:[UIImage imageNamed:@"backNav"] forState:UIControlStateNormal];
     //UIBarButtonItem *bacgItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
     //self.navigationItem.leftBarButtonItem = bacgItem;
@@ -94,6 +98,12 @@
     titleLab.textAlignment = NSTextAlignmentCenter;
     titleLab.font = NavTitleFont;
     [navView addSubview:titleLab];
+    
+    UIButton *moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    moreBtn.frame = CGRectMake(UIWIDTH - 50, 44/2 - 30/2 + 20, 40, 30);
+    [moreBtn setBackgroundImage:[UIImage imageNamed:@"deleteChat"] forState:UIControlStateNormal];
+    [navView addSubview:moreBtn];
+    [moreBtn addTarget:self action:@selector(clickMoreBtn:) forControlEvents:UIControlEventTouchUpInside];
     /*
      导航 底部线
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 43.5, UIWIDTH, 1)];
@@ -105,6 +115,20 @@
 - (void)backNav:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)clickMoreBtn:(id)sender
+{
+    UIActionSheet *deleteSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles: nil];//@"Stick on Top",
+    [deleteSheet handlerClickedButton:^(NSInteger btnIndex) {
+        if (btnIndex == 0) {
+            //delete
+            [self deleteCurrentChatMessage];
+        }else if (btnIndex == 1){
+            //top
+        }
+    }];
+    [deleteSheet showInView:self.view];
 }
 
 #pragma -mark 初始化 表格
@@ -188,12 +212,11 @@
         return;
     }
 
-    
     [HttpTool sendRequestProfileWithUserID:message.msg_userID success:^(id json) {
         ResponseChatUserInforModel *res = [[ResponseChatUserInforModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
             //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            // 跳转
+            //跳转
             [self pushUserInforVC:res.RETURN_OBJ];
         }else
             [self showHudWith:ErrorRequestText];
@@ -201,6 +224,45 @@
     } faliure:^(NSError *error) {
         [self showHudWith:ErrorText];
     }];
+}
+
+// 重发
+- (void)resendMessage:(ChatModel *)message
+{
+    /*
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
+                                                        message:@"Are you sour Resend"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Resend", nil];
+    [alertView handlerClickedButton:^(NSInteger btnIndex) {
+        
+    }];
+    [alertView show];
+    */
+    UIActionSheet *resendSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                               destructiveButtonTitle:@"Resend"
+                                                    otherButtonTitles: nil];
+    [resendSheet handlerClickedButton:^(NSInteger btnIndex) {
+        if (btnIndex == 0) {
+            
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"messageID ＝ %@",message.messageID];
+            [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+                [ChatModel MR_deleteAllMatchingPredicate:predicate inContext:localContext];
+            } completion:^(BOOL success, NSError *error) {
+                
+                [self.mesgaeArr removeObject:message];
+                
+                if ([message.msg_type isEqualToNumber:@(SendChatMessageChatIMGType)]) {
+                    [self sendImageMessage:message.msg_message];
+                }else
+                    [self sendTextMessage:message.msg_message];
+            }];            
+        }
+    }];
+    [resendSheet showInView:self.view];
 }
 
 - (void)deleteMessage:(ChatModel *)message IndexPath:(NSIndexPath *)indexpath
@@ -244,7 +306,8 @@
 {
     CGRect rect = self.tableView.frame;
     rect.origin.y = 64;
-    rect.size.height = self.view.frame.size.height - toHeight - [MessageToolBar defaultHeight] + 64 - 49;
+    rect.size.height = UIHEIGHT - toHeight - [MessageToolBar defaultHeight] - 20 - 49 + 44;
+
     self.tableView.frame = rect;
     
     [self scrollViewToBottom:NO];
@@ -286,6 +349,7 @@
 #pragma -mark 发送文本消息
 -(void)sendTextMessage:(NSString *)textMessage
 {
+
     NSString *currentTime = [UtilDate getCurrentTime];
     NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
     NSString *messageID = [NSString stringWithFormat:@"%@_%@",self.userID,timeSp];
@@ -397,9 +461,17 @@
 {
     __weak ChatController *weakSelf = self;
     dispatch_async(_messageQueue, ^{
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"user_ID = %@ and msg_userID = %@",[[UserInfoManager sharedInstance] getCurrentUserInfo].userID,self.userID];
+        
+        NSArray *array = [ChatModel MR_findAllSortedBy:@"msg_time" ascending:YES withPredicate:predicate];
+        //NSArray * array = [ChatModel MR_findByAttribute:@"msg_userID" withValue:self.userID];
+        
+        weakSelf.mesgaeArr = [NSMutableArray arrayWithArray:array];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.mesgaeArr = [NSMutableArray arrayWithArray:[ChatModel MR_findByAttribute:@"msg_userID" withValue:self.userID]];
-
+            
+            
             if (weakSelf.mesgaeArr.count > 0) {
                 [weakSelf.tableView reloadData];
                 [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[weakSelf.mesgaeArr count] - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
@@ -459,17 +531,35 @@
 }
 
 #pragma -mark xmpp 代理回调
-- (void)didReceiveMessageId:(NSString *)msg_ID
+- (void)didReceiveMessageId:(NSString *)msg_ID Msg_userID:(NSString *)msg_userid
 {
-    [self refreshDataWithMessageID:msg_ID];
-    // 发送已读操作
-    [ChatSendMessage ReplyToChatMessageWithMessageID:msg_ID ToUserID:self.userID CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
-        
-    }];
+    if ([msg_userid isEqualToString:self.userID]) {
+        [self refreshDataWithMessageID:msg_ID];
+        // 发送已读操作
+        [ChatSendMessage ReplyToChatMessageWithMessageID:msg_ID ToUserID:self.userID CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
+            
+        }];
+    }
 }
 
 - (void)didReceiveHasReadResponse:(NSString *)msg_ID
 {
+    dispatch_async(_messageReadQueue, ^{
+        for (int i = 0 ;i< self.mesgaeArr.count ; i++) {
+            ChatModel *model = self.mesgaeArr[i];
+            if ([model.messageID isEqualToString:msg_ID]) {
+                model.msg_send_type = @(SendChatMessageReadState);
+                [self.mesgaeArr replaceObjectAtIndex:i withObject:model];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                });
+            }
+        }
+    });
+    
+    
+    
+    /*
     for (int i = 0 ;i< self.mesgaeArr.count ; i++) {
         
         ChatModel *model = self.mesgaeArr[i];
@@ -494,9 +584,8 @@
             }];
         }
     }
+     */
 }
-
-
 
 #pragma -mark 发送已读操作
 - (void)sendRead
@@ -505,17 +594,35 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"user_ID = %@ and msg_userID = %@ and msg_send_type = %@",curuserID,self.userID,@(SendChatMessageNoReadState)];
     NSArray *chatModelArr = [ChatModel MR_findAllWithPredicate:predicate];
     
+    debugLog(@"%@",chatModelArr);
+    
     if (chatModelArr.count>0) {
         
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            
             for (ChatModel *model in chatModelArr) {
-                [ChatSendMessage ReplyToChatMessageWithMessageID:model.self.user_ID ToUserID:curuserID CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
-                    
+                [ChatSendMessage ReplyToChatMessageWithMessageID:model.messageID ToUserID:self.userID CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
+                    debugLog(@"已回复");
                 }];
             }
         });
         
     }
+}
+
+#pragma mark 删除会话
+- (void)deleteCurrentChatMessage
+{
+    [DataShareInstance deleteCurrentChatMessage:self.userID];
+
+    NSString *currentUserID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"toUserID = %@ and cur_userID = %@",self.userID,currentUserID];
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+        [MessageModel MR_deleteAllMatchingPredicate:predicate inContext:localContext];
+    } completion:^(BOOL success, NSError *error) {
+        debugLog(@"删除当前会话成功");
+        [self backNav:nil];
+    }];
 }
 
 - (void)dealloc

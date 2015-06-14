@@ -164,7 +164,7 @@
         [self.view addSubview:self.nearByTable];
         
         [self.nearByTable addLegendFooterWithRefreshingTarget:self refreshingAction:@selector(loadMoreData:)];
-
+        self.nearByTable.footer.hidden = YES;
         [self.nearByTable.footer setTitle:@"" forState:MJRefreshFooterStateIdle];
         
         _refreshControl = [[UIRefreshControl alloc] init];
@@ -263,7 +263,7 @@
 
     NSInteger startNum = sendType==RequestLoadMoreType ? self.dataSource.count:0;
     NSString *gender = self.selectType == All?@"":[NSString stringWithFormat:@"%d",self.selectType];
-    [HttpTool sendRequestWithLongitude:longitude Latitude:latitude Gender:gender StartNumber:startNum NumberCount:10 success:^(id json) {
+    [HttpTool sendRequestWithLongitude:longitude Latitude:latitude Gender:gender StartNumber:startNum NumberCount:20 success:^(id json) {
         if (sendType == RequestRefreshType) {
             [_refreshControl endRefreshing];
         }
@@ -277,6 +277,7 @@
                 case RequestCommonType:
                 {
                     self.dataSource = [NSMutableArray arrayWithArray:res.content];
+                    self.nearByTable.footer.hidden = self.dataSource.count>20;
 
                 }
                     break;

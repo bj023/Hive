@@ -134,7 +134,7 @@
     profileView.frame = CGRectMake(profileX, profileY, profileW, profileH);
     [self.view addSubview:profileView];
     
-    CGFloat nameX = 30;
+    CGFloat nameX = 117/2;
     CGFloat nameY = 5;
     CGFloat nameW = profileW - nameX * 2;
     CGFloat nameH = 30;

@@ -49,6 +49,10 @@
     alertLab1.font = [UIFont fontWithName:GothamRoundedBold size:34/2];
     [self addSubview:alertLab1];
     
+    alertLab.textColor = [UIColorUtil colorWithHexString:@"#424242"];
+    alertLab1.textColor = [UIColorUtil colorWithHexString:@"#424242"];
+
+    
     CGFloat textX = 30;
     CGFloat textY = 375/2;
     CGFloat textW = UIWIDTH - textX*2;;

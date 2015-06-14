@@ -13,16 +13,18 @@
 #import "ChatRoomModel.h"
 #import "ChatModel.h"
 #import "ChatManager.h"
+#import "UIAlertView+Block.h"
 
 #define kXMPPHost @"115.28.51.196"
 #define LITTLEBIRD @"ay130718210956811b81z"
 
 static XMPPManager *sharedManager;
 
-@interface XMPPManager ()
+@interface XMPPManager ()<UIAlertViewDelegate>
 {
     dispatch_queue_t myCustomQueue;
     dispatch_queue_t myCustomChatQueue;
+    dispatch_queue_t readCustomChatQueue;
 
 }
 @end
@@ -35,6 +37,7 @@ static XMPPManager *sharedManager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedManager = [[XMPPManager alloc] init];
+        [sharedManager setupStream];
         [sharedManager setupCustomQueue];
     });
     return sharedManager;
@@ -44,13 +47,14 @@ static XMPPManager *sharedManager;
     NSLog(@"====初始化XMPPStream====");
     xmppStream = [[XMPPStream alloc] init];
     [xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
+    
+    //允许后台模式(注意ios模拟器上是不支持后台socket的)
+    //xmppStream.enableBackgroundingOnSocket = YES;
+
 }
 
 - (BOOL)connect
 {
-    
-    [self setupStream];
-    
     NSString *user_ID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
     debugLog(@"要连接XMPP的用户ID->%@",user_ID);
     //从本地取得用户名，密码和服务器地址
@@ -62,13 +66,16 @@ static XMPPManager *sharedManager;
     if (![xmppStream isDisconnected]) {
         return YES;
     }
-    
     if (userId == nil || pass == nil) {
         return NO;
     }
-    NSLog(@"connect server --id:%@-password:%@-",userId,pass);
+    NSLog(@"connect server --id:%@-password:%@",userId,pass);
     //设置用户
-    [xmppStream setMyJID:[XMPPJID jidWithString:userId]];
+    //XMPPJID *jid = [XMPPJID jidWithString:userId];
+    XMPPJID *jid = [XMPPJID jidWithString:userId resource:userId];
+    //XMPPJID *jid = [XMPPJID jidWithUser:userId domain:user_ID resource:@"Ework"];
+    [xmppStream setMyJID:jid];
+    debugLog(@"xmppjid->%@",jid);
     //设置服务器
     [xmppStream setHostName:server];
     //密码
@@ -82,8 +89,6 @@ static XMPPManager *sharedManager;
     }
     return YES;
 }
-
-
 
 //连接服务器
 - (void)xmppStreamDidConnect:(XMPPStream *)sender{
@@ -104,6 +109,12 @@ static XMPPManager *sharedManager;
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender{
     NSLog(@"==========验证通过==========");
     [self goOnline];
+}
+
+- (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error//
+{
+    NSLog(@"验证失败 didNotAuthenticate:%@",error.description);
+    
 }
 
 - (void)goOnline{
@@ -162,11 +173,45 @@ static XMPPManager *sharedManager;
     debugLog(@"%@",error.description);
 }
 
+
+- (void)xmppStream:(XMPPStream *)sender didReceiveError:(NSXMLElement *)error
+{
+    //您的账户已在其他手机上登录，您已被挤下线，请确定是否是您本人操作!是否重新登录？
+    debugLog(@"didReceiveError:%@",error);
+    DDXMLNode *errorNode = (DDXMLNode *)error;
+    //遍历错误节点
+    for(DDXMLNode *node in [errorNode children])
+    {
+        //若错误节点有【冲突】
+        if([[node name] isEqualToString:@"conflict"])
+        {
+            //停止轮训检查链接状态
+            //[_timer invalidate];
+            NSString *message = @"您的账户已在其他手机上登录，您已被挤下线，请确定是否是您本人操作!是否重新登录？";
+            //弹出登陆冲突,点击OK后logout
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
+                                                           message:message
+                                                          delegate:self
+                                                 cancelButtonTitle:@"OK"
+                                                 otherButtonTitles:nil, nil];
+            [alert handlerClickedButton:^(NSInteger btnIndex) {
+                //重新登陆
+                [[UserInfoManager sharedInstance] logOut];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"setRootViewController" object:nil];
+            }];
+            [alert show];
+        }
+    }  
+}
+
 - (void)signOut
 {
     [self disconnect];
 }
-
+/*
+didReceiveError:<stream:error xmlns:stream="http://etherx.jabber.org/streams"><conflict xmlns="urn:ietf:params:xml:ns:xmpp-streams"/></stream:error>
+2015-06-14 17:30:54.795 Hive[6682:1083339] Error Domain=GCDAsyncSocketErrorDomain Code=7 "Socket closed by remote peer" UserInfo=0x170e7ee40 {NSLocalizedDescription=Socket closed by remote peer}
+ */
 - (XMPPStream *)getXMPPStream
 {
     return xmppStream;
@@ -405,7 +450,7 @@ static XMPPManager *sharedManager;
         NSString *isTime = [XMPPManager getChatTime:time ToUserID:[self getUserId:from]];
         NSString *msg_content = [[message elementForName:@"body"]  stringValue];
         NSString *type =[[message attributeForName:@"messageType"] stringValue];
-        
+        NSString *msg_userID = [self getUserId:from];
         [ChatManager insertChatMessageWith:[self getUserId:from]
                                   UserName:name
                                  MessageID:msgId
@@ -415,7 +460,7 @@ static XMPPManager *sharedManager;
         [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
             
             ChatModel *model = [ChatModel MR_createInContext:localContext];
-            model.msg_userID = [self getUserId:from];
+            model.msg_userID = msg_userID;
             model.userName = name;
             model.user_ID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
             model.msg_message = msg_content;
@@ -434,9 +479,12 @@ static XMPPManager *sharedManager;
         } completion:^(BOOL success, NSError *error) {
             // 已读操作
             //[self receiptsMessage:msgId ToUserID:[self getUserId:from]];
+            
+            
+            
             dispatch_async(dispatch_get_main_queue(), ^{
-                if ([self.privatedelegate respondsToSelector:@selector(didReceiveMessageId:)]) {
-                    [self.privatedelegate didReceiveMessageId:msgId];
+                if ([self.privatedelegate respondsToSelector:@selector(didReceiveMessageId:Msg_userID:)]) {
+                    [self.privatedelegate didReceiveMessageId:msgId Msg_userID:msg_userID];
                 }
             });
         }];
@@ -445,7 +493,23 @@ static XMPPManager *sharedManager;
 
 - (void)receiptsChatMessage:(XMPPMessage *)message
 {
+    
     NSString *msgId = [[message attributeForName:@"messageID"] stringValue];
+
+    dispatch_async(readCustomChatQueue, ^{
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"messageID = %@",msgId];
+        [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+            
+            ChatModel *chatModel = [ChatModel MR_findFirstWithPredicate:predicate inContext:localContext];
+            chatModel.msg_send_type = @(SendChatMessageReadState);
+        } completion:^(BOOL success, NSError *error) {
+            
+        }];
+
+        
+    });
+
     if ([self.privatedelegate respondsToSelector:@selector(didReceiveHasReadResponse:)]) {
         [self.privatedelegate didReceiveHasReadResponse:msgId];
     }
@@ -455,6 +519,6 @@ static XMPPManager *sharedManager;
 {
     myCustomQueue = dispatch_queue_create("example.MyCustomQueue", NULL);
     myCustomChatQueue = dispatch_queue_create("example.MyCustomChatQueue", NULL);
-
+    readCustomChatQueue = dispatch_queue_create("example.readCustomChatQueue", NULL);
 }
 @end

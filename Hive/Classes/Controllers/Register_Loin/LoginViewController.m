@@ -25,6 +25,8 @@
     [super viewDidLoad];
     [self setBackGroundColor];
     [self configButton];
+    [self startAnimate];
+    //[self performSelector:@selector(startAnimate) withObject:nil afterDelay:1];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -36,7 +38,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self startAnimate];
 }
 
 - (void)startAnimate
@@ -101,8 +102,7 @@
     label.textAlignment = NSTextAlignmentCenter;
     label.numberOfLines = 0;
     label.text = string;
-    [_mainView addSubview:label];
-    
+    //[_mainView addSubview:label];//去掉
     
     y = y + h + 10;
     UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(x, y, w, h)];
@@ -115,7 +115,7 @@
     //[self.view addSubview:label1];
     
     w = UIWIDTH;
-    h = 100/2;
+    h = 160/2;
     x = 0;
     y = UIHEIGHT - h;
     UIButton *signInBtn = [UIButton buttonWithType:UIButtonTypeCustom];

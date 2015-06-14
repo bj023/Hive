@@ -116,7 +116,7 @@
     XMPPElementReceipt *receipt = [[XMPPElementReceipt alloc] init];
     [[[XMPPManager sharedInstance] getXMPPStream] sendElement:mes andGetReceipt:&receipt];
     BOOL messageState =[receipt wait:-1];
-
+    
     result(messageState?SendChatMessageSuccessState:SendChatMessageFailState,msgID);
 }
 
@@ -152,6 +152,21 @@
     BOOL messageState =[receipt wait:-1];
     
     result(messageState?SendChatMessageSuccessState:SendChatMessageFailState,msg_id);
+}
+
+/** 发送二进制文件 */
+- (void)sendMessageWithData:(NSData *)data bodyName:(NSString *)name
+{
+    XMPPMessage *message = [XMPPMessage messageWithType:@"chat" to:@"123"];
+    [message addBody:name];
+    // 转换成base64的编码
+    NSString *base64str = [data base64EncodedStringWithOptions:0];
+    // 设置节点内容
+    XMPPElement *attachment = [XMPPElement elementWithName:@"attachment" stringValue:base64str];
+    // 包含子节点
+    [message addChild:attachment];
+    // 发送消息
+    [[[XMPPManager sharedInstance] getXMPPStream] sendElement:message];
 }
 
 @end

@@ -25,7 +25,7 @@
 - (void)receiptsChatMessageWithMessageID:(NSString *)messageID;
 
 @optional
-- (void)didReceiveMessageId:(NSString *)msg_ID;
+- (void)didReceiveMessageId:(NSString *)msg_ID Msg_userID:(NSString *)msg_userid;
 - (void)didReceiveHasReadResponse:(NSString *)msg_ID;
 
 @end

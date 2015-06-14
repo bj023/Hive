@@ -51,6 +51,10 @@
     alertLab1.font = [UIFont fontWithName:GothamRoundedBold size:34/2];
     [self addSubview:alertLab1];
     
+    alertLab.textColor = [UIColorUtil colorWithHexString:@"#424242"];
+    alertLab1.textColor = [UIColorUtil colorWithHexString:@"#424242"];
+
+    
     x = 117/2;
     y = 375/2;
     w = UIWIDTH - x - 121/2;
@@ -82,7 +86,7 @@
     h = textSize.height + 10;
     
     self.introLabel.frame = CGRectMake(x, y, w, h);
-    self.introLabel.font = HintFont;
+    self.introLabel.font = tetxFont;
     self.introLabel.numberOfLines = 0;
     
     self.introLabel.textColor = [UIColorUtil colorWithHexString:@"#B2B2B2"];

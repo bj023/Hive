@@ -58,9 +58,9 @@
 
 - (void)initView
 {    
-    CGFloat userNameX = 20;
+    CGFloat userNameX = 117/2;
     CGFloat userNameY = UIHEIGHT/2 - 150 + 14;
-    CGFloat userNameW = UIWIDTH - 40;
+    CGFloat userNameW = UIWIDTH - 2 * userNameX;
     CGFloat userNameH = 30;
     self.userNameText = [[UITextField alloc] initWithFrame:CGRectMake(userNameX,userNameY, userNameW , userNameH)];
 
@@ -98,7 +98,7 @@
     self.userNameText.font = [UIFont fontWithName:Font_Helvetica size:16];
     self.passwordText.font = [UIFont fontWithName:Font_Helvetica size:16];
 
-    self.userNameText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Email" attributes:attributes];
+    self.userNameText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Mobile/Email" attributes:attributes];
     self.passwordText.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"Password" attributes:attributes];
     
     [self addSubview:self.userNameText];

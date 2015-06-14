@@ -103,6 +103,7 @@
                 
             }else if ([str isEqualToString:@"Forget"]){
                 // 点击忘记密码
+                debugLog(@"点击忘记密码");
             }
         };
         
@@ -308,9 +309,10 @@
         if (res.RETURN_CODE == 200) {
             
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            
+            [self handleLoginCenterManager:res.content Password:_loginView.password];
+            [self handleSetRootViewController];
         }else
-            [self showErrorWithText:ErrorRequestText];
+            [self showErrorWithText:ErrorRequest_Login_Text];
         
     } faliure:^(NSError *error) {
         [self showErrorWithText:ErrorText];
@@ -413,12 +415,14 @@
     NSData *imgData = UIImageJPEGRepresentation([_registerFour getImgData], 0.1);
     [HttpTool sendRequestUploadHeadImg:imgData success:^(id json) {
         
-        ResponseManagerModel *res = [[ResponseManagerModel alloc] initWithString:json error:nil];
+        ResponseLoginModel *res = [[ResponseLoginModel alloc] initWithString:json error:nil];
         
         if (res.RETURN_CODE == 200) {
             
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             
+            [self handleLoginCenterManager:res.content Password:_registerThird.passwordText.text];
+
             [self handleSetRootViewController];
             
         }else

@@ -131,7 +131,6 @@
     h = textSize.height + 10;
 
     introLabel.frame = CGRectMake(x, y, w, h);
-    introLabel.font = HintFont;
     introLabel.numberOfLines = 0;
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineSpacing = 7;// 字体的行间距

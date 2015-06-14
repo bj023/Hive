@@ -16,4 +16,6 @@
 
 - (NSArray *)getChatsCount:(NSInteger)count;
 
+- (void)deleteCurrentChatMessage:(NSString *)toUserID;
+
 @end

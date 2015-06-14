@@ -20,5 +20,4 @@
 + (NSString *)chatMessageUnreadCount;
 
 + (void)clearUnReadCountWith:(NSString *)userID;
-
 @end

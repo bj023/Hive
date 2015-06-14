@@ -39,6 +39,7 @@
     alertLab.text = @"Enter your mobile";
     alertLab.textAlignment = NSTextAlignmentCenter;
     alertLab.font = [UIFont fontWithName:GothamRoundedBold size:34/2];
+    alertLab.textColor = [UIColorUtil colorWithHexString:@"#424242"];
     [self addSubview:alertLab];
     
     CGFloat phoneNumX = 117/2;
@@ -83,14 +84,14 @@
     self.phoneNumIntroLabel.numberOfLines   = 0;
 //    self.phoneNumIntroLabel.text            = ValidationCodeStrin;
     // 行间距
-    
+    self.phoneNumIntroLabel.font = [UIFont fontWithName:Font_Helvetica size:14];
     self.phoneNumIntroLabel.textColor = [UIColorUtil colorWithHexString:@"#B2B2B2"];
     
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:ValidationCodeStrin];
 //    [str addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(0,5)];
 //    [str addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(6,12)];
 //    [str addAttribute:NSForegroundColorAttributeName value:[UIColor greenColor] range:NSMakeRange(19,6)];
-    
+    //Font_Helvetica/Font_Bold
     [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:Font_Bold size:14] range:NSMakeRange(28, 12)];
     [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:Font_Bold size:14] range:NSMakeRange([ValidationCodeStrin length] - 14, 14)];
     self.phoneNumIntroLabel.attributedText = str;

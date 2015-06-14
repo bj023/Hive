@@ -12,7 +12,7 @@
 #import "MessageModel.h"
 #import "UtilDate.h"
 
-#define kReadHeight 22
+#define kReadHeight 23
 
 @interface MessageCell ()
 
@@ -23,6 +23,7 @@
 @property (strong, nonatomic)UILabel *dateLabel;// 时间
 @property (strong, nonatomic)UILabel *messageLabel;// 消息内容
 @property (strong, nonatomic)UILabel *unreadLabel;// 未读数
+@property (strong, nonatomic)UIImageView *unreadIMG;
 @end
 
 @implementation MessageCell
@@ -112,17 +113,26 @@
     
     CGFloat readX = UIWIDTH - 40;
     CGFloat readY = [MessageCell getMessageCellHeight] - 40;
-    CGFloat readW = 26;
     CGFloat readH = kReadHeight;
-    if (!self.unreadLabel) {
+    CGFloat readW = readH;
+    
+    
+    if (!self.unreadIMG) {
+        
+        self.unreadIMG = [[UIImageView alloc] initWithFrame:CGRectMake(readX, readY, readW, readH)];
+        self.unreadIMG.backgroundColor = [UIColorUtil colorWithHexString:@"#FF5B2F"];
+        self.unreadIMG.layer.cornerRadius = readH/2;
+        self.unreadIMG.clipsToBounds = YES;
+        [self.contentView addSubview:self.unreadIMG];
+        
         self.unreadLabel = [[UILabel alloc] init];
-        self.unreadLabel.frame = CGRectMake(readX, readY, readW, readH);
+        self.unreadLabel.frame = CGRectMake(0, 0, readW, readH);
         self.unreadLabel.textAlignment = NSTextAlignmentCenter;
         self.unreadLabel.font = [UIFont systemFontOfSize:31/2];
-        self.unreadLabel.backgroundColor = [UIColorUtil colorWithHexString:@"#FF5B2F"];
+        self.unreadLabel.backgroundColor = [UIColor clearColor];
         self.unreadLabel.textColor = [UIColor whiteColor];
-        self.unreadLabel.layer.cornerRadius = readH/2;
         self.unreadLabel.layer.masksToBounds = YES;
+        [self.unreadIMG addSubview:self.unreadLabel];
     }
     
     
@@ -134,7 +144,6 @@
     [self addSubview:self.dateLabel];
     [self addSubview:self.userNameLabel];
     [self addSubview:self.messageLabel];
-    [self addSubview:self.unreadLabel];
 
     [self.headIMG addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadIMG:)]];
 }
@@ -177,20 +186,27 @@
     debugLog(@"未读数->%@",_chatModel.unReadCount);
     
     if ([_chatModel.unReadCount isEqualToString:@"0"]) {
-        self.unreadLabel.hidden = YES;
+
+        self.unreadIMG.hidden = YES;
     }else{
-        self.unreadLabel.hidden = NO;
+        self.unreadIMG.hidden = NO;
         
         CGSize size = [UILabel sizeWithString:_chatModel.unReadCount font:_unreadLabel.font maxSize:CGSizeMake(MAXFLOAT, kReadHeight)];
 
-        CGFloat readW = size.width + 10;
+        CGFloat l_X = 7;
+        CGFloat r_X = 7;
+        
+        //CGFloat t_Y = 5;
+        //CGFloat b_Y = 5.5;
+        
+        CGFloat readW = size.width + l_X + r_X;
         CGFloat readH = kReadHeight;
         CGFloat readX = UIWIDTH - readW - 10;
         CGFloat readY = [MessageCell getMessageCellHeight]/2 - 5;
-      
-        _unreadLabel.frame = CGRectMake(readX, readY, readW, readH);
+        
+        _unreadIMG.frame = CGRectMake(readX, readY, readW, readH);
+        _unreadLabel.frame = CGRectMake(l_X, 0.5, size.width, readH-2);
         _unreadLabel.text = _chatModel.unReadCount;
-        _unreadLabel.layer.cornerRadius = size.height/2;
     }
     
     debugLog(@"%@",model);
@@ -204,7 +220,6 @@
 
             NearByModel *model = res.RETURN_OBJ;
             [self.headIMG setImageURLStr:model.iconPath];
-            
         }
 
     } faliure:^(NSError *error) {

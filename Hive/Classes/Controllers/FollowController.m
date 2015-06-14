@@ -69,7 +69,7 @@
     [self.view addSubview:navView];
     
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    backBtn.frame = CGRectMake(10, 44/2 - 18/2 + 20, 18, 18);
+    backBtn.frame = CGRectMake(10, 44/2 - 20/2 + 20, 30, 20);
     [backBtn setBackgroundImage:[UIImage imageNamed:@"backNav"] forState:UIControlStateNormal];
     
     [navView addSubview:backBtn];

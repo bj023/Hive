@@ -9,6 +9,7 @@
 #import "DataBaseModel.h"
 #import "Utils.h"
 #import "ChatRoomModel.h"
+#import "ChatModel.h"
 
 static DataBaseModel *sharedInstance;
 
@@ -30,7 +31,9 @@ static DataBaseModel *sharedInstance;
 
 - (void)setUpDataSource
 {
-    NSArray *array = [ChatRoomModel MR_findAllSortedBy:@"msg_Interval_time" ascending:NO];
+    //NSArray *array = [ChatRoomModel MR_findAllSortedBy:@"msg_Interval_time" ascending:NO];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %@",[[UserInfoManager sharedInstance] getCurrentUserInfo].userID];
+    NSArray *array = [ChatRoomModel MR_findAllSortedBy:@"msg_Interval_time" ascending:NO withPredicate:predicate];
     self.dataSource = [NSMutableArray arrayWithArray:array];
 }
 
@@ -55,7 +58,17 @@ static DataBaseModel *sharedInstance;
     return array;
 }
 
-
+#pragma mark 删除会话
+- (void)deleteCurrentChatMessage:(NSString *)toUserID
+{
+    NSString *currentUser = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"user_ID = %@ and msg_userID = %@",currentUser,toUserID];
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+        [ChatModel MR_deleteAllMatchingPredicate:predicate inContext:localContext];
+    } completion:^(BOOL success, NSError *error) {
+        debugLog(@"删除当前会话-记录成功");
+    }];
+}
 
 
 + (NSPredicate *)predicateForStart:(NSInteger )start andCount:(NSInteger)count

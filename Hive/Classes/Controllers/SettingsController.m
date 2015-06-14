@@ -58,7 +58,7 @@
                   @"Notification Previews",
                   @"In-App Sound",
                   @"In-App Vibrate",
-                  @"Hide",
+                  @"Go Invisible",
                   @"Be Followed",
                   @"My Following",
                   @"Block List",
@@ -85,9 +85,8 @@
     //[self.headIMG setImageURLStr:User_Head(user.userID) placeholder:nil];
     //self.headIMG.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:User_Head(user.userID)]]];
     [self.headIMG setImageURLStr:user.userHead];
-
+    debugLog(@"\n\n\n\n\n用户头像------>%@\n\n\n\n",user.userHead);
     [self.headIMG addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadIMGAction:)]];
-
 }
 
 - (void)setTableFooterView
@@ -206,11 +205,15 @@
          };
         
         return cell;
-    }else if(indexPath.row == 10 || indexPath.row == 11){
+    }
+    /*
+    else if(indexPath.row == 10 || indexPath.row == 11){
         LogOutCell *cell = [LogOutCell cellWithTableView:tableView];
         [cell setIconIMG:ICONIMGARR[indexPath.row-10] Title:_titleArr[indexPath.row]];
         return cell;
-    }else{
+    }
+     */
+    else{
         SettingsCell *cell = [SettingsCell cellWithTableView:tableView];
         [cell settingData:_titleArr[indexPath.row]];
         return cell;
