@@ -43,6 +43,7 @@
 		9687039A1AEF303D00088718 /* ChatTimeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 968703991AEF303D00088718 /* ChatTimeView.m */; };
 		9687039D1AEF399000088718 /* ChatBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9687039C1AEF399000088718 /* ChatBubbleView.m */; };
 		968703A01AEF402E00088718 /* chatViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9687039F1AEF402E00088718 /* chatViewCell.m */; };
+		968C91A51B31A66F00DAD905 /* NSString+Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 968C91A41B31A66F00DAD905 /* NSString+Common.m */; };
 		969378CF1AE23D4200BE585F /* UserInforCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 969378CE1AE23D4200BE585F /* UserInforCell.m */; };
 		96A3F4FD1AE3603C00A03BA2 /* UtilDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A3F4FC1AE3603C00A03BA2 /* UtilDate.m */; };
 		96A3F5001AE3B7D600A03BA2 /* FollowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A3F4FF1AE3B7D600A03BA2 /* FollowController.m */; };
@@ -62,6 +63,10 @@
 		96E0987A1B1AD59D00257DDB /* UIActionSheet+Block.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E098791B1AD59D00257DDB /* UIActionSheet+Block.m */; };
 		96E243BF1B0C88240079AE0E /* ChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E243BE1B0C88240079AE0E /* ChatController.m */; };
 		96E4E36B1B0D8BA80092DA32 /* GPLoadingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E4E36A1B0D8BA80092DA32 /* GPLoadingButton.m */; };
+		96E5B0621B2F1FD500C27C23 /* ForgetFirstView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E5B0611B2F1FD500C27C23 /* ForgetFirstView.m */; };
+		96E5B0651B2F228E00C27C23 /* ForgetSecondView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E5B0641B2F228E00C27C23 /* ForgetSecondView.m */; };
+		96E5B0681B2F248600C27C23 /* ForgetThirdView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E5B0671B2F248600C27C23 /* ForgetThirdView.m */; };
+		96E7D6A41B33F5520088B9F9 /* DXChatBarMoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E7D6A31B33F5520088B9F9 /* DXChatBarMoreView.m */; };
 		96FCDE6D1AE4D2930040688F /* UIView+Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FCDE6C1AE4D2930040688F /* UIView+Common.m */; };
 		96FCDE701AE4D99C0040688F /* MBProgressHUD+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FCDE6F1AE4D99C0040688F /* MBProgressHUD+Helper.m */; };
 		E6446D771AC967FE0099AFF1 /* HttpManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E6446D761AC967FE0099AFF1 /* HttpManager.m */; };
@@ -174,6 +179,8 @@
 		9687039C1AEF399000088718 /* ChatBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatBubbleView.m; sourceTree = "<group>"; };
 		9687039E1AEF402E00088718 /* chatViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chatViewCell.h; sourceTree = "<group>"; };
 		9687039F1AEF402E00088718 /* chatViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = chatViewCell.m; sourceTree = "<group>"; };
+		968C91A31B31A66F00DAD905 /* NSString+Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Common.h"; sourceTree = "<group>"; };
+		968C91A41B31A66F00DAD905 /* NSString+Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Common.m"; sourceTree = "<group>"; };
 		969378CD1AE23D4200BE585F /* UserInforCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInforCell.h; sourceTree = "<group>"; };
 		969378CE1AE23D4200BE585F /* UserInforCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInforCell.m; sourceTree = "<group>"; };
 		96A3F4FB1AE3603C00A03BA2 /* UtilDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilDate.h; sourceTree = "<group>"; };
@@ -206,6 +213,14 @@
 		96E243BE1B0C88240079AE0E /* ChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatController.m; sourceTree = "<group>"; };
 		96E4E3691B0D8BA80092DA32 /* GPLoadingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPLoadingButton.h; sourceTree = "<group>"; };
 		96E4E36A1B0D8BA80092DA32 /* GPLoadingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPLoadingButton.m; sourceTree = "<group>"; };
+		96E5B0601B2F1FD500C27C23 /* ForgetFirstView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForgetFirstView.h; sourceTree = "<group>"; };
+		96E5B0611B2F1FD500C27C23 /* ForgetFirstView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForgetFirstView.m; sourceTree = "<group>"; };
+		96E5B0631B2F228E00C27C23 /* ForgetSecondView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForgetSecondView.h; sourceTree = "<group>"; };
+		96E5B0641B2F228E00C27C23 /* ForgetSecondView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForgetSecondView.m; sourceTree = "<group>"; };
+		96E5B0661B2F248600C27C23 /* ForgetThirdView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForgetThirdView.h; sourceTree = "<group>"; };
+		96E5B0671B2F248600C27C23 /* ForgetThirdView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForgetThirdView.m; sourceTree = "<group>"; };
+		96E7D6A21B33F5520088B9F9 /* DXChatBarMoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DXChatBarMoreView.h; path = "../../../../../../Downloads/iOSSDK-20150528/ChatDemo-UI2.0/ChatDemo-UI2.0/Class/Chat/ChatView/MessageToolbar/MessageToolBarBottomView/MoreView/DXChatBarMoreView.h"; sourceTree = "<group>"; };
+		96E7D6A31B33F5520088B9F9 /* DXChatBarMoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DXChatBarMoreView.m; path = "../../../../../../Downloads/iOSSDK-20150528/ChatDemo-UI2.0/ChatDemo-UI2.0/Class/Chat/ChatView/MessageToolbar/MessageToolBarBottomView/MoreView/DXChatBarMoreView.m"; sourceTree = "<group>"; };
 		96FCDE6B1AE4D2930040688F /* UIView+Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Common.h"; sourceTree = "<group>"; };
 		96FCDE6C1AE4D2930040688F /* UIView+Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Common.m"; sourceTree = "<group>"; };
 		96FCDE6E1AE4D99C0040688F /* MBProgressHUD+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+Helper.h"; sourceTree = "<group>"; };
@@ -367,6 +382,8 @@
 				966C1DEB1AD239FD004D33DA /* MessageToolBar.m */,
 				966C1DED1AD265FD004D33DA /* FaceView.h */,
 				966C1DEE1AD265FD004D33DA /* FaceView.m */,
+				96E7D6A21B33F5520088B9F9 /* DXChatBarMoreView.h */,
+				96E7D6A31B33F5520088B9F9 /* DXChatBarMoreView.m */,
 			);
 			path = MessageToolBar;
 			sourceTree = "<group>";
@@ -756,6 +773,12 @@
 				E6B8BAED1AC7DA3C003CA484 /* RegisterThirdView.m */,
 				E6B8BAF01AC7E036003CA484 /* RegisterFourView.h */,
 				E6B8BAF11AC7E036003CA484 /* RegisterFourView.m */,
+				96E5B0601B2F1FD500C27C23 /* ForgetFirstView.h */,
+				96E5B0611B2F1FD500C27C23 /* ForgetFirstView.m */,
+				96E5B0631B2F228E00C27C23 /* ForgetSecondView.h */,
+				96E5B0641B2F228E00C27C23 /* ForgetSecondView.m */,
+				96E5B0661B2F248600C27C23 /* ForgetThirdView.h */,
+				96E5B0671B2F248600C27C23 /* ForgetThirdView.m */,
 			);
 			path = Login_Register;
 			sourceTree = "<group>";
@@ -777,6 +800,8 @@
 				96E098791B1AD59D00257DDB /* UIActionSheet+Block.m */,
 				96603C091B1D4D200071479D /* UIView+Animation.h */,
 				96603C0A1B1D4D200071479D /* UIView+Animation.m */,
+				968C91A31B31A66F00DAD905 /* NSString+Common.h */,
+				968C91A41B31A66F00DAD905 /* NSString+Common.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -941,9 +966,11 @@
 				E6A808771ABE687B005E48C2 /* UIColorUtil.m in Sources */,
 				E6B8BAD91AC7A2DF003CA484 /* UserDefaultsUtil.m in Sources */,
 				966ECFD31AD38EC900C93440 /* SLPagingViewController.m in Sources */,
+				96E5B0681B2F248600C27C23 /* ForgetThirdView.m in Sources */,
 				E680C7781ACEBCE300E26136 /* UILabel+Size.m in Sources */,
 				96C8A64B1AD6311D00372AF8 /* NSDataUtil.m in Sources */,
 				E6A808741ABE6809005E48C2 /* UIFontUtil.m in Sources */,
+				96E5B0621B2F1FD500C27C23 /* ForgetFirstView.m in Sources */,
 				966C5D181AECA059004EE35D /* ChatRoomModel.m in Sources */,
 				966ECFD21AD38EC900C93440 /* UIScrollView+UpdateContentSize.m in Sources */,
 				966ECFD11AD38EC900C93440 /* UIColor+SLAddition.m in Sources */,
@@ -959,6 +986,7 @@
 				966C1DEC1AD239FD004D33DA /* MessageToolBar.m in Sources */,
 				E65D07E61ACA3C730074A3FB /* CustomIMGView.m in Sources */,
 				96663C521AF893A50015FBB6 /* ChatModel.m in Sources */,
+				968C91A51B31A66F00DAD905 /* NSString+Common.m in Sources */,
 				E6446D7A1AC969D50099AFF1 /* HttpTool.m in Sources */,
 				9662AAC41B0EC1B900DB247F /* ProfileViewController.m in Sources */,
 				96AFB68F1AD421D500D6128E /* NearByModel.m in Sources */,
@@ -968,11 +996,13 @@
 				E69F08491ABE999F00E5ADD3 /* MainViewController.m in Sources */,
 				E6B8BAEE1AC7DA3C003CA484 /* RegisterThirdView.m in Sources */,
 				969378CF1AE23D4200BE585F /* UserInforCell.m in Sources */,
+				96E7D6A41B33F5520088B9F9 /* DXChatBarMoreView.m in Sources */,
 				967D52E41AFB8BF400BF77E1 /* ChatRoomCell.m in Sources */,
 				E65D07E91ACA4FDC0074A3FB /* ProfileCell.m in Sources */,
 				9675D9EC1AD957440001B8F9 /* BlockListController.m in Sources */,
 				967166621B0712AC00FE1D6D /* ChatManager.m in Sources */,
 				E6A8084B1ABE55CC005E48C2 /* ViewController.m in Sources */,
+				96E5B0651B2F228E00C27C23 /* ForgetSecondView.m in Sources */,
 				96FCDE701AE4D99C0040688F /* MBProgressHUD+Helper.m in Sources */,
 				96FCDE6D1AE4D2930040688F /* UIView+Common.m in Sources */,
 				E6A808421ABE55CB005E48C2 /* main.m in Sources */,

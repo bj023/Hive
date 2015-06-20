@@ -372,8 +372,9 @@
     [_pageViewController setCurrentIndex:1 animated:NO];
 
     ChatController *chatVC = [[ChatController alloc] init];
-    chatVC.userID = [NSString stringWithFormat:@"%d",model.userId];
-    chatVC.userName = model.userName;
+    chatVC.toUserID = [NSString stringWithFormat:@"%d",model.userId];
+    chatVC.toUserName = model.userName;
+    chatVC.toUserIconPath = model.iconPath;
     chatVC.title = [model.userName uppercaseString];
     [self.navigationController pushViewController:chatVC animated:YES];
 }
@@ -381,8 +382,9 @@
 - (void)pushChatVC:(MessageModel *)model
 {
     ChatController *chatVC = [[ChatController alloc] init];
-    chatVC.userID = model.toUserID;
-    chatVC.userName = model.toUserName;
+    chatVC.toUserIconPath = model.toUser_IconPath;
+    chatVC.toUserID = model.toUserID;
+    chatVC.toUserName = model.toUserName;
     chatVC.title = [model.toUserName uppercaseString];
     [self.navigationController pushViewController:chatVC animated:YES];
 }

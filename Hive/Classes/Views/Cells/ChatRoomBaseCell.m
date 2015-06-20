@@ -250,7 +250,7 @@
         if ([message.msg_hasStealth isEqualToString:@"1"]){
             _nameLabel.text = [NSString stringWithFormat:@"隐身用户 %@",distance];
         }else
-            _nameLabel.text = [NSString stringWithFormat:@"%@  %@",_message.userName,distance];
+            _nameLabel.text = [NSString stringWithFormat:@"%@  %@",_message.toUserName,distance];
 
     }
     

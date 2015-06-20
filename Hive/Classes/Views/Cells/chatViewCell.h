@@ -19,7 +19,8 @@
 @property (nonatomic, strong) UIImageView *activtiyImg;
 @property (nonatomic, strong) UIView *activityView;
 @property (nonatomic, strong) UIButton *retryButton;
-@property (nonatomic, strong) UIImageView *hasRead;
+@property (nonatomic, strong) UILabel *hasRead;
+@property (nonatomic, strong) NSString *iconPath;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView Delegate:(id<ChatViewCellDelegate>)delegate;
 

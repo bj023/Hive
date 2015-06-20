@@ -20,8 +20,17 @@
  *  用于输入文本消息的输入框
  */
 @property (strong, nonatomic) MessageTextView *inputTextView;
+
 @property (nonatomic, weak) id <MessageToolBarDelegate> delegate;
 
+/**
+ *  更多的附加页面
+ */
+@property (strong, nonatomic) UIView *moreView;
+
+/**
+ *  表情的附加页面
+ */
 @property (strong, nonatomic) UIView *faceView;
 
 

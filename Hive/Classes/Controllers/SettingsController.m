@@ -85,7 +85,7 @@
     //[self.headIMG setImageURLStr:User_Head(user.userID) placeholder:nil];
     //self.headIMG.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:User_Head(user.userID)]]];
     [self.headIMG setImageURLStr:user.userHead];
-    debugLog(@"\n\n\n\n\n用户头像------>%@\n\n\n\n",user.userHead);
+
     [self.headIMG addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickHeadIMGAction:)]];
 }
 

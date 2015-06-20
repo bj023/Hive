@@ -294,7 +294,13 @@
                 [self clickTalk];
             break;
         case 1:
-            [self sendFollow];
+        {
+            if (_model.hide == 1) {
+                UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:nil cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Sorry,There is no way to follow an invisible man." otherButtonTitles: nil];
+                [sheet showInView:self.view];
+            }else
+                [self sendFollow];
+        }
             break;
         case 2:
             [self showBlockAlert];

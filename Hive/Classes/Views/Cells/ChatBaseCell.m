@@ -72,6 +72,10 @@
 {
     [super layoutSubviews];
     
+    if (!_message) {
+        return;
+    }
+    
     BOOL isShow = [_message.msg_flag isEqualToString:@"ME"]?YES:NO;
 
     _headImgaeView.hidden = isShow;

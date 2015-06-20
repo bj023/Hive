@@ -32,7 +32,7 @@ static DataBaseModel *sharedInstance;
 - (void)setUpDataSource
 {
     //NSArray *array = [ChatRoomModel MR_findAllSortedBy:@"msg_Interval_time" ascending:NO];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %@",[[UserInfoManager sharedInstance] getCurrentUserInfo].userID];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cur_userID = %@",[[UserInfoManager sharedInstance] getCurrentUserInfo].userID];
     NSArray *array = [ChatRoomModel MR_findAllSortedBy:@"msg_Interval_time" ascending:NO withPredicate:predicate];
     self.dataSource = [NSMutableArray arrayWithArray:array];
 }
@@ -41,6 +41,10 @@ static DataBaseModel *sharedInstance;
 - (NSArray *)getChatsCount:(NSInteger)count
 {
     NSMutableArray *array = [NSMutableArray array];
+    
+    if (self.dataSource.count == 0) {
+        return array;
+    }
     
     for (ChatRoomModel *model in self.dataSource) {
         

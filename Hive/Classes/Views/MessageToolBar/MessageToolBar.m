@@ -9,6 +9,7 @@
 #import "MessageToolBar.h"
 #import "Utils.h"
 #import "FaceView.h"
+#import "DXChatBarMoreView.h"
 
 @interface MessageToolBar ()<UITextViewDelegate, FaceDelegate>
 {
@@ -93,6 +94,7 @@
         self.faceButton.tag = 1;
     }
     
+    
     CGFloat sendW = 60;
     if (!self.sendButton) {
         self.sendButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.bounds) - kHorizontalPadding - sendW, kVerticalPadding, sendW, kInputTextViewMinHeight)];
@@ -134,6 +136,12 @@
     }
     
     
+    if (!self.moreView) {
+        self.moreView = [[DXChatBarMoreView alloc] initWithFrame:CGRectMake(0, (kVerticalPadding * 2 + kInputTextViewMinHeight), self.frame.size.width, 216) typw:ChatMoreTypeChat];
+        self.moreView.backgroundColor = [UIColor whiteColor];
+        self.moreView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    }
+    
     [self.toolbarView addSubview:self.faceButton];
     [self.toolbarView addSubview:self.inputTextView];
     [self.toolbarView addSubview:self.sendButton];
@@ -173,11 +181,15 @@
 
 - (void)sendButtonAction:(UIButton *)sender
 {
+    /*
     if ([self.delegate respondsToSelector:@selector(didSendText:)]) {
         [self.delegate didSendText:self.inputTextView.text];
         self.inputTextView.text = @"";
         [self willShowInputTextViewToHeight:[self getTextViewContentH:self.inputTextView]];
     }
+     */
+    [self.inputTextView resignFirstResponder];
+    [self willShowBottomView:self.moreView];
 }
 
 #pragma mark - UIKeyboardNotification

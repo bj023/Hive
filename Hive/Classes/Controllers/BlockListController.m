@@ -155,6 +155,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NearByModel *_model = self.dataSource[indexPath.row];
     UserInformationController *userInformationVC = [[UserInformationController alloc] init];
     userInformationVC.delegate = self;

@@ -177,7 +177,9 @@
 
 - (void)set_NearByCellData:(NearByModel *)model
 {
-    self.userNameLabel.text = model.userName;
+    BOOL hide =  model.hide == 1;
+
+    self.userNameLabel.text = hide ? @"invisible user" : model.userName;
     /*
     NSString *date = [NSString stringWithFormat:@"%d-%d %d:%d",model.month,model.date,model.hours,model.minutes];
     if ([date isEqualToString:[self stringFromDate:[NSDate date]]]) {
@@ -187,17 +189,16 @@
     
     */
     
-    /**/
     if (!IsEmpty(model.distance)) {
         self.timeLabel.text = [NSString stringWithFormat:@"%@ km",model.distance];
     }
-     
+    [self.headIMG setImageURLStr:model.iconPath];
+
 //    NSString *distance = [NSTimeUtil getDistance:model.longitude latitude:model.latitude];
 //    self.timeLabel.text = distance;
     
     //NSString *headUrl = [NSString stringWithFormat:@"%d",model.userId];
     //[self.headIMG setImageURLStr:User_Head(headUrl)];
-    [self.headIMG setImageURLStr:model.iconPath];
     //UIColor *sexColor = [model.gender isEqualToString:@"0"]?[UIColorUtil colorWithHexString:@"#64baff"]:[UIColorUtil colorWithHexString:@"#ff5b2f"];
     //self.sexLabel.backgroundColor = sexColor;
 }

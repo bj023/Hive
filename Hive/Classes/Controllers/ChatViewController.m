@@ -286,11 +286,13 @@
         
         [self sendMessage:message ToUserID:self.userID MessageID:messageID];
         
+        /*
         [ChatManager insertChatMessageWith:self.userID
                                   UserName:self.userName
                                  MessageID:messageID
                             MessageContent:message
                                MessageTime:currentTime isShow:YES];
+         */
     }];
 }
 

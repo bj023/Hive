@@ -16,6 +16,8 @@
 // 按钮线条颜色
 #define kButton_Layout_Line_Color [UIColorUtil colorWithHexString:@"#d2d2d2"]
 
+#define kButton_Select [UIColorUtil colorWithHexString:@"#ff5b2f"] // 红色
+
 @interface CustomButtonView ()
 @property (strong, nonatomic)UIButton *followBtn;
 @property (strong, nonatomic)UIButton *blockBtn;
@@ -173,15 +175,15 @@
 
     
     [talkBtn setBackgroundImage:[self buttonImageFromColor:[UIColorUtil colorWithHexString:@"#f89e1d"] size:talkBtn.frame.size] forState:UIControlStateHighlighted];
-    [self.followBtn setBackgroundImage:[self buttonImageFromColor:[UIColorUtil colorWithHexString:@"#1b2430"] size:talkBtn.frame.size] forState:UIControlStateHighlighted];
-    [self.blockBtn setBackgroundImage:[self buttonImageFromColor:[UIColor redColor] size:talkBtn.frame.size] forState:UIControlStateHighlighted];
+    [self.followBtn setBackgroundImage:[self buttonImageFromColor:kButton_Select size:talkBtn.frame.size] forState:UIControlStateHighlighted];
+    [self.blockBtn setBackgroundImage:[self buttonImageFromColor:kButton_Select size:talkBtn.frame.size] forState:UIControlStateHighlighted];
 
     [talkBtn addTarget:self action:@selector(touchUpTalkInside:) forControlEvents:UIControlEventTouchUpInside];
     [talkBtn addTarget:self action:@selector(touchDown_Talk:) forControlEvents:UIControlEventTouchDown];
     [talkBtn addTarget:self action:@selector(touchDidEnd:) forControlEvents:UIControlEventTouchDragOutside];
     
     [self.followBtn addTarget:self action:@selector(touchUpFollowInside:) forControlEvents:UIControlEventTouchUpInside];
-    [self.followBtn addTarget:self action:@selector(touchDown:) forControlEvents:UIControlEventTouchDown];
+    [self.followBtn addTarget:self action:@selector(touchDown_Red:) forControlEvents:UIControlEventTouchDown];
     [self.followBtn addTarget:self action:@selector(touchDidEnd:) forControlEvents:UIControlEventTouchDragOutside];
     
     [self.blockBtn addTarget:self action:@selector(touchUpBlockInside:) forControlEvents:UIControlEventTouchUpInside];
@@ -196,6 +198,7 @@
 
 - (void)touchDown:(UIButton *)sender
 {
+    // 关注
     sender.layer.borderColor = [UIColorUtil colorWithHexString:@"#1b2430"].CGColor;
 }
 
@@ -207,7 +210,7 @@
 - (void)touchDown_Red:(UIButton *)sender
 {
     // 选择Block 按钮颜色
-    sender.layer.borderColor = [UIColorUtil colorWithHexString:@"#ff5b2f"].CGColor;
+    sender.layer.borderColor = kButton_Select.CGColor;
 }
 
 - (void)touchUpTalkInside:(UIButton *)sender
@@ -242,7 +245,8 @@
         self.followBtn.backgroundColor = [UIColor whiteColor];
         [self.followBtn setTitleColor:[UIColorUtil colorWithHexString:@"a0a0a0"] forState:UIControlStateNormal];
     }else{
-        self.followBtn.backgroundColor = [UIColorUtil colorWithHexString:@"#1b2430"];
+        //self.followBtn.backgroundColor = [UIColorUtil colorWithHexString:@"#1b2430"];
+        self.followBtn.backgroundColor = kButton_Select;
         [self.followBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
 }
@@ -254,7 +258,7 @@
         self.blockBtn.backgroundColor = [UIColor whiteColor];
         [self.blockBtn setTitleColor:[UIColorUtil colorWithHexString:@"a0a0a0"] forState:UIControlStateNormal];
     }else{
-        self.blockBtn.backgroundColor = [UIColor redColor];
+        self.blockBtn.backgroundColor = kButton_Select;
         [self.blockBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
 }

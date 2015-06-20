@@ -11,8 +11,9 @@
 
 @interface ChatController : MainViewController
 
-@property (nonatomic, strong) NSString *userID;
-@property (nonatomic, strong) NSString *userName;
+@property (nonatomic, strong) NSString *toUserIconPath;
+@property (nonatomic, strong) NSString *toUserID;
+@property (nonatomic, strong) NSString *toUserName;
 
 - (void)reloadData;
 

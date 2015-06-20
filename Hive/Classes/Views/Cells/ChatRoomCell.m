@@ -196,8 +196,10 @@
 - (void)setMessage:(ChatRoomModel *)message
 {
     [super setMessage:message];
+    BOOL isShow = [self.message.msg_flag isEqualToString:@"ME"]?YES:NO;
     
-    [self loadUserIconPath:message.userID];
+    if(!isShow)
+        [self loadUserIconPath:message.toUserID];
     
 }
 

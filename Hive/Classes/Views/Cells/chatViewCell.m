@@ -65,27 +65,28 @@
         [self.contentView addSubview:_activtiyImg];
         [_activtiyImg startAnimating];
         
+        /*
         // 图片已读
         if (!_hasRead) {
             _hasRead = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE)];
             _hasRead.image = [UIImage imageNamed:@"read"];
             [_activityView addSubview:_hasRead];
         }
-        
+        */
         //已读
-        /*
+        /**/
         _hasRead = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE)];
         _hasRead.text = @"Read";
-        _hasRead.textColor = [UIColor whiteColor];
+        _hasRead.textColor = [UIColorUtil colorWithHexString:@"e8e8e8"];
         _hasRead.textAlignment = NSTextAlignmentCenter;
-        _hasRead.backgroundColor = [UIColorUtil colorWithHexString:@"e8e8e8"];
-        _hasRead.layer.cornerRadius = 8;
-        _hasRead.layer.masksToBounds = YES;
+        //_hasRead.backgroundColor = [UIColorUtil colorWithHexString:@"e8e8e8"];
+        //_hasRead.layer.cornerRadius = 8;
+        //_hasRead.layer.masksToBounds = YES;
         _hasRead.hidden = YES;
         _hasRead.font = [UIFont systemFontOfSize:12];
         [_hasRead sizeToFit];
         [_activityView addSubview:_hasRead];
-        */
+        
 
         /*
         // 发送进度显示view
@@ -133,11 +134,15 @@
 {
     [super layoutSubviews];
     
+    if (!self.message) {
+        return;
+    }
+    
     BOOL isShow = [self.message.msg_flag isEqualToString:@"ME"]?YES:NO;
     _activityView.frame = CGRectMake(0, self.bubbleView.frame.origin.y, SEND_STATUS_SIZE, SEND_STATUS_SIZE);
 
-    //_hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x, self.timeLabel.frame.origin.y-SEND_STATUS_SIZE-5, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE - 5);
-    _hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x + self.timeLabel.frame.size.width/2 - 5, self.timeLabel.frame.origin.y-20, 15, 10);
+    _hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x, self.timeLabel.frame.origin.y-SEND_STATUS_SIZE-5, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE - 5);
+    //_hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x + self.timeLabel.frame.size.width/2 - 5, self.timeLabel.frame.origin.y-20, 15, 10);
     
     debugLog(@"%@-%@-%@-%@",self.indexPath,self.message.msg_flag,self.message.msg_type,self.message.msg_message);
     
@@ -205,13 +210,18 @@
     _activtiyImg.frame = CGRectMake(self.timeLabel.frame.origin.x + 7, self.timeLabel.frame.origin.y - 5, SEND_STATUS_SIZE, 4);
     
     _hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x, 3, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE - 5);
+    //_hasRead.frame = CGRectMake(self.timeLabel.frame.origin.x, self.timeLabel.frame.origin.y-SEND_STATUS_SIZE-5, SEND_STATUS_SIZE * 2, SEND_STATUS_SIZE - 5);
 }
 
-- (void)setMessage:(ChatModel *)message
+//- (void)setMessage:(ChatModel *)message
+//{
+//    [super setMessage:message];
+//}
+
+- (void)setIconPath:(NSString *)iconPath
 {
-    [super setMessage:message];
-    
-    [self loadUserIconPath:message.msg_userID];
+    _iconPath = iconPath;
+    [self.headImgaeView setImageURLStr:_iconPath];
 }
 
 - (void)clickResendAction:(id)sender
@@ -310,27 +320,6 @@
 - (void)hiddenHighlightedBubbleView
 {
     self.bubbleView.highlighted = NO;
-}
-
-- (void)loadUserIconPath:(NSString *)userID
-{
-    NSString *currentUserID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
-    if ([currentUserID isEqualToString:userID]) {
-        return;
-    }
-    
-    [HttpTool sendRequestProfileWithUserID:userID success:^(id json) {
-        ResponseChatUserInforModel *res = [[ResponseChatUserInforModel alloc] initWithString:json error:nil];
-        if (res.RETURN_CODE == 200) {
-            
-            NearByModel *model = res.RETURN_OBJ;
-            [self.headImgaeView setImageURLStr:model.iconPath placeholder:nil];
-            
-        }
-        
-    } faliure:^(NSError *error) {
-        
-    }];
 }
 
 - (void)dealloc

@@ -7,17 +7,36 @@
 //
 
 #import <Foundation/Foundation.h>
+
 @class MessageModel;
+@class Message_Model;
 @interface ChatManager : NSObject
 
-+ (void)insertChatMessageWith:(NSString *)toUserID
-                     UserName:(NSString *)toUserName
-                    MessageID:(NSString *)msgID
-               MessageContent:(NSString *)msg_Content
-                  MessageTime:(NSString *)msg_time isShow:(BOOL)isShow;
+
++ (instancetype)sharedInstace;
+
+- (void)addMessageModel:(Message_Model *)message;
+
++ (void)insertChatMessageToUserID:(NSString *)toUserID
+                       ToUserName:(NSString *)toUserName
+                   ToUserIconPath:(NSString *)toIconPath
+                        MessageID:(NSString *)msgID
+                   MessageContent:(NSString *)msg_Content
+                      MessageTime:(NSString *)msg_time isShow:(BOOL)isShow;
 
 
 + (NSString *)chatMessageUnreadCount;
 
 + (void)clearUnReadCountWith:(NSString *)userID;
+@end
+
+@interface Message_Model : NSObject
+@property (nonatomic, strong) NSString * cur_userID;
+@property (nonatomic, strong) NSString * msg_content;
+@property (nonatomic, strong) NSString * msg_ID;
+@property (nonatomic, strong) NSString * msg_time;
+@property (nonatomic, strong) NSString * toUser_IconPath;
+@property (nonatomic, strong) NSString * toUserID;
+@property (nonatomic, strong) NSString * toUserName;
+@property (nonatomic, strong) NSNumber * is_flag;
 @end

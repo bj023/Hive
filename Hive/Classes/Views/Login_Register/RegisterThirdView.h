@@ -15,6 +15,7 @@
 typedef void (^Block)(NSString *str);
 
 @interface RegisterThirdView : BaseView
+
 @property (nonatomic, copy) Block block;
 
 @property (strong, nonatomic) UITextField *userNameText;

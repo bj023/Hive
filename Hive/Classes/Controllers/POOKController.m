@@ -18,6 +18,7 @@
 #import "ChatSendMessage.h"
 #import "DataBaseModel.h"
 #import "UIActionSheet+Block.h"
+#import "NSString+Common.h"
 
 #define kChatCount 20
 
@@ -54,18 +55,6 @@
     _messageQueue = dispatch_queue_create("easemob.com", NULL);
 }
 
-- (void)startRun
-{
-    dispatch_queue_t myCustomQueue = dispatch_queue_create("example.MyCustomQueue", NULL);
-    dispatch_async(myCustomQueue, ^{
-        
-        while (1) {
-            debugLog(@"example.MyCustomQueue Do some work here.");
-            sleep(1);
-        }
-        
-    });
-}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -79,20 +68,21 @@
 
 - (void)configMessageArr
 {
+    for (ChatRoomModel *model in [ChatRoomModel MR_findAll]) {
+        debugLog(@"聊天大厅记录%@-%@---%@---%@",model.id,model.msg_Interval_time,model.toUserID,model.cur_userID);
+    }
+    
     self.mesgaeArr = [NSMutableArray array];
 
     NSArray *array = [DataShareInstance getChatsCount:kChatCount];
     
+    if (array.count == 0) {
+        return;
+    }
     
     NSRange range = NSMakeRange(0, [array count]);
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:range];
     [self.mesgaeArr insertObjects:array atIndexes:indexSet];
-    
-    
-    for (ChatRoomModel *model in [ChatRoomModel MR_findAll]) {
-        debugLog(@"%@-%@",model.id,model.msg_Interval_time);
-    }
-    
     
     if (self.mesgaeArr.count == 0) {
         return;
@@ -177,12 +167,12 @@
     //点击头像 查看个人信息
     //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    if (IsEmpty(message.userID)) {
+    if (IsEmpty(message.toUserID)) {
         [self showHudWith:RequestFailText];
         return;
     }
     
-    [HttpTool sendRequestProfileWithUserID:message.userID success:^(id json) {
+    [HttpTool sendRequestProfileWithUserID:message.toUserID success:^(id json) {
         ResponseChatUserInforModel *res = [[ResponseChatUserInforModel alloc] initWithString:json error:nil];
         if (res.RETURN_CODE == 200) {
             //[MBProgressHUD hideAllHUDsForView:self.view animated:YES];
@@ -200,8 +190,8 @@
 {
     // @某人
     if (![message.msg_flag isEqualToString:@"ME"]) {
-        NSString *aName = [NSString stringWithFormat:@"@%@ ",message.userName];
-        _isAname = message.userID;
+        NSString *aName = [NSString stringWithFormat:@"@%@ ",message.toUserName];
+        _isAname = message.toUserID;
         self.chatToolBar.inputTextView.text = aName;
         self.chatToolBar.aNameLength = [aName length];
     }
@@ -278,7 +268,7 @@
 - (void)didSendText:(NSString *)text
 {
     if (![[text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]==0) {
-        [self sendTextMessage:text];
+        [self sendTextMessage:[NSString removeTrimmingWithString:text]];
     }
 }
 // 发送 图片
@@ -321,8 +311,8 @@
         
         ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
         model.id = [NSDataUtil setChatRoomDataID];
-        model.userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
-        model.userName = [[UserInfoManager sharedInstance] getCurrentUserInfo].userName;
+        model.cur_userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+        //model.toUserName = [[UserInfoManager sharedInstance] getCurrentUserInfo].userName;
         model.hasAname = self.chatToolBar.aNameLength>0?_isAname:@"";
         model.msg_message = textMessage;
         model.messageID = messageID;
@@ -357,8 +347,8 @@
         
         ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
         model.id = [NSDataUtil setChatRoomDataID];
-        model.userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
-        model.userName = [[UserInfoManager sharedInstance] getCurrentUserInfo].userName;
+        model.cur_userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+        //model.userName = [[UserInfoManager sharedInstance] getCurrentUserInfo].userName;
         //model.hasAname = self.chatToolBar.aNameLength>0?_isAname:@"";
         model.hasAname = @"";
         model.msg_message = imagePath;

@@ -220,10 +220,26 @@
 
             NearByModel *model = res.RETURN_OBJ;
             [self.headIMG setImageURLStr:model.iconPath];
+            
+            [MagicalRecord saveUsingCurrentThreadContextWithBlock:^(NSManagedObjectContext *localContext) {
+                NSString *curUserID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cur_userID = %@ and toUserID = %@",curUserID,userID];
+                MessageModel *messageModel = [MessageModel MR_findFirstWithPredicate:predicate inContext:localContext];
+                messageModel.toUser_IconPath = model.iconPath;
+                
+            } completion:^(BOOL success, NSError *error) {
+                
+            }];
+            
         }
 
     } faliure:^(NSError *error) {
         
+        NSString *curUserID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cur_userID = %@ and toUserID = %@",curUserID,userID];
+        MessageModel *messageModel = [MessageModel MR_findFirstWithPredicate:predicate];
+        [self.headIMG setImageURLStr:messageModel.toUser_IconPath];
+
     }];
 }
 

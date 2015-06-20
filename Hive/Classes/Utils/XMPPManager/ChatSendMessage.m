@@ -100,6 +100,7 @@
     [mes addAttributeWithName:@"longitude" stringValue:longitude];
     [mes addAttributeWithName:@"latitude" stringValue:latitude];
     [mes addAttributeWithName:@"messageType" stringValue:isIMG?@"2":@"1"];
+    [mes addAttributeWithName:@"iconPath" stringValue:[[UserInfoManager sharedInstance] getCurrentUserInfo].userHead];
 
     //用户名
     [mes addAttributeWithName:@"name" stringValue:[[UserInfoManager sharedInstance] getCurrentUserInfo].userName];

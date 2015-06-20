@@ -14,6 +14,7 @@
 #import "ChatModel.h"
 #import "ChatManager.h"
 #import "UIAlertView+Block.h"
+#import "MessageModel.h"
 
 #define kXMPPHost @"115.28.51.196"
 #define LITTLEBIRD @"ay130718210956811b81z"
@@ -388,6 +389,7 @@ didReceiveError:<stream:error xmlns:stream="http://etherx.jabber.org/streams"><c
 {
     dispatch_async(myCustomQueue, ^{
         NSString *from = [[message attributeForName:@"from"] stringValue];
+        NSString *toUserID = [[message attributeForName:@"to"] stringValue];
         NSString *time = [[message attributeForName:@"time"] stringValue];
         NSString *at = [[message attributeForName:@"at"] stringValue];
         NSString *msgId = [[message attributeForName:@"messageID"] stringValue];
@@ -402,10 +404,13 @@ didReceiveError:<stream:error xmlns:stream="http://etherx.jabber.org/streams"><c
         NSString *type =[[message attributeForName:@"messageType"] stringValue];
         
         
+        
         [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
             
             ChatRoomModel *model = [ChatRoomModel MR_createInContext:localContext];
-            model.userID = [self getUserId:from];
+            model.cur_userID = [self getUserId:toUserID];
+            model.toUserID = [self getUserId:from];
+            model.toUserName = name;
             model.msg_message = msg_content;
             model.msg_time = time;
             model.msg_flag = @"YOU";
@@ -413,7 +418,6 @@ didReceiveError:<stream:error xmlns:stream="http://etherx.jabber.org/streams"><c
             model.msg_longitude = longitude;
             model.msg_latitude = latitude;
             model.messageID = msgId;
-            model.userName = name;
             model.msg_hasStealth = hasStealth;
             model.msg_hasTime = isTime;
             model.msg_Interval_time = [UtilDate getCurrentTimeInterval];
@@ -440,6 +444,8 @@ didReceiveError:<stream:error xmlns:stream="http://etherx.jabber.org/streams"><c
 - (void)receiveChatMessage:(XMPPMessage *)message
 {
     dispatch_async(myCustomChatQueue, ^{
+        
+        
         NSString *from = [[message attributeForName:@"from"] stringValue];
         NSString *time = [[message attributeForName:@"time"] stringValue];
         NSString *msgId = [[message attributeForName:@"messageID"] stringValue];
@@ -451,11 +457,38 @@ didReceiveError:<stream:error xmlns:stream="http://etherx.jabber.org/streams"><c
         NSString *msg_content = [[message elementForName:@"body"]  stringValue];
         NSString *type =[[message attributeForName:@"messageType"] stringValue];
         NSString *msg_userID = [self getUserId:from];
+        NSString *iconPath = [[message attributeForName:@"iconPath"] stringValue];
+        
+        
+        Message_Model *messageModel = [[Message_Model alloc] init];
+        messageModel.toUserName = name;
+        messageModel.toUser_IconPath = iconPath;
+        messageModel.toUserID = [self getUserId:from];
+        messageModel.msg_time = time;
+        messageModel.msg_ID = msgId;
+        messageModel.is_flag = @(YES);
+        messageModel.msg_content = msg_content;
+        messageModel.cur_userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+
+        [[ChatManager sharedInstace] addMessageModel:messageModel];
+        
+        /*
+        [ChatManager insertChatMessageToUserID:[self getUserId:from]
+                                    ToUserName:name
+                                ToUserIconPath:iconPath
+                                     MessageID:msgId
+                                MessageContent:msg_content
+                                   MessageTime:time
+                                        isShow:NO];
+        */
+        /*
         [ChatManager insertChatMessageWith:[self getUserId:from]
                                   UserName:name
                                  MessageID:msgId
                             MessageContent:msg_content
                                MessageTime:time isShow:NO];
+        */
+        
         
         [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
             

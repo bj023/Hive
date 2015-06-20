@@ -482,7 +482,7 @@
 {
     NSString *userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    [parameters setObject:toUserID forKey:@"friendId"];
+    [parameters setObject:IsEmpty(toUserID)?@"":toUserID forKey:@"friendId"];
     [parameters setObject:userID forKey:@"userId"];
     
     NSString *longitudeStr = [[NSTimeUtil sharedInstance] getCoordinateLongitude];

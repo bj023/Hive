@@ -2,7 +2,7 @@
 //  ChatRoomModel.m
 //  
 //
-//  Created by 那宝军 on 15/6/2.
+//  Created by 那宝军 on 15/6/17.
 //
 //
 
@@ -26,7 +26,9 @@
 @dynamic msg_send_type;
 @dynamic msg_time;
 @dynamic msg_type;
-@dynamic userID;
-@dynamic userName;
+@dynamic cur_userID;
+@dynamic toUserName;
+@dynamic toUserID;
+@dynamic toUserIconPath;
 
 @end

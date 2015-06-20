@@ -19,6 +19,7 @@
 #import "UIActionSheet+Block.h"
 #import "DataBaseModel.h"
 #import "MessageModel.h"
+#import "NSString+Common.h"
 
 @interface ChatController ()<   UITableViewDelegate,
                                 UITableViewDataSource,UIActionSheetDelegate,
@@ -43,7 +44,7 @@
     [self configTableView];
     [self configMessageToolBar];
     [XMPPManager sharedInstance].privatedelegate = self;
-    _messageQueue = dispatch_queue_create("easemob.com", NULL);
+    _messageQueue = dispatch_queue_create("easemob.chat.com", NULL);
     _messageReadQueue = dispatch_queue_create("easemob.read.com", NULL);
 }
 
@@ -53,7 +54,7 @@
     //self.navigationController.navigationBarHidden = NO;
     //self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
-    [ChatManager clearUnReadCountWith:self.userID];
+    [ChatManager clearUnReadCountWith:_toUserID];
     [self reloadData];
     [self sendRead];
 }
@@ -63,7 +64,7 @@
     [super viewDidDisappear:animated];
     //self.navigationController.navigationBarHidden = YES;
     //self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-    [ChatManager clearUnReadCountWith:self.userID];
+    [ChatManager clearUnReadCountWith:_toUserID];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -134,7 +135,6 @@
 #pragma -mark 初始化 表格
 - (void)configTableView
 {
-    self.mesgaeArr = [NSMutableArray array];
     if (!self.tableView) {
         CGRect frame = self.view.bounds;
         frame.origin.y = 64;
@@ -189,6 +189,7 @@
     chatViewCell *cell = [chatViewCell cellWithTableView:tableView Delegate:self];
     cell.indexPath = indexPath;
     cell.message = self.mesgaeArr[indexPath.row];
+    cell.iconPath = _toUserIconPath;
     
     return cell;
 }
@@ -316,7 +317,7 @@
 - (void)didSendText:(NSString *)text
 {
     if (![[text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]==0) {
-        [self sendTextMessage:text];
+        [self sendTextMessage:[NSString removeTrimmingWithString:text]];
     }
 }
 // 发送 图片
@@ -352,28 +353,50 @@
 
     NSString *currentTime = [UtilDate getCurrentTime];
     NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
-    NSString *messageID = [NSString stringWithFormat:@"%@_%@",self.userID,timeSp];
+    NSString *messageID = [NSString stringWithFormat:@"%@_%@",_toUserID,timeSp];
     
-    [ChatManager insertChatMessageWith:self.userID
-                              UserName:self.userName
+    Message_Model *messageModel = [[Message_Model alloc] init];
+    messageModel.toUserName = _toUserName;
+    messageModel.toUser_IconPath = _toUserIconPath;
+    messageModel.toUserID = _toUserID;
+    messageModel.msg_time = currentTime;
+    messageModel.msg_ID = messageID;
+    messageModel.is_flag = @(NO);
+    messageModel.msg_content = textMessage;
+    messageModel.cur_userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    
+    [[ChatManager sharedInstace] addMessageModel:messageModel];
+    
+    /*
+    [ChatManager insertChatMessageToUserID:_toUserID
+                                ToUserName:_toUserName
+                            ToUserIconPath:_toUserIconPath
+                                 MessageID:messageID
+                            MessageContent:textMessage
+                               MessageTime:currentTime
+                                    isShow:YES];
+    */
+    /*
+    [ChatManager insertChatMessageWith:_toUserID
+                              UserName:_toUserName
                              MessageID:messageID
                         MessageContent:textMessage
                            MessageTime:currentTime isShow:YES];
-    
+    */
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         
         ChatModel *model = [ChatModel MR_createInContext:localContext];
         model.id = [NSNumber numberWithInteger:(self.mesgaeArr.count + 1)];
         model.user_ID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
-        model.msg_userID = self.userID;
-        model.userName = self.userName;
+        model.msg_userID = _toUserID;
+        model.userName = _toUserName;
         model.msg_message = textMessage;
         model.msg_time = currentTime;
         model.msg_flag = @"ME";
         model.msg_longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
         model.msg_latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
         model.messageID = messageID;
-        model.msg_hasTime = [XMPPManager getChatTime:currentTime ToUserID:self.userID];
+        model.msg_hasTime = [XMPPManager getChatTime:currentTime ToUserID:_toUserID];
         model.msg_send_type = @(SendCHatMessageNomal);
         model.msg_type = @(SendChatMessageChatType);
         
@@ -392,28 +415,53 @@
 {
     NSString *currentTime = [UtilDate getCurrentTime];
     NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
-    NSString *messageID = [NSString stringWithFormat:@"%@_%@",self.userID,timeSp];
+    NSString *messageID = [NSString stringWithFormat:@"%@_%@",_toUserID,timeSp];
     
-    [ChatManager insertChatMessageWith:self.userID
-                              UserName:self.userName
+    Message_Model *messageModel = [[Message_Model alloc] init];
+    messageModel.toUserName = _toUserName;
+    messageModel.toUser_IconPath = _toUserIconPath;
+    messageModel.toUserID = _toUserID;
+    messageModel.msg_time = currentTime;
+    messageModel.msg_ID = messageID;
+    messageModel.is_flag = @(NO);
+    messageModel.msg_content = imagePath;
+    messageModel.cur_userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    
+    [[ChatManager sharedInstace] addMessageModel:messageModel];
+
+    
+    /*
+    [ChatManager insertChatMessageToUserID:_toUserID
+                                ToUserName:_toUserName
+                            ToUserIconPath:_toUserIconPath
+                                 MessageID:messageID
+                            MessageContent:imagePath
+                               MessageTime:currentTime
+                                    isShow:YES];
+    */
+    /*
+    [ChatManager insertChatMessageWith:_toUserID
+                              UserName:_toUserName
                              MessageID:messageID
                         MessageContent:imagePath
                            MessageTime:currentTime isShow:YES];
+    */
+    
     
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         
         ChatModel *model = [ChatModel MR_createInContext:localContext];
         model.id = [NSNumber numberWithInteger:(self.mesgaeArr.count + 1)];
         model.user_ID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
-        model.msg_userID = self.userID;
-        model.userName = self.userName;
+        model.msg_userID = _toUserID;
+        model.userName = _toUserName;
         model.msg_message = imagePath;
         model.msg_time = currentTime;
         model.msg_flag = @"ME";
         model.msg_longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
         model.msg_latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
         model.messageID = messageID;
-        model.msg_hasTime = [XMPPManager getChatTime:currentTime ToUserID:self.userID];
+        model.msg_hasTime = [XMPPManager getChatTime:currentTime ToUserID:_toUserID];
         model.msg_send_type = @(SendCHatMessageNomal);
         model.msg_type = @(SendChatMessageChatIMGType);
         
@@ -432,7 +480,7 @@
     [ChatSendMessage sendTextMessageWithString:textMessage
                                SendMessageTime:msg_time
                                  SendMessageID:msg_ID
-                                      ToUserID:self.userID
+                                      ToUserID:_toUserID
                                      IsChatIMG:YES
                                       CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
                                           
@@ -450,7 +498,7 @@
     [ChatSendMessage sendTextMessageWithString:textMessage
                                SendMessageTime:msg_time
                                  SendMessageID:msg_ID
-                                      ToUserID:self.userID
+                                      ToUserID:_toUserID
                                      IsChatIMG:NO
                                       CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
                                           [self updateSendMessageState:sendState MessageID:msg_ID];
@@ -459,18 +507,19 @@
 // 加载记录
 - (void)reloadData
 {
+    /*
     __weak ChatController *weakSelf = self;
     dispatch_async(_messageQueue, ^{
         
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"user_ID = %@ and msg_userID = %@",[[UserInfoManager sharedInstance] getCurrentUserInfo].userID,self.userID];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"user_ID = %@ and msg_userID = %@",[[UserInfoManager sharedInstance] getCurrentUserInfo].userID,_toUserID];
         
         NSArray *array = [ChatModel MR_findAllSortedBy:@"msg_time" ascending:YES withPredicate:predicate];
         //NSArray * array = [ChatModel MR_findByAttribute:@"msg_userID" withValue:self.userID];
         
-        weakSelf.mesgaeArr = [NSMutableArray arrayWithArray:array];
+        
+        weakSelf.mesgaeArr = [[NSMutableArray alloc] initWithArray:array];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             
             if (weakSelf.mesgaeArr.count > 0) {
                 [weakSelf.tableView reloadData];
@@ -478,7 +527,19 @@
             }
         });
     });
+    */
     
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"user_ID = %@ and msg_userID = %@",[[UserInfoManager sharedInstance] getCurrentUserInfo].userID,_toUserID];
+    
+    NSArray *array = [ChatModel MR_findAllSortedBy:@"msg_time" ascending:YES withPredicate:predicate];
+    //NSArray * array = [ChatModel MR_findByAttribute:@"msg_userID" withValue:self.userID];
+    
+    self.mesgaeArr = [NSMutableArray arrayWithArray:array];
+    
+    if (self.mesgaeArr.count > 0) {
+        [self.tableView reloadData];
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.mesgaeArr count] - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    }
 }
 // 添加一条消息
 /*
@@ -533,11 +594,16 @@
 #pragma -mark xmpp 代理回调
 - (void)didReceiveMessageId:(NSString *)msg_ID Msg_userID:(NSString *)msg_userid
 {
-    if ([msg_userid isEqualToString:self.userID]) {
+    if ([msg_userid isEqualToString:_toUserID]) {
         [self refreshDataWithMessageID:msg_ID];
         // 发送已读操作
-        [ChatSendMessage ReplyToChatMessageWithMessageID:msg_ID ToUserID:self.userID CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
-            
+        [ChatSendMessage ReplyToChatMessageWithMessageID:msg_ID ToUserID:_toUserID CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
+            [MagicalRecord saveUsingCurrentThreadContextWithBlock:^(NSManagedObjectContext *localContext) {
+                ChatModel *model = [ChatModel MR_findFirstByAttribute:@"messageID" withValue:msg_ID inContext:localContext];
+                model.msg_send_type = @(SendChatMessageReadState);
+            } completion:^(BOOL success, NSError *error) {
+                
+            }];
         }];
     }
 }
@@ -591,7 +657,7 @@
 - (void)sendRead
 {
     NSString *curuserID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"user_ID = %@ and msg_userID = %@ and msg_send_type = %@",curuserID,self.userID,@(SendChatMessageNoReadState)];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"user_ID = %@ and msg_userID = %@ and msg_send_type = %@",curuserID,_toUserID,@(SendChatMessageNoReadState)];
     NSArray *chatModelArr = [ChatModel MR_findAllWithPredicate:predicate];
     
     debugLog(@"%@",chatModelArr);
@@ -601,10 +667,22 @@
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             
             for (ChatModel *model in chatModelArr) {
-                [ChatSendMessage ReplyToChatMessageWithMessageID:model.messageID ToUserID:self.userID CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
+                [ChatSendMessage ReplyToChatMessageWithMessageID:model.messageID ToUserID:_toUserID CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
+                    
                     debugLog(@"已回复");
                 }];
             }
+            
+            [MagicalRecord saveUsingCurrentThreadContextWithBlock:^(NSManagedObjectContext *localContext) {
+                
+                for (ChatModel *model in chatModelArr) {
+                    ChatModel *chatModel = [ChatModel MR_findFirstByAttribute:@"messageID" withValue:model.messageID inContext:localContext];
+                    chatModel.msg_send_type = @(SendChatMessageReadState);
+                }
+                
+            } completion:^(BOOL success, NSError *error) {
+                
+            }];
         });
         
     }
@@ -613,10 +691,10 @@
 #pragma mark 删除会话
 - (void)deleteCurrentChatMessage
 {
-    [DataShareInstance deleteCurrentChatMessage:self.userID];
+    [DataShareInstance deleteCurrentChatMessage:_toUserID];
 
     NSString *currentUserID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"toUserID = %@ and cur_userID = %@",self.userID,currentUserID];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"toUserID = %@ and cur_userID = %@",_toUserID,currentUserID];
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         [MessageModel MR_deleteAllMatchingPredicate:predicate inContext:localContext];
     } completion:^(BOOL success, NSError *error) {

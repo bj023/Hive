@@ -16,6 +16,10 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "AppDelegate.h"
 
+#import "ForgetFirstView.h"
+#import "ForgetSecondView.h"
+#import "ForgetThirdView.h"
+
 @interface LoginController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
 @property (strong, nonatomic)UIScrollView *scrollerView;
@@ -27,6 +31,11 @@
 @property (strong, nonatomic) RegisterThirdView  *registerThird;
 @property (strong, nonatomic) RegisterFourView   *registerFour;
 
+
+@property (strong, nonatomic) ForgetFirstView *forgetFirst;
+@property (strong, nonatomic) ForgetSecondView *forgetSecond;
+@property (strong, nonatomic) ForgetThirdView *forgetThird;
+
 @end
 
 @implementation LoginController
@@ -37,7 +46,11 @@
     self.registerThird = nil;
     self.registerFour = nil;
     self.loginView = nil;
+    self.forgetFirst = nil;
+    self.forgetSecond = nil;
+    self.forgetThird = nil;
     self.scrollerView = nil;
+    
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -78,11 +91,31 @@
     __weak LoginController *weakSelf = self;
 
     if (self.selectType == SelectSignInType) {
-        [self.scrollerView setContentSize:CGSizeMake(UIWIDTH, UIHEIGHT)];
+        [self.scrollerView setContentSize:CGSizeMake(UIWIDTH * 4, UIHEIGHT)];
         // 登陆
-        self.loginView = [[LoginView alloc] initWithFrame:self.view.bounds];
-        [self.scrollerView addSubview:self.loginView];
+        CGRect frame = CGRectMake(UIWIDTH * 0, 0, UIWIDTH, UIHEIGHT);
+        self.loginView = [[LoginView alloc] initWithFrame:frame];
         
+        // 忘记密码第一步 手机号
+        frame = CGRectMake(UIWIDTH * 1, 0, UIWIDTH, UIHEIGHT);
+        _forgetFirst = [[ForgetFirstView alloc] initWithFrame:frame];
+        
+        // 忘记密码第二步 验证码
+        frame = CGRectMake(UIWIDTH * 2, 0, UIWIDTH, UIHEIGHT);
+        _forgetSecond = [[ForgetSecondView alloc] initWithFrame:frame];
+        
+        // 忘记密码第三步 新密码
+        frame = CGRectMake(UIWIDTH * 3, 0, UIWIDTH, UIHEIGHT);
+        _forgetThird = [[ForgetThirdView alloc] initWithFrame:frame];
+        
+        
+        
+        [self.scrollerView addSubview:_loginView];
+        [self.scrollerView addSubview:_forgetFirst];
+        [self.scrollerView addSubview:_forgetSecond];
+        [self.scrollerView addSubview:_forgetThird];
+        
+        //登陆页
         self.loginView.block = ^(NSString *str){
             /*
             if ([str isEqualToString:@"Sign up"]) {
@@ -104,8 +137,53 @@
             }else if ([str isEqualToString:@"Forget"]){
                 // 点击忘记密码
                 debugLog(@"点击忘记密码");
+                CGRect frame = weakSelf.view.bounds;
+                [weakSelf.forgetFirst become_FirstResponder];
+                frame.origin.x = UIWIDTH;
+                [weakSelf.scrollerView scrollRectToVisible:frame animated:YES];
             }
         };
+        
+        // 忘记密码 第一步
+        self.forgetFirst.block = ^(NSString *str){
+            if ([str isEqualToString:@"Back"]) {
+                CGRect frame = weakSelf.view.bounds;
+                [weakSelf.loginView become_FirstResponder];
+                frame.origin.x = 0;
+                [weakSelf.scrollerView scrollRectToVisible:frame animated:YES];
+                
+            }else{
+                //[weakSelf sendRequestSecond:str];
+            }
+        };
+        
+        // 忘记密码 第二步
+        self.forgetSecond.block = ^(NSString *str){
+            if ([str isEqualToString:@"Back"]) {
+                CGRect frame = weakSelf.view.bounds;
+                [weakSelf.forgetFirst become_FirstResponder];
+                frame.origin.x = UIWIDTH;
+                [weakSelf.scrollerView scrollRectToVisible:frame animated:YES];
+                
+            }else{
+                //[weakSelf sendRequestSecond:str];
+            }
+        };
+        
+        // 忘记密码 第三步 新密码
+        self.forgetThird.block = ^(NSString *str){
+            if ([str isEqualToString:@"Back"]) {
+                CGRect frame = weakSelf.view.bounds;
+                [weakSelf.forgetSecond become_FirstResponder];
+                frame.origin.x = UIWIDTH*2;
+                [weakSelf.scrollerView scrollRectToVisible:frame animated:YES];
+                
+            }else{
+                //[weakSelf sendRequestSecond:str];
+            }
+        };
+        
+        
         
     }else
     {
@@ -133,7 +211,6 @@
         
         [self.registerFirst become_FirstResponder];
 
-        
         self.registerFirst.block = ^(NSString *str){
             
             if ([str isEqualToString:@"Back"]) {
@@ -147,7 +224,6 @@
             }else{
                 [weakSelf sendRequestFist:str];
             }
-            
         };
         
         self.registerSecond.block = ^(NSString *str){
@@ -304,7 +380,6 @@
         ResponseLoginModel *res = [[ResponseLoginModel alloc] initWithString:json error:&error];
         
         debugLog(@"%d-%@",res.RETURN_CODE,res.content);
-        
         
         if (res.RETURN_CODE == 200) {
             
