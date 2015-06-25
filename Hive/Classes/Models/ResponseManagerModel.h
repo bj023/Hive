@@ -45,3 +45,7 @@
 @property (nonatomic, strong) NearByModel *RETURN_OBJ;
 @end
 
+@interface ResponseChatPhotoModel : JSONModel
+@property (nonatomic, assign) int RETURN_CODE;
+@property (nonatomic, strong) NSString *imgUrl;
+@end

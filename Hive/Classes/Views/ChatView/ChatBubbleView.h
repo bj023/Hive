@@ -23,4 +23,8 @@
 @property (nonatomic, strong)UILabel *messageLabel;
 @property (nonatomic, assign)BOOL isMe;
 
+
+- (void)setImageURLStr:(NSString *)urlStr;
+- (UIImage *)imageWithUrl:(NSString *)urlStr;
+
 @end

@@ -10,6 +10,7 @@
 #import "Utils.h"
 #import "FaceView.h"
 #import "DXChatBarMoreView.h"
+#import "FRDLivelyButton.h"
 
 @interface MessageToolBar ()<UITextViewDelegate, FaceDelegate>
 {
@@ -107,6 +108,16 @@
         self.sendButton.tag = 2;
     }
     
+    FRDLivelyButton *photoBtn = [[FRDLivelyButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.bounds) - kHorizontalPadding - 20, 12, 20, 20)];
+    [photoBtn setOptions:@{ kFRDLivelyButtonLineWidth: @(2.0f),
+                          kFRDLivelyButtonHighlightedColor:kRegisterTextTintColor,
+                          kFRDLivelyButtonColor: kRegisterTextTintColor
+                          }];
+    [photoBtn setStyle:kFRDLivelyButtonStylePlus animated:YES];
+    [photoBtn addTarget:self action:@selector(sendPhotoAction:) forControlEvents:UIControlEventTouchUpInside];
+    photoBtn.tag = 2;
+
+    
     allButtonWidth += CGRectGetWidth(self.faceButton.frame) + kHorizontalPadding * 2;
     // 输入框的高度和宽度
     CGFloat width = CGRectGetWidth(self.bounds) - (allButtonWidth ? allButtonWidth : (textViewLeftMargin * 2) )- sendW - kVerticalPadding;
@@ -145,6 +156,10 @@
     [self.toolbarView addSubview:self.faceButton];
     [self.toolbarView addSubview:self.inputTextView];
     [self.toolbarView addSubview:self.sendButton];
+    [self.toolbarView addSubview:photoBtn];
+    
+    self.sendButton.hidden = !isShow;
+    photoBtn.hidden = isShow;
 }
 
 - (void)setMaxTextInputViewHeight:(CGFloat)maxTextInputViewHeight
@@ -181,13 +196,16 @@
 
 - (void)sendButtonAction:(UIButton *)sender
 {
-    /*
+    /* */
     if ([self.delegate respondsToSelector:@selector(didSendText:)]) {
         [self.delegate didSendText:self.inputTextView.text];
         self.inputTextView.text = @"";
         [self willShowInputTextViewToHeight:[self getTextViewContentH:self.inputTextView]];
     }
-     */
+}
+
+- (void)sendPhotoAction:(UIButton *)sender
+{
     [self.inputTextView resignFirstResponder];
     [self willShowBottomView:self.moreView];
 }

@@ -81,7 +81,7 @@
                   SendMessageTime:(NSString *)msg_time
                     SendMessageID:(NSString *)msgID
                          ToUserID:(NSString *)msg_to_userID
-                        IsChatIMG:(BOOL)isIMG
+                      ChatIMGType:(SendChatMessageType)imgType
                          CallBack:(SendChatMessageSuccess)result
 {
     NSXMLElement *body;
@@ -99,7 +99,8 @@
     NSString *latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
     [mes addAttributeWithName:@"longitude" stringValue:longitude];
     [mes addAttributeWithName:@"latitude" stringValue:latitude];
-    [mes addAttributeWithName:@"messageType" stringValue:isIMG?@"2":@"1"];
+    //[mes addAttributeWithName:@"messageType" stringValue:isIMG?@"2":@"1"];
+    [mes addAttributeWithName:@"messageType" intValue:imgType];
     [mes addAttributeWithName:@"iconPath" stringValue:[[UserInfoManager sharedInstance] getCurrentUserInfo].userHead];
 
     //用户名

@@ -38,6 +38,8 @@
 
 #define APPEND_PushMessage @"/info/pushMessage.do"
 
+#define APPEND_SendIMG @"/info/uploadImage.do"
+
 @implementation HttpTool
 #pragma -mark 登陆
 /**
@@ -618,6 +620,20 @@
 {
     NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_Register_UpdateProfile];
     [HttpManager postRequestWithBaseUrl:urlString params:[HttpTool parameterDeviceToken:token] success:^(id response) {
+        success(response);
+    } Fail:^(NSError *error) {
+        faliure(error);
+    }];
+}
+
+#pragma -mark 发送图片
++ (void)sendRequestSendIMG:(NSData *)imageData
+                   success:(ResponseSuccBlcok)success
+                   faliure:(HttpFailBlcok)faliure
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@%@",HTTP_Request,APPEND_SendIMG];
+    
+    [HttpManager postFormDataRequestWithBaseUrl:urlString params:[self parameterImageData:imageData] ImageData:imageData success:^(id response) {
         success(response);
     } Fail:^(NSError *error) {
         faliure(error);

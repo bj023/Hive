@@ -30,12 +30,12 @@
     //[[SDImageCache sharedImageCache] clearMemory];
     //[[SDImageCache sharedImageCache] clearDisk];
     
-    [self sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed | SDWebImageLowPriority];
+    [self sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed | SDWebImageLowPriority | SDWebImageProgressiveDownload];
 }
 
 - (void)setImageUrl:(NSURL *)url
 {
-    [self sd_setImageWithURL:url placeholderImage:nil options:SDWebImageRetryFailed | SDWebImageLowPriority];
+    [self sd_setImageWithURL:url placeholderImage:nil options:SDWebImageRetryFailed | SDWebImageLowPriority | SDWebImageProgressiveDownload];
 }
 
 - (void)setImageURLStr:(NSString *)urlStr placeholder:(UIImage *)placeholder
@@ -47,4 +47,5 @@
 {
     [self setImageUrl:[NSURL URLWithString:urlStr]];
 }
+
 @end

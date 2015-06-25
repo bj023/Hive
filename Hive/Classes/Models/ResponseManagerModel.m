@@ -42,3 +42,10 @@
 @implementation ResponseChatUserInforModel
 
 @end
+
+@implementation ResponseChatPhotoModel
++(JSONKeyMapper*)keyMapper
+{
+    return [[JSONKeyMapper alloc] initWithDictionary:@{@"RETURN_OBJ.link" : @"imgUrl"}];
+}
+@end

@@ -20,11 +20,17 @@
 #import "DataBaseModel.h"
 #import "MessageModel.h"
 #import "NSString+Common.h"
+#import "DXChatBarMoreView.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 
-@interface ChatController ()<   UITableViewDelegate,
-                                UITableViewDataSource,UIActionSheetDelegate,
+
+@interface ChatController ()<   UITableViewDelegate,UITableViewDataSource,
+                                UINavigationControllerDelegate, UIImagePickerControllerDelegate,
+                                UIActionSheetDelegate,
                                 MessageToolBarDelegate,
-                                ChatViewCellDelegate, ChatPrivateMessageDelegate>
+                                ChatViewCellDelegate,
+                                ChatPrivateMessageDelegate,
+                                DXChatBarMoreViewDelegate>
 {
     dispatch_queue_t _messageQueue;
     dispatch_queue_t _messageReadQueue;
@@ -32,6 +38,8 @@
 @property (strong, nonatomic)MessageToolBar *chatToolBar;
 @property (strong, nonatomic)UITableView *tableView;
 @property (strong, nonatomic)NSMutableArray *mesgaeArr;
+@property (strong, nonatomic) UIImagePickerController *imagePicker;
+
 @end
 
 
@@ -169,7 +177,68 @@
         self.chatToolBar.delegate = self;
         self.chatToolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
         [self.view addSubview:self.chatToolBar];
+        
+        //将self注册为chatToolBar的moreView的代理
+        if ([self.chatToolBar.moreView isKindOfClass:[DXChatBarMoreView class]]) {
+            [(DXChatBarMoreView *)self.chatToolBar.moreView setDelegate:self];
+        }
     }
+}
+
+- (void)moreViewPhotoAction:(DXChatBarMoreView *)moreView
+{
+    debugMethod();
+    // 隐藏键盘
+    [self keyBoardHidden];
+    // 弹出照片选择
+    self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    self.imagePicker.mediaTypes = @[(NSString *)kUTTypeImage];
+    [self presentViewController:self.imagePicker animated:YES completion:NULL];
+
+}
+
+- (void)moreViewTakePicAction:(DXChatBarMoreView *)moreView
+{
+    debugMethod();
+    // 隐藏键盘
+    [self keyBoardHidden];
+    // 照相
+    self.imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    self.imagePicker.mediaTypes = @[(NSString *)kUTTypeImage];//@[(NSString *)kUTTypeImage,(NSString *)kUTTypeMovie];
+    [self presentViewController:self.imagePicker animated:YES completion:NULL];
+}
+
+#pragma -mark 图片选择器
+- (UIImagePickerController *)imagePicker
+{
+    if (_imagePicker == nil) {
+        _imagePicker = [[UIImagePickerController alloc] init];
+        _imagePicker.modalPresentationStyle= UIModalPresentationOverFullScreen;
+        _imagePicker.delegate = self;
+    }
+    
+    return _imagePicker;
+}
+
+#pragma mark - UIImagePickerControllerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    NSString *mediaType = info[UIImagePickerControllerMediaType];
+    if ([mediaType isEqualToString:(NSString *)kUTTypeMovie]) {
+        
+    }else{
+        UIImage *orgImage = info[UIImagePickerControllerOriginalImage];
+        [picker dismissViewControllerAnimated:YES completion:nil];
+        //[self sendImageMessage:orgImage];
+        [self sendImgWithData:UIImageJPEGRepresentation(orgImage, 1)];
+    }
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:NO] forKey:@"isShowPicker"];
+    [self.imagePicker dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma -mark TableView 回调
@@ -398,7 +467,7 @@
         model.messageID = messageID;
         model.msg_hasTime = [XMPPManager getChatTime:currentTime ToUserID:_toUserID];
         model.msg_send_type = @(SendCHatMessageNomal);
-        model.msg_type = @(SendChatMessageChatType);
+        model.msg_type = @(SendChatMessageChatTextType);
         
     } completion:^(BOOL success, NSError *error) {
         
@@ -408,9 +477,7 @@
     }];
 }
 
-
-
-
+// 发送图片表情
 - (void)sendImageMessage:(NSString *)imagePath
 {
     NSString *currentTime = [UtilDate getCurrentTime];
@@ -428,7 +495,6 @@
     messageModel.cur_userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
     
     [[ChatManager sharedInstace] addMessageModel:messageModel];
-
     
     /*
     [ChatManager insertChatMessageToUserID:_toUserID
@@ -473,6 +539,73 @@
     }];
 }
 
+
+- (void)sendPhotoIMGWithIMGData:(NSString *)imgUrl
+{
+    NSString *currentTime = [UtilDate getCurrentTime];
+    NSString *timeSp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
+    NSString *messageID = [NSString stringWithFormat:@"%@_%@",_toUserID,timeSp];
+    
+    Message_Model *messageModel = [[Message_Model alloc] init];
+    messageModel.toUserName = _toUserName;
+    messageModel.toUser_IconPath = _toUserIconPath;
+    messageModel.toUserID = _toUserID;
+    messageModel.msg_time = currentTime;
+    messageModel.msg_ID = messageID;
+    messageModel.is_flag = @(NO);
+    messageModel.msg_content = @"图片";
+    messageModel.cur_userID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+    
+    [[ChatManager sharedInstace] addMessageModel:messageModel];
+
+    // 转换成base64的编码
+    //NSString *base64str = [imgaeData base64EncodedStringWithOptions:0];
+    
+    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+        
+        ChatModel *model = [ChatModel MR_createInContext:localContext];
+        model.id = [NSNumber numberWithInteger:(self.mesgaeArr.count + 1)];
+        model.user_ID = [[UserInfoManager sharedInstance] getCurrentUserInfo].userID;
+        model.msg_userID = _toUserID;
+        model.userName = _toUserName;
+        
+        model.msg_message = imgUrl;
+        model.msg_time = currentTime;
+        model.msg_flag = @"ME";
+        model.msg_longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
+        model.msg_latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
+        model.messageID = messageID;
+        model.msg_hasTime = [XMPPManager getChatTime:currentTime ToUserID:_toUserID];
+        model.msg_send_type = @(SendCHatMessageNomal);
+        model.msg_type = @(SendChatMessageChatPhotoType);
+        
+    } completion:^(BOOL success, NSError *error) {
+        
+        [self refreshDataWithMessageID:messageID];
+        [self sendPhotoMessage:imgUrl SendMessageTime:currentTime MessageID:messageID];
+    }];
+}
+
+// 表送图片
+- (void)sendImgWithData:(NSData *)imageData
+{
+    
+    //[self sendPhotoIMGWithIMG_URL:@"http://115.28.51.196/X_USER_ICON/1801434461844144.jpg"];
+    
+    [HttpTool sendRequestSendIMG:imageData success:^(id json) {
+
+        ResponseChatPhotoModel *res = [[ResponseChatPhotoModel alloc] initWithString:json error:nil];
+        if (res.RETURN_CODE == 200) {
+            [self sendPhotoIMGWithIMGData:res.imgUrl];
+        }
+        
+    } faliure:^(NSError *error) {
+        
+        debugLog(@"发送失败");
+        
+    }];
+}
+
 - (void)sendImageMessage:(NSString *)textMessage
          SendMessageTime:(NSString *)msg_time
                MessageID:(NSString *)msg_ID
@@ -481,7 +614,7 @@
                                SendMessageTime:msg_time
                                  SendMessageID:msg_ID
                                       ToUserID:_toUserID
-                                     IsChatIMG:YES
+                                   ChatIMGType:SendChatMessageChatIMGType
                                       CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
                                           
                                           [self updateSendMessageState:sendState MessageID:msg_ID];
@@ -499,11 +632,29 @@
                                SendMessageTime:msg_time
                                  SendMessageID:msg_ID
                                       ToUserID:_toUserID
-                                     IsChatIMG:NO
+                                   ChatIMGType:SendChatMessageChatTextType
                                       CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
                                           [self updateSendMessageState:sendState MessageID:msg_ID];
                                       }];
 }
+
+- (void)sendPhotoMessage:(NSString *)textMessage
+         SendMessageTime:(NSString *)msg_time
+               MessageID:(NSString *)msg_ID
+{
+    
+    [ChatSendMessage sendTextMessageWithString:textMessage
+                               SendMessageTime:msg_time
+                                 SendMessageID:msg_ID
+                                      ToUserID:_toUserID
+                                   ChatIMGType:SendChatMessageChatPhotoType
+                                      CallBack:^(SendChatMessageStateType sendState, NSString *msg_ID) {
+                                          
+                                          [self updateSendMessageState:sendState MessageID:msg_ID];
+                                          
+                                      }];
+}
+
 // 加载记录
 - (void)reloadData
 {
@@ -705,6 +856,7 @@
 
 - (void)dealloc
 {
+    self.imagePicker = nil;
     self.chatToolBar = nil;
     self.tableView = nil;
     self.mesgaeArr = nil;

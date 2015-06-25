@@ -322,7 +322,7 @@
         model.msg_longitude = [[NSTimeUtil sharedInstance] getCoordinateLongitude];
         model.msg_latitude = [[NSTimeUtil sharedInstance] getCoordinateLatitude];
         model.msg_send_type = @(SendCHatMessageNomal);
-        model.msg_type = @(SendChatMessageChatType);
+        model.msg_type = @(SendChatMessageChatTextType);
         model.msg_Interval_time = [UtilDate getCurrentTimeInterval];
 
         debugLog(@"收到聊天大厅创建记录->%@",model.id);

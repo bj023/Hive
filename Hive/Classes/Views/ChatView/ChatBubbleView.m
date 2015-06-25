@@ -8,6 +8,8 @@
 
 #import "ChatBubbleView.h"
 #import "Utils.h"
+#import <UIImageView+WebCache.h>
+#import <SDImageCache.h>
 
 #define MESSAGE_FONT_SIZE [UIFont systemFontOfSize:16] // 字体
 
@@ -56,5 +58,33 @@
 {
     _isMe = isMe;
     _messageLabel.textColor = isMe?[UIColor whiteColor]:[UIColorUtil colorWithHexString:@"#1a1a1a"];
+}
+
+- (void)setImageUrl:(NSURL *)url
+{
+    [self sd_setImageWithURL:url placeholderImage:nil options:SDWebImageRetryFailed | SDWebImageLowPriority | SDWebImageProgressiveDownload];
+}
+
+- (void)setImageURLStr:(NSString *)urlStr
+{
+    [self setImageUrl:[NSURL URLWithString:urlStr]];
+}
+
+- (UIImage *)imageWithUrl:(NSString *)urlStr
+{
+    if([[SDImageCache sharedImageCache] diskImageExistsWithKey:urlStr])
+    {
+        UIImage* image = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:urlStr];
+        if(!image)
+        {
+            NSData* data = [[SDImageCache sharedImageCache] performSelector:@selector(imageFromDiskCacheForKey:) withObject:urlStr];
+            image = [UIImage imageWithData:data];
+        }
+        if(!image)
+        {
+            return image;
+        }
+    }
+    return nil;
 }
 @end

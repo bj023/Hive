@@ -293,4 +293,14 @@ typedef void(^ResponseSuccBlcok)(id json);
 + (void)sendRequestUpdateDeviceToken:(NSString *)token
                              success:(ResponseSuccBlcok)success
                              faliure:(HttpFailBlcok)faliure;
+/**
+ *  私聊，发送图片
+ *
+ *  @param imageData 图片数据
+ *  @param success   成功回调
+ *  @param faliure   失败回调
+ */
++ (void)sendRequestSendIMG:(NSData *)imageData
+                   success:(ResponseSuccBlcok)success
+                   faliure:(HttpFailBlcok)faliure;
 @end

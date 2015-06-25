@@ -11,8 +11,9 @@
 // 私聊发送类型
 typedef enum{
 
-    SendChatMessageChatType = 1,
+    SendChatMessageChatTextType = 1,
     SendChatMessageChatIMGType = 2,
+    SendChatMessageChatPhotoType = 3,
     
 } SendChatMessageType;
 
@@ -61,7 +62,7 @@ typedef void(^SendChatMessageSuccess)(SendChatMessageStateType sendState ,NSStri
                   SendMessageTime:(NSString *)msg_time
                     SendMessageID:(NSString *)msgID
                          ToUserID:(NSString *)msg_to_userID
-                        IsChatIMG:(BOOL)isIMG
+                      ChatIMGType:(SendChatMessageType)imgType
                          CallBack:(SendChatMessageSuccess)result;
 
 /**
